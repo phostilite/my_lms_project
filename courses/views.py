@@ -1,3 +1,4 @@
 from django.shortcuts import render
 
-# Create your views here.
+def course_catalog(request):
+    return render(request, 'learner/course_catalog.html')

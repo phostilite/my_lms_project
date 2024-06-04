@@ -1,3 +1,4 @@
 from django.shortcuts import render
 
-# Create your views here.
+def discussions(request):
+    return render(request, 'learner/discussions.html')
