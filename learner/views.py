@@ -8,3 +8,7 @@ def calendar(request):
 
 def my_courses(request):
     return render(request, 'learner/my_courses.html')
+
+
+def my_certificates(request):
+    return render(request, 'learner/my_certificates.html')

@@ -1,0 +1,141 @@
+{% extends '../base.html' %}
+{% block content %}
+{% include './navbar.html' %}
+{% include './sidebar.html' %}
+  
+<div class="p-4 sm:ml-64">
+    <div class="p-4 mt-14">
+        <div class="container mx-auto px-4 py-8">
+            <header class="mb-8">
+                <h1 class="text-3xl font-bold text-gray-800">My Certificates</h1>
+                <p class="text-gray-600 mt-2">View and download your earned certificates</p>
+            </header>
+    
+            <div class="mb-6 flex justify-between items-center">
+                <input type="text" placeholder="Search certificates" class="border rounded-md px-4 py-2 w-64">
+                <select class="border rounded-md px-4 py-2">
+                    <option>Filter by</option>
+                    <option>Date</option>
+                    <option>Course</option>
+                    <option>Type</option>
+                </select>
+            </div>
+<!-- 
+            <--------------------certificate list ---------------------------------------------->
+     
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Certificate Card -->
+                <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                    <img src="https://via.placeholder.com/300x200" alt="Certificate Thumbnail" class="w-full h-40 object-cover">
+                    <div class="p-4">
+                        <h3 class="font-semibold text-lg mb-2">Web Development Fundamentals</h3>
+                        <p class="text-gray-600 text-sm mb-4">Issued on: June 15, 2024</p>
+                        <button class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition">View Certificate</button>
+                    </div>
+                </div>
+                
+          
+                
+
+                <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                    <img src="https://via.placeholder.com/300x200" alt="Certificate Thumbnail" class="w-full h-40 object-cover">
+                    <div class="p-4">
+                        <h3 class="font-semibold text-lg mb-2">UI UX  Fundamentals</h3>
+                        <p class="text-gray-600 text-sm mb-4">Issued on: June 15, 2024</p>
+                        <button class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition">View Certificate</button>
+                    </div>
+                </div>
+
+
+                <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                    <img src="https://via.placeholder.com/300x200" alt="Certificate Thumbnail" class="w-full h-40 object-cover">
+                    <div class="p-4">
+                        <h3 class="font-semibold text-lg mb-2">Flutter Fundamentals</h3>
+                        <p class="text-gray-600 text-sm mb-4">Issued on: June 15, 2023</p>
+                        <button class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition">View Certificate</button>
+                    </div>
+                </div>
+            </div>
+
+        
+            
+    <!-- <----------------------------xxxxxxxx--------certificate list ------xxxxxxx---------------------------------> 
+            <div class="mt-8 text-center">
+                <button class="bg-gray-300 text-gray-700 px-6 py-2 rounded-md hover:bg-gray-400 transition">Load More</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+    // Sample certificate data
+    const certificates = [
+        { title: "Web Development Fundamentals", date: "June 15, 2024", image: "https://via.placeholder.com/300x200", type: "Web Development" },
+        { title: "UI UX Fundamentals", date: "June 15, 2024", image: "https://via.placeholder.com/300x200", type: "Design" },
+        { title: "Flutter Fundamentals", date: "June 15, 2023", image: "https://via.placeholder.com/300x200", type: "Mobile Development" },
+        // Add more certificate objects as needed
+    ];
+
+    const certificateList = document.getElementById('certificateList');
+    const searchInput = document.getElementById('searchInput');
+    const filterSelect = document.getElementById('filterSelect');
+    const loadMoreBtn = document.getElementById('loadMoreBtn');
+
+    let displayedCertificates = 3;
+
+    function renderCertificates(certs) {
+        certificateList.innerHTML = '';
+        certs.forEach(cert => {
+            const card = document.createElement('div');
+            card.className = 'bg-white rounded-lg shadow-md overflow-hidden';
+            card.innerHTML = `
+                <img src="${cert.image}" alt="Certificate Thumbnail" class="w-full h-40 object-cover">
+                <div class="p-4">
+                    <h3 class="font-semibold text-lg mb-2">${cert.title}</h3>
+                    <p class="text-gray-600 text-sm mb-4">Issued on: ${cert.date}</p>
+                    <button class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition">View Certificate</button>
+                </div>
+            `;
+            certificateList.appendChild(card);
+        });
+    }
+
+    function filterCertificates() {
+        const searchTerm = searchInput.value.toLowerCase();
+        const filterValue = filterSelect.value;
+
+        let filteredCerts = certificates.filter(cert => 
+            cert.title.toLowerCase().includes(searchTerm) ||
+            cert.date.toLowerCase().includes(searchTerm) ||
+            cert.type.toLowerCase().includes(searchTerm)
+        );
+
+        if (filterValue === 'date') {
+            filteredCerts.sort((a, b) => new Date(b.date) - new Date(a.date));
+        } else if (filterValue === 'course') {
+            filteredCerts.sort((a, b) => a.title.localeCompare(b.title));
+        } else if (filterValue === 'type') {
+            filteredCerts.sort((a, b) => a.type.localeCompare(b.type));
+        }
+
+        renderCertificates(filteredCerts.slice(0, displayedCertificates));
+    }
+
+    searchInput.addEventListener('input', filterCertificates);
+    filterSelect.addEventListener('change', filterCertificates);
+
+    loadMoreBtn.addEventListener('click', () => {
+        displayedCertificates += 3;
+        filterCertificates();
+        if (displayedCertificates >= certificates.length) {
+            loadMoreBtn.style.display = 'none';
+        }
+    });
+
+    // Initial render
+    renderCertificates(certificates.slice(0, displayedCertificates));
+</script>
+
+{% endblock %}
