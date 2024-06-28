@@ -12,3 +12,7 @@ def my_courses(request):
 
 def my_certificates(request):
     return render(request, 'learner/my_certificates.html')
+
+
+def my_badge(request):
+    return render(request, 'learner/my_badge.html')
