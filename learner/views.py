@@ -16,3 +16,6 @@ def my_certificates(request):
 
 def my_badge(request):
     return render(request, 'learner/my_badge.html')
+
+def leaderboard(request):
+    return render(request, 'learner/leaderboard.html')
