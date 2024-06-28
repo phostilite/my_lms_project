@@ -3,11 +3,134 @@
 {% include './navbar.html' %}
 {% include './sidebar.html' %}
 
-<!-- component -->
 <div class="p-4 sm:ml-64">
     <div class="p-4 mt-14">
-        <div inline-datepicker data-date="02/25/2022"></div>
+        <div class="container mx-auto p-4">
+            <div class="flex justify-between items-center mb-4">
+                <button id="prevMonth" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg shadow transition duration-300 ease-in-out transform hover:scale-105">&lt; Prev</button>
+                <h1 id="monthYear" class="text-2xl font-bold"></h1>
+                <button id="nextMonth" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg shadow transition duration-300 ease-in-out transform hover:scale-105">Next &gt;</button>
+            </div>
+            <div id="calendar" class="grid grid-cols-7 gap-2"></div>
+        </div>
     </div>
 </div>
+
+<!-- Modal for adding tasks -->
+<div id="taskModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center">
+    <div class="bg-white p-8 rounded-lg shadow-xl">
+        <h2 class="text-xl font-bold mb-4">Add Task for <span id="selectedDate"></span></h2>
+        <input type="text" id="taskInput" class="border p-2 w-full mb-4" placeholder="Enter task">
+        <div class="flex justify-end">
+            <button id="cancelTask" class="bg-gray-300 text-black px-4 py-2 rounded mr-2">Cancel</button>
+            <button id="addTask" class="bg-green-500 text-white px-4 py-2 rounded">Add Task</button>
+        </div>
+    </div>
+</div>
+
+<script>
+const calendar = document.getElementById('calendar');
+const prevBtn = document.getElementById('prevMonth');
+const nextBtn = document.getElementById('nextMonth');
+const monthYearElement = document.getElementById('monthYear');
+const taskModal = document.getElementById('taskModal');
+const taskInput = document.getElementById('taskInput');
+const addTaskBtn = document.getElementById('addTask');
+const cancelTaskBtn = document.getElementById('cancelTask');
+const selectedDateElement = document.getElementById('selectedDate');
+
+let currentDate = new Date();
+let tasks = {};
+let selectedDate = null;
+
+function renderCalendar() {
+    calendar.innerHTML = '';
+    const year = currentDate.getFullYear();
+    const month = currentDate.getMonth();
+
+    monthYearElement.textContent = new Date(year, month).toLocaleString('default', { month: 'long', year: 'numeric' });
+
+    const firstDay = new Date(year, month, 1);
+    const lastDay = new Date(year, month + 1, 0);
+
+    const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    daysOfWeek.forEach(day => {
+        const dayCell = document.createElement('div');
+        dayCell.className = 'text-center font-bold';
+        dayCell.textContent = day;
+        calendar.appendChild(dayCell);
+    });
+
+    for (let i = 0; i < firstDay.getDay(); i++) {
+        calendar.appendChild(createDateCell(''));
+    }
+
+    for (let day = 1; day <= lastDay.getDate(); day++) {
+        const dateCell = createDateCell(day);
+        const dateString = `${year}-${(month + 1).toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
+        
+        dateCell.addEventListener('click', () => openTaskModal(dateString));
+
+        if (tasks[dateString]) {
+            const taskList = document.createElement('ul');
+            tasks[dateString].forEach(task => {
+                const li = document.createElement('li');
+                li.textContent = task;
+                li.className = 'text-sm';
+                taskList.appendChild(li);
+            });
+            dateCell.appendChild(taskList);
+        }
+
+        calendar.appendChild(dateCell);
+    }
+}
+
+function createDateCell(content) {
+    const cell = document.createElement('div');
+    cell.className = 'border p-2 h-24 overflow-y-auto cursor-pointer hover:bg-gray-100';
+    cell.textContent = content;
+    return cell;
+}
+
+function openTaskModal(date) {
+    selectedDate = date;
+    selectedDateElement.textContent = new Date(date).toLocaleDateString();
+    taskModal.classList.remove('hidden');
+    taskModal.classList.add('flex');
+}
+
+function closeTaskModal() {
+    taskModal.classList.add('hidden');
+    taskModal.classList.remove('flex');
+    taskInput.value = '';
+}
+
+prevBtn.addEventListener('click', () => {
+    currentDate.setMonth(currentDate.getMonth() - 1);
+    renderCalendar();
+});
+
+nextBtn.addEventListener('click', () => {
+    currentDate.setMonth(currentDate.getMonth() + 1);
+    renderCalendar();
+});
+
+addTaskBtn.addEventListener('click', () => {
+    const task = taskInput.value.trim();
+    if (task && selectedDate) {
+        if (!tasks[selectedDate]) {
+            tasks[selectedDate] = [];
+        }
+        tasks[selectedDate].push(task);
+        closeTaskModal();
+        renderCalendar();
+    }
+});
+
+cancelTaskBtn.addEventListener('click', closeTaskModal);
+
+renderCalendar();
+</script>
 
 {% endblock %}
