@@ -1,7 +1,9 @@
 {% extends '../base.html' %}
 {% block content %}
+{% load static %}
 {% include './navbar.html' %}
 {% include './sidebar.html' %}
+
 
 <div class="p-4 sm:ml-64">
     <div class="p-4 mt-14">
@@ -132,5 +134,7 @@ cancelTaskBtn.addEventListener('click', closeTaskModal);
 
 renderCalendar();
 </script>
+
+  
 
 {% endblock %}

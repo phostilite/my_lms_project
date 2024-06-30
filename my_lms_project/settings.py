@@ -45,6 +45,8 @@ INSTALLED_APPS = [
     'assignments',
     'certificates',
     'discussions',
+    'api',
+    'administrator',
 ]
 
 MIDDLEWARE = [
@@ -147,7 +149,7 @@ LOGGING = {
     'disable_existing_loggers': False,
     'handlers': {
         'file': {
-            'level': 'DEBUG',
+            'level': 'INFO',
             'class': 'logging.FileHandler',
             'filename': 'debug.log',
         },
@@ -159,3 +161,8 @@ LOGGING = {
         },
     },
 }
+
+CLOUDSCORM_APP_ID = os.getenv('CLOUDSCORM_APP_ID')
+CLOUDSCORM_SECRET_KEY = os.getenv('CLOUDSCORM_SECRET_KEY')
+
+DOMAIN_NAME = 'http://127.0.0.1:8000' 
