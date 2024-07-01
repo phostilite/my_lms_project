@@ -1,18 +1,84 @@
+import logging
 from django.shortcuts import render
+from django.http import HttpResponseServerError
+from django.http import Http404
+
+from courses.models import ScormCloudCourse, ScormCloudRegistration
+from accounts.models import Learner
+
+
+# Configure the logger
+logger = logging.getLogger(__name__)
 
 def dashboard(request):
-    return render(request, 'learner/dashboard.html')
+    try:
+        return render(request, 'learner/dashboard.html')
+    except Exception as e:
+        logger.error(f"Error loading dashboard: {e}")
+        return HttpResponseServerError("An error occurred")
 
 def calendar(request):
-    return render(request, 'learner/calendar.html')
+    try:
+        return render(request, 'learner/calendar.html')
+    except Exception as e:
+        logger.error(f"Error loading calendar: {e}")
+        return HttpResponseServerError("An error occurred")
 
-def my_courses(request):
-    return render(request, 'learner/my_courses.html')
+def course_catalog(request):
+    try:
+        courses = ScormCloudCourse.objects.all()
+    except ScormCloudCourse.DoesNotExist:
+        courses = None
+    except Exception as e:
+        logger.error(f"Error loading course catalog: {e}")
+        courses = None
+    return render(request, 'learner/course_catalog.html', {'courses': courses})
 
+def courses(request):
+    try:
+        # Fetch registrations for the logged-in learner
+        registrations = ScormCloudRegistration.objects.filter(learner=request.user.learner)
 
-def my_certificates(request):
-    return render(request, 'learner/my_certificates.html')
+        # Prepare course data for the template
+        course_data = []
+        for registration in registrations:
+            try:
+                course = ScormCloudCourse.objects.get(course_id=registration.course_id)
+                course_data.append({
+                    'registration': registration,
+                    'course': course
+                })
+            except ScormCloudCourse.DoesNotExist:
+                logger.warning(f"Course with ID '{registration.course_id}' not found for registration {registration.registration_id}.")
+                # Handle the case where the course doesn't exist
+                # Option 1: Skip and don't show the registration
+                # Option 2: Show an error message in the template
 
+        return render(request, 'learner/courses.html', {'course_data': course_data})
 
-def my_badge(request):
-    return render(request, 'learner/my_badge.html')
+    except Learner.DoesNotExist:  # If the learner object does not exist (i.e., the user is not a learner)
+        raise Http404("Learner profile not found.") 
+    except Exception as e:  # Catch-all for other unexpected errors
+        logger.error(f"Unexpected error loading courses: {e}")
+        return HttpResponseServerError("An error occurred while loading courses.")
+
+def certificates(request):
+    try:
+        return render(request, 'learner/certificates.html')
+    except Exception as e:
+        logger.error(f"Error loading certificates: {e}")
+        return HttpResponseServerError("An error occurred")
+
+def badge(request):
+    try:
+        return render(request, 'learner/badge.html')
+    except Exception as e:
+        logger.error(f"Error loading badge: {e}")
+        return HttpResponseServerError("An error occurred")
+    
+def leaderboard(request):
+    try:
+        return render(request, 'learner/leaderboard.html')
+    except Exception as e:
+        logger.error(f"Error loading leaderboard: {e}")
+        return HttpResponseServerError("An error occurred")
