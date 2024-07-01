@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-8ex+p6(xq8#!*-ei^!@mln^8o9*b#yiy40#4g2kp*vcx=lnpe^
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['206.189.143.26', '139.59.55.171', 'lms.learnknowdigital.com', 'localhost', '127.0.0.1']
 
 
 # Application definition
@@ -85,8 +85,12 @@ WSGI_APPLICATION = 'my_lms_project.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'my_lms_project',
+        'USER': 'my_lms_project_user',
+        'PASSWORD': 'pRiuu@@##5577s',
+        'HOST': 'localhost', 
+        'PORT': '5432',
     }
 }
 
@@ -165,4 +169,4 @@ LOGGING = {
 CLOUDSCORM_APP_ID = os.getenv('CLOUDSCORM_APP_ID')
 CLOUDSCORM_SECRET_KEY = os.getenv('CLOUDSCORM_SECRET_KEY')
 
-DOMAIN_NAME = 'http://127.0.0.1:8000' 
+DOMAIN_NAME = 'http://lms.learnknowdigital.com' 
