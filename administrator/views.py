@@ -17,6 +17,9 @@ def dashboard(request):
 def calendar(request):
     return render(request, 'administrator/calendar.html')
 
+def leaderboard(request):
+    return render(request, 'administrator/leaderboard.html')
+
 def course_list(request):
     try:
         courses = ScormCloudCourse.objects.all()
