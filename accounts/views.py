@@ -1,13 +1,14 @@
-from django.contrib.auth.models import User
 from django.contrib.auth.views import LoginView
 from django.shortcuts import redirect, render
 from django.contrib import messages
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login, logout, get_user_model
 import logging
 
 from .forms import LoginForm, LearnerSignupForm
 
 logger = logging.getLogger(__name__)
+
+User = get_user_model()
 
 
 def landing_page(request):
@@ -33,6 +34,7 @@ class LoginView(LoginView):
 
         if user is not None:
             login(self.request, user)
+            logger.info(f"User {username} logged in successfully.")
 
             if user.groups.filter(name='learner').exists():
                 messages.success(self.request, 'Welcome, Learner!')
@@ -42,10 +44,17 @@ class LoginView(LoginView):
                 return redirect('instructor_dashboard')
             elif user.groups.filter(name='administrator').exists():
                 messages.success(self.request, 'Welcome, Administrator!')
-                return redirect('admin_dashboard')
+                return redirect('administrator_dashboard')
         else:
             messages.error(self.request, 'Invalid username or password.')
+            logger.warning(f"Failed login attempt for username: {username}")
 
+        return super().form_invalid(form)
+    
+    def form_invalid(self, form):
+        # Log form errors
+        logger.error(f"Form invalid: {form.errors}")
+        messages.error(self.request, "There were errors in your form submission.")
         return super().form_invalid(form)
 
 

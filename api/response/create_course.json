@@ -1,0 +1,48 @@
+{
+    "message": "Course created successfully",
+    "job_result": {
+        "job_id": "ZSBCOYAWTGC5",
+        "status": "COMPLETE",
+        "message": "Finished",
+        "import_result": {
+            "web_path_to_course": "/content/courses/ZSBCOYAWTG/C5/0",
+            "parser_warnings": [],
+            "course_languages": [],
+            "course": {
+                "id": "C5",
+                "title": "PERL",
+                "xapi_activity_id": "urn:uuid:63e34cbe-7f7f-54b4-a1b5-f05061ee467d",
+                "created": "2024-06-28T11:10:04Z",
+                "updated": "2024-06-28T11:12:05Z",
+                "version": 0,
+                "registration_count": null,
+                "activity_id": "PERL_ORG",
+                "course_learning_standard": "SCORM12",
+                "tags": [],
+                "dispatched": false,
+                "metadata": null,
+                "root_activity": {
+                    "external_identifier": "PERL_ORG",
+                    "item_identifier": "PERL_ORG",
+                    "resource_identifier": "",
+                    "activity_type": "AGGREGATION",
+                    "href": "",
+                    "scaled_passing_score": null,
+                    "title": "PERL",
+                    "children": [
+                        {
+                            "external_identifier": "PERL_LMS_SCO",
+                            "item_identifier": "PERL_LMS_SCO",
+                            "resource_identifier": "__5vx1HWXKlp0_RES",
+                            "activity_type": "SCO",
+                            "href": "index_lms.html",
+                            "scaled_passing_score": null,
+                            "title": "PERL",
+                            "children": []
+                        }
+                    ]
+                }
+            }
+        }
+    }
+}
