@@ -169,4 +169,4 @@ LOGGING = {
 CLOUDSCORM_APP_ID = os.getenv('CLOUDSCORM_APP_ID')
 CLOUDSCORM_SECRET_KEY = os.getenv('CLOUDSCORM_SECRET_KEY')
 
-DOMAIN_NAME = 'http://lms.learnknowdigital.com' 
+DOMAIN_NAME = 'http://127.0.0.1:8000' 

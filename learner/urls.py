@@ -9,5 +9,6 @@ urlpatterns = [
     path('course_catalog', views.course_catalog, name='learner_course_catalog'),
     path('certificates/', views.certificates, name='learner_certificates'),
     path('badge/', views.badge, name='learner_badge'),
-    path('leaderboard/', views.leaderboard, name='learner_leaderboard')
+    path('leaderboard/', views.leaderboard, name='learner_leaderboard'),
+    path('progress/', views.progress, name='learner_progress'),
 ]

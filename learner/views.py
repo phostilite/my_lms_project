@@ -16,6 +16,9 @@ def dashboard(request):
     except Exception as e:
         logger.error(f"Error loading dashboard: {e}")
         return HttpResponseServerError("An error occurred")
+    
+def progress(request):
+    return render(request, 'learner/progress.html')
 
 def calendar(request):
     try:
