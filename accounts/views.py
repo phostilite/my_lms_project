@@ -20,6 +20,9 @@ def about(request):
 def contact(request):
     return render(request, 'contact.html')
 
+def courses(request):
+    return render(request, 'courses.html')
+
 class LoginView(LoginView):
     template_name = 'authentication/login.html'
     form_class = LoginForm
