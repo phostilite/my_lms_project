@@ -14,6 +14,11 @@ User = get_user_model()
 def landing_page(request):
     return render(request, 'landing_page.html')
 
+def about(request):
+    return render(request, 'about.html')
+
+def contact(request):
+    return render(request, 'contact.html')
 
 class LoginView(LoginView):
     template_name = 'authentication/login.html'

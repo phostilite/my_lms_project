@@ -57,10 +57,10 @@
     </a>
     <div class="flex items-center md:order-2">
       <div class="hidden md:flex md:items-center md:space-x-8 rtl:space-x-reverse mr-8"> <!-- Increased right margin -->
-        <a href="#" class="text-gray-900 hover:text-green-700 dark:text-white dark:hover:text-green-500">Home</a>
-        <a href="#" class="text-gray-900 hover:text-green-700 dark:text-white dark:hover:text-green-500">About</a>
+        <a href="{% url 'landing_page' %}" class="text-gray-900 hover:text-green-700 dark:text-white dark:hover:text-green-500">Home</a>
+        <a href="{% url 'about' %}" class="text-gray-900 hover:text-green-700 dark:text-white dark:hover:text-green-500">About</a>
         <a href="#" class="text-gray-900 hover:text-green-700 dark:text-white dark:hover:text-green-500">Services</a>
-        <a href="#" class="text-gray-900 hover:text-green-700 dark:text-white dark:hover:text-green-500">Contact</a>
+        <a href="{% url 'contact' %}" class="text-gray-900 hover:text-green-700 dark:text-white dark:hover:text-green-500">Contact</a>
       </div>
       <div class="hidden md:flex items-center space-x-4">
         <a href="{% url 'login' %}" class="px-4 py-2 text-green-700 border border-green-700 rounded-md hover:bg-green-700 hover:text-white transition duration-300">Log In</a>
@@ -76,16 +76,16 @@
     <div class="items-center justify-between hidden w-full md:hidden" id="navbar-sticky">
       <ul class="flex flex-col p-4 mt-4 font-medium border border-gray-100 rounded-lg bg-gray-50 dark:bg-gray-800 dark:border-gray-700">
         <li>
-          <a href="#" class="block py-2 px-3 text-white bg-green-700 rounded" aria-current="page">Home</a>
+          <a href="{% url 'landing_page' %}" class="block py-2 px-3 text-white bg-green-700 rounded" aria-current="page">Home</a>
         </li>
         <li>
-          <a href="#" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">About</a>
+          <a href="{% url 'about' %}" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">About</a>
         </li>
         <li>
           <a href="#" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Services</a>
         </li>
         <li>
-          <a href="#" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Contact</a>
+          <a href="{% url 'contact' %}" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Contact</a>
         </li>
       </ul>
     </div>
@@ -205,7 +205,7 @@
 </section>
 
 
-<section class="bg-white dark:bg-gray-900">
+<section class="bg-green-50 dark:bg-gray-900">
     <div class="py-8 px-4 mx-auto max-w-screen-xl lg:py-16">
       <h2 class="mb-4 text-4xl text-center tracking-tight font-extrabold text-gray-900 dark:text-white">Explore Our Wide Range of Courses</h2>        
         <div class="flex items-center justify-center py-4 md:py-8 flex-wrap">
@@ -589,7 +589,7 @@
         <h4 class="text-lg font-semibold mb-4">Subscribe to Our Newsletter</h4>
         <p class="mb-4">Stay updated with our latest courses and educational insights.</p>
         <form class="flex flex-col sm:flex-row">
-          <input type="email" placeholder="Enter your email" class="bg-gray-800 text-white px-4 py-2 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-600 mb-2 sm:mb-0">
+          <input type="email" placeholder="Enter your email" class="bg-white-800 text-black px-4 py-2 rounded-l-md focus:outline-none focus:ring-2 focus:ring-green-600 mb-2 sm:mb-0">
           <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-r-md hover:bg-blue-700 transition duration-300 ease-in-out">Subscribe</button>
         </form>
       </div>
