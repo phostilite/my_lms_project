@@ -50,16 +50,28 @@
 </style>
 
 <nav class="bg-white dark:bg-gray-900 fixed w-full z-50 top-0 start-0 border-b border-gray-200 dark:border-gray-600">
-  <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-8">
+  <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-6">
     <a href="#" class="flex items-center space-x-3 rtl:space-x-reverse">
       <img src="{% static 'img/logo.png' %}" class="h-8" alt="LearnKnow Digital Logo">
       <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">LMS</span>
     </a>
+    
+    <!-- Search bar for desktop -->
+    <div class="hidden md:block flex-1 max-w-xl mx-8">
+      <form class="relative">
+        <input type="search" class="w-full bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white rounded-full py-2 px-4 pl-10 focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="Search courses...">
+        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+          <svg class="w-5 h-5 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+          </svg>
+        </div>
+      </form>
+    </div>
+    
     <div class="flex items-center md:order-2">
-      <div class="hidden md:flex md:items-center md:space-x-8 rtl:space-x-reverse mr-8"> <!-- Increased right margin -->
+      <div class="hidden md:flex md:items-center md:space-x-8 rtl:space-x-reverse mr-8">
         <a href="{% url 'landing_page' %}" class="text-gray-900 hover:text-green-700 dark:text-white dark:hover:text-green-500">Home</a>
         <a href="{% url 'about' %}" class="text-gray-900 hover:text-green-700 dark:text-white dark:hover:text-green-500">About</a>
-        <a href="#" class="text-gray-900 hover:text-green-700 dark:text-white dark:hover:text-green-500">Services</a>
         <a href="{% url 'contact' %}" class="text-gray-900 hover:text-green-700 dark:text-white dark:hover:text-green-500">Contact</a>
       </div>
       <div class="hidden md:flex items-center space-x-4">
@@ -73,7 +85,20 @@
         </svg>
       </button>
     </div>
+    
+    <!-- Mobile menu -->
     <div class="items-center justify-between hidden w-full md:hidden" id="navbar-sticky">
+      <!-- Search bar for mobile -->
+      <div class="p-4">
+        <form class="relative">
+          <input type="search" class="w-full bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white rounded-full py-2 px-4 pl-10 focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="Search courses...">
+          <button type="submit" class="absolute left-3 top-1/2 transform -translate-y-1/2">
+            <svg class="w-5 h-5 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
       <ul class="flex flex-col p-4 mt-4 font-medium border border-gray-100 rounded-lg bg-gray-50 dark:bg-gray-800 dark:border-gray-700">
         <li>
           <a href="{% url 'landing_page' %}" class="block py-2 px-3 text-white bg-green-700 rounded" aria-current="page">Home</a>
@@ -82,26 +107,30 @@
           <a href="{% url 'about' %}" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">About</a>
         </li>
         <li>
-          <a href="#" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Services</a>
-        </li>
-        <li>
           <a href="{% url 'contact' %}" class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Contact</a>
+        </li>
+        <li class="mt-4">
+          <a href="{% url 'login' %}" class="block py-2 px-3 text-center text-green-700 border border-green-700 rounded-md hover:bg-green-700 hover:text-white transition duration-300">Log In</a>
+        </li>
+        <li class="mt-2">
+          <a href="{% url 'signup' %}" class="block py-2 px-3 text-center bg-green-700 text-white rounded-md hover:bg-green-800 transition duration-300">Sign Up</a>
         </li>
       </ul>
     </div>
   </div>
 
+  <!-- Green category bar -->
   <div class="bg-green-700 text-white">
     <div class="container mx-auto px-4 py-3">
       <ul class="flex items-center justify-between overflow-x-auto whitespace-nowrap">
-        <li><a href="#" class="px-4 py-2 hover:bg-green-600 rounded-md transition duration-300">Programming</a></li>
-        <li><a href="#" class="px-4 py-2 hover:bg-green-600 rounded-md transition duration-300">Data Science</a></li>
+        <li><a href="#" class="px-4 py-2 hover:bg-green-600 rounded-md transition duration-300">Development</a></li>
         <li><a href="#" class="px-4 py-2 hover:bg-green-600 rounded-md transition duration-300">Business</a></li>
+        <li><a href="#" class="px-4 py-2 hover:bg-green-600 rounded-md transition duration-300">Finance & Accounting</a></li>
+        <li><a href="#" class="px-4 py-2 hover:bg-green-600 rounded-md transition duration-300">IT & Software</a></li>
         <li><a href="#" class="px-4 py-2 hover:bg-green-600 rounded-md transition duration-300">Design</a></li>
-        <li><a href="#" class="px-4 py-2 hover:bg-green-600 rounded-md transition duration-300">Marketing</a></li>
         <li><a href="#" class="px-4 py-2 hover:bg-green-600 rounded-md transition duration-300">Personal Development</a></li>
-        <li><a href="#" class="px-4 py-2 hover:bg-green-600 rounded-md transition duration-300">Health & Fitness</a></li>
-        <li><a href="#" class="px-4 py-2 hover:bg-green-600 rounded-md transition duration-300">Music</a></li>
+        <li><a href="#" class="px-4 py-2 hover:bg-green-600 rounded-md transition duration-300">Marketing</a></li>
+        <li><a href="#" class="px-4 py-2 hover:bg-green-600 rounded-md transition duration-300">Teaching & Academics</a></li>
       </ul>
     </div>
   </div>
@@ -209,15 +238,15 @@
     <div class="py-8 px-4 mx-auto max-w-screen-xl lg:py-16">
       <h2 class="mb-4 text-4xl text-center tracking-tight font-extrabold text-gray-900 dark:text-white">Explore Our Wide Range of Courses</h2>        
         <div class="flex items-center justify-center py-4 md:py-8 flex-wrap">
-          <button type="button" class="text-blue-700 hover:text-white border border-blue-600 bg-white hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-full text-base font-medium px-5 py-2.5 text-center me-3 mb-3 dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-500 dark:bg-gray-900 dark:focus:ring-blue-800">All categories</button>
-          <button type="button" class="text-gray-900 border border-white hover:border-gray-200 dark:border-gray-900 dark:bg-gray-900 dark:hover:border-gray-700 bg-white focus:ring-4 focus:outline-none focus:ring-gray-300 rounded-full text-base font-medium px-5 py-2.5 text-center me-3 mb-3 dark:text-white dark:focus:ring-gray-800">Technology and Programming</button>
-          <button type="button" class="text-gray-900 border border-white hover:border-gray-200 dark:border-gray-900 dark:bg-gray-900 dark:hover:border-gray-700 bg-white focus:ring-4 focus:outline-none focus:ring-gray-300 rounded-full text-base font-medium px-5 py-2.5 text-center me-3 mb-3 dark:text-white dark:focus:ring-gray-800">Business and Marketing</button>
-          <button type="button" class="text-gray-900 border border-white hover:border-gray-200 dark:border-gray-900 dark:bg-gray-900 dark:hover:border-gray-700 bg-white focus:ring-4 focus:outline-none focus:ring-gray-300 rounded-full text-base font-medium px-5 py-2.5 text-center me-3 mb-3 dark:text-white dark:focus:ring-gray-800">Data Science and Analytics</button>
-          <button type="button" class="text-gray-900 border border-white hover:border-gray-200 dark:border-gray-900 dark:bg-gray-900 dark:hover:border-gray-700 bg-white focus:ring-4 focus:outline-none focus:ring-gray-300 rounded-full text-base font-medium px-5 py-2.5 text-center me-3 mb-3 dark:text-white dark:focus:ring-gray-800">Arts and Design</button>
+          <button type="button" data-category="all" class="category-btn text-blue-700 hover:text-white border border-blue-600 bg-white hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-full text-base font-medium px-5 py-2.5 text-center me-3 mb-3 dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-500 dark:bg-gray-900 dark:focus:ring-blue-800">All categories</button>
+          <button type="button" data-category="tech" class="category-btn text-gray-900 border border-white hover:border-gray-200 dark:border-gray-900 dark:bg-gray-900 dark:hover:border-gray-700 bg-white focus:ring-4 focus:outline-none focus:ring-gray-300 rounded-full text-base font-medium px-5 py-2.5 text-center me-3 mb-3 dark:text-white dark:focus:ring-gray-800">Technology and Programming</button>
+          <button type="button" data-category="business" class="category-btn text-gray-900 border border-white hover:border-gray-200 dark:border-gray-900 dark:bg-gray-900 dark:hover:border-gray-700 bg-white focus:ring-4 focus:outline-none focus:ring-gray-300 rounded-full text-base font-medium px-5 py-2.5 text-center me-3 mb-3 dark:text-white dark:focus:ring-gray-800">Business and Marketing</button>
+          <button type="button" data-category="data" class="category-btn text-gray-900 border border-white hover:border-gray-200 dark:border-gray-900 dark:bg-gray-900 dark:hover:border-gray-700 bg-white focus:ring-4 focus:outline-none focus:ring-gray-300 rounded-full text-base font-medium px-5 py-2.5 text-center me-3 mb-3 dark:text-white dark:focus:ring-gray-800">Data Science and Analytics</button>
+          <button type="button" data-category="arts" class="category-btn text-gray-900 border border-white hover:border-gray-200 dark:border-gray-900 dark:bg-gray-900 dark:hover:border-gray-700 bg-white focus:ring-4 focus:outline-none focus:ring-gray-300 rounded-full text-base font-medium px-5 py-2.5 text-center me-3 mb-3 dark:text-white dark:focus:ring-gray-800">Arts and Design</button>
         </div>
         <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
 
-          <div class="relative group overflow-hidden rounded-lg">
+          <div class="course-item relative group overflow-hidden rounded-lg" data-category="business">
             <img class="h-auto max-w-full transition-all duration-300 group-hover:scale-110 group-hover:blur-sm group-hover:grayscale" 
                  src="{% static 'img/courses/brand_management.png' %}" 
                  alt="Brand Management course">
@@ -232,7 +261,7 @@
             </div>
           </div>
 
-          <div class="relative group overflow-hidden rounded-lg">
+          <div class="course-item relative group overflow-hidden rounded-lg" data-category="business">
               <img class="h-auto max-w-full transition-all duration-300 group-hover:scale-110 group-hover:blur-sm group-hover:grayscale" 
                   src="{% static 'img/courses/anti_bribery.png' %}" 
                   alt="Anti-bribery course">
@@ -247,7 +276,7 @@
             </div>
           </div>
 
-          <div class="relative group overflow-hidden rounded-lg">
+          <div class="course-item relative group overflow-hidden rounded-lg" data-category="business">
             <img class="h-auto max-w-full transition-all duration-300 group-hover:scale-110 group-hover:blur-sm group-hover:grayscale" 
                  src="{% static 'img/courses/communiation_essentials.png' %}" 
                  alt="Anti-bribery course">
@@ -262,7 +291,7 @@
             </div>
           </div>
 
-          <div class="relative group overflow-hidden rounded-lg">
+          <div class="course-item relative group overflow-hidden rounded-lg" data-category="tech">
             <img class="h-auto max-w-full transition-all duration-300 group-hover:scale-110 group-hover:blur-sm group-hover:grayscale" 
                  src="{% static 'img/courses/it.png' %}" 
                  alt="Anti-bribery course">
@@ -277,7 +306,7 @@
             </div>
           </div>
 
-          <div class="relative group overflow-hidden rounded-lg">
+          <div class="course-item relative group overflow-hidden rounded-lg" data-category="tech">
             <img class="h-auto max-w-full transition-all duration-300 group-hover:scale-110 group-hover:blur-sm group-hover:grayscale" 
                  src="{% static 'img/courses/cyber_security.jpeg' %}" 
                  alt="Anti-bribery course">
@@ -292,7 +321,7 @@
             </div>
           </div>
 
-          <div class="relative group overflow-hidden rounded-lg">
+          <div class="course-item relative group overflow-hidden rounded-lg" data-category="business">
             <img class="h-auto max-w-full transition-all duration-300 group-hover:scale-110 group-hover:blur-sm group-hover:grayscale" 
                  src="{% static 'img/courses/digital_marketing.jpeg' %}" 
                  alt="Anti-bribery course">
@@ -307,9 +336,61 @@
             </div>
           </div>
 
+          <div id="no-courses-message" class="hidden col-span-full text-center py-12 px-4">
+            <div class="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl">
+              <div class="p-8">
+                <div class="uppercase tracking-wide text-sm text-indigo-500 font-semibold">Notice</div>
+                <p class="mt-2 text-gray-600 text-xl">No courses found in this category.</p>
+                <p class="mt-2 text-gray-500">We're constantly updating our course offerings. Please check back later or explore other categories.</p>
+                <button class="mt-4 px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                  Explore All Courses
+                </button>
+              </div>
+            </div>
+          </div>
+
         </div>
     </div>
 </section>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const categoryButtons = document.querySelectorAll('.category-btn');
+    const courseItems = document.querySelectorAll('.course-item');
+    const noCoursesMessage = document.getElementById('no-courses-message');
+  
+    categoryButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const category = button.getAttribute('data-category');
+        
+        // Remove 'active' class from all buttons
+        categoryButtons.forEach(btn => btn.classList.remove('active'));
+        
+        // Add 'active' class to clicked button
+        button.classList.add('active');
+  
+        let visibleCourses = 0;
+  
+        // Show/hide course items based on category
+        courseItems.forEach(item => {
+          if (category === 'all' || item.getAttribute('data-category') === category) {
+            item.style.display = 'block';
+            visibleCourses++;
+          } else {
+            item.style.display = 'none';
+          }
+        });
+  
+        // Show/hide "no courses" message
+        if (visibleCourses === 0) {
+          noCoursesMessage.classList.remove('hidden');
+        } else {
+          noCoursesMessage.classList.add('hidden');
+        }
+      });
+    });
+  });
+  </script>
 
 
 
