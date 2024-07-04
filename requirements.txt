@@ -1,10 +1,16 @@
 asgiref==3.8.1
 certifi==2024.6.2
+cffi==1.16.0
 charset-normalizer==3.3.2
+cryptography==42.0.8
 Deprecated==1.2.14
 Django==5.0.6
+django-allauth==0.63.3
 idna==3.7
 pillow==10.3.0
+psycopg2-binary==2.9.9
+pycparser==2.22
+PyJWT==2.8.0
 python-dateutil==2.9.0.post0
 python-dotenv==1.0.1
 requests==2.32.3

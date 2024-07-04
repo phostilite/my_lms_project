@@ -47,7 +47,9 @@ INSTALLED_APPS = [
     'discussions',
     'api',
     'administrator',
+    'django.contrib.sites',
 ]
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -170,3 +172,12 @@ CLOUDSCORM_APP_ID = os.getenv('CLOUDSCORM_APP_ID')
 CLOUDSCORM_SECRET_KEY = os.getenv('CLOUDSCORM_SECRET_KEY')
 
 DOMAIN_NAME = 'http://127.0.0.1:8000' 
+
+
+SITE_ID = 1
+
+LOGIN_REDIRECT_URL = '/'
+
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.getenv('GOOGLE_CLIENT_ID')
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.getenv('GOOGLE_CLIENT_SECRET')
