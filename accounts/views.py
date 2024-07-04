@@ -23,6 +23,9 @@ def contact(request):
 def courses(request):
     return render(request, 'courses.html')
 
+def privacy_policy(request):
+    return render(request, 'privacy_policy.html')
+
 class LoginView(LoginView):
     template_name = 'authentication/login.html'
     form_class = LoginForm
