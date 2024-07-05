@@ -325,3 +325,5 @@ yarn-error.log
 
 package*.json
 payments_data.json
+
+oauth_settings.yaml
