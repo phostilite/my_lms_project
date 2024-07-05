@@ -15,4 +15,8 @@ urlpatterns = [
 
 
     path('oauth/', include('social_django.urls', namespace='social')),
+
+    path('signin', views.microsoft_sign_in, name='signin'),
+    path('signout', views.microsoft_sign_out, name='signout'),
+    path('callback', views.callback, name='callback'),
 ]

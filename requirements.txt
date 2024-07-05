@@ -8,6 +8,7 @@ Deprecated==1.2.14
 Django==5.0.6
 django-allauth==0.63.3
 idna==3.7
+msal==1.29.0
 oauthlib==3.2.2
 pillow==10.3.0
 psycopg2-binary==2.9.9
@@ -16,6 +17,7 @@ PyJWT==2.8.0
 python-dateutil==2.9.0.post0
 python-dotenv==1.0.1
 python3-openid==3.2.0
+PyYAML==6.0.1
 requests==2.32.3
 requests-oauthlib==2.0.0
 rustici-software-cloud-v2==4.0.0
