@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'discussions',
     'api',
     'administrator',
+    'social_django',
     'django.contrib.sites',
 ]
 
@@ -60,6 +61,24 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+AUTHENTICATION_BACKENDS = (
+    'social_core.backends.google.GoogleOAuth2',  # Google backend
+    'django.contrib.auth.backends.ModelBackend',  # Your existing backend
+)
+
+SOCIAL_AUTH_PIPELINE = (
+    'social_core.pipeline.social_auth.social_details',
+    'social_core.pipeline.social_auth.social_uid',
+    'social_core.pipeline.social_auth.auth_allowed',
+    'social_core.pipeline.social_auth.social_user',
+    'social_core.pipeline.user.get_username',
+    'social_core.pipeline.user.create_user',
+    'social_core.pipeline.social_auth.associate_user',
+    'social_core.pipeline.social_auth.load_extra_data',
+    'social_core.pipeline.user.user_details',
+    'accounts.pipelines.social_auth_user',
+)
 
 ROOT_URLCONF = 'my_lms_project.urls'
 
@@ -155,15 +174,19 @@ LOGGING = {
     'disable_existing_loggers': False,
     'handlers': {
         'file': {
-            'level': 'INFO',
+            'level': 'DEBUG',
             'class': 'logging.FileHandler',
             'filename': 'debug.log',
+        },
+        'console': {  # Define a new handler for console output
+            'level': 'INFO',
+            'class': 'logging.StreamHandler',
         },
     },
     'loggers': {
         'django': {
-            'handlers': ['file'],
-            'level': 'DEBUG',
+            'handlers': ['file', 'console'],  # Add 'console' to the handlers list
+            'level': 'INFO',
         },
     },
 }
@@ -173,11 +196,10 @@ CLOUDSCORM_SECRET_KEY = os.getenv('CLOUDSCORM_SECRET_KEY')
 
 DOMAIN_NAME = 'http://127.0.0.1:8000' 
 
-
 SITE_ID = 1
-
-LOGIN_REDIRECT_URL = '/'
-
 
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.getenv('GOOGLE_CLIENT_ID')
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.getenv('GOOGLE_CLIENT_SECRET')
+
+SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/'  
+SOCIAL_AUTH_URL_NAMESPACE = 'social' 

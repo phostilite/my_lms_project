@@ -1,10 +1,12 @@
 from django.contrib.auth.views import LoginView
 from django.shortcuts import redirect, render
 from django.contrib import messages
+from social_django.models import UserSocialAuth
 from django.contrib.auth import authenticate, login, logout, get_user_model
 import logging
 
 from .forms import LoginForm, LearnerSignupForm
+from .utils import redirect_based_on_group
 
 logger = logging.getLogger(__name__)
 
@@ -46,24 +48,15 @@ class LoginView(LoginView):
         if user is not None:
             login(self.request, user)
             logger.info(f"User {username} logged in successfully.")
+            return redirect_based_on_group(self.request, user)  
 
-            if user.groups.filter(name='learner').exists():
-                messages.success(self.request, 'Welcome, Learner!')
-                return redirect('learner_dashboard')
-            elif user.groups.filter(name='instructor').exists():
-                messages.success(self.request, 'Welcome, Instructor!')
-                return redirect('instructor_dashboard')
-            elif user.groups.filter(name='administrator').exists():
-                messages.success(self.request, 'Welcome, Administrator!')
-                return redirect('administrator_dashboard')
         else:
             messages.error(self.request, 'Invalid username or password.')
             logger.warning(f"Failed login attempt for username: {username}")
 
-        return super().form_invalid(form)
+        return super().form_invalid(form)  
     
     def form_invalid(self, form):
-        # Log form errors
         logger.error(f"Form invalid: {form.errors}")
         messages.error(self.request, "There were errors in your form submission.")
         return super().form_invalid(form)

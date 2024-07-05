@@ -2,6 +2,7 @@ import logging
 from django.shortcuts import render
 from django.http import HttpResponseServerError
 from django.http import Http404
+from django.contrib.auth.decorators import login_required
 
 from courses.models import ScormCloudCourse, ScormCloudRegistration
 from accounts.models import Learner
@@ -10,16 +11,19 @@ from accounts.models import Learner
 # Configure the logger
 logger = logging.getLogger(__name__)
 
+@login_required
 def dashboard(request):
     try:
         return render(request, 'learner/dashboard.html')
     except Exception as e:
         logger.error(f"Error loading dashboard: {e}")
         return HttpResponseServerError("An error occurred")
-    
+
+@login_required    
 def progress(request):
     return render(request, 'learner/progress.html')
 
+@login_required
 def calendar(request):
     try:
         return render(request, 'learner/calendar.html')
@@ -27,6 +31,7 @@ def calendar(request):
         logger.error(f"Error loading calendar: {e}")
         return HttpResponseServerError("An error occurred")
 
+@login_required
 def course_catalog(request):
     try:
         courses = ScormCloudCourse.objects.all()
@@ -37,6 +42,7 @@ def course_catalog(request):
         courses = None
     return render(request, 'learner/course_catalog.html', {'courses': courses})
 
+@login_required
 def courses(request):
     try:
         # Fetch registrations for the logged-in learner
@@ -65,6 +71,7 @@ def courses(request):
         logger.error(f"Unexpected error loading courses: {e}")
         return HttpResponseServerError("An error occurred while loading courses.")
 
+@login_required
 def certificates(request):
     try:
         return render(request, 'learner/certificates.html')
@@ -72,13 +79,15 @@ def certificates(request):
         logger.error(f"Error loading certificates: {e}")
         return HttpResponseServerError("An error occurred")
 
+@login_required
 def badge(request):
     try:
         return render(request, 'learner/badge.html')
     except Exception as e:
         logger.error(f"Error loading badge: {e}")
         return HttpResponseServerError("An error occurred")
-    
+
+@login_required    
 def leaderboard(request):
     try:
         return render(request, 'learner/leaderboard.html')

@@ -11,15 +11,19 @@ from courses.forms import ScormCloudCourseForm
 
 logger = logging.getLogger(__name__)
 
+@login_required
 def dashboard(request):
     return render(request, 'administrator/dashboard.html')
 
+@login_required
 def calendar(request):
     return render(request, 'administrator/calendar.html')
 
+@login_required
 def leaderboard(request):
     return render(request, 'administrator/leaderboard.html')
 
+@login_required
 def course_list(request):
     try:
         courses = ScormCloudCourse.objects.all()
