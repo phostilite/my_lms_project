@@ -13,6 +13,13 @@ from django.urls import reverse
 from django.contrib.auth.models import Group
 from django.db import transaction
 from django.db.utils import IntegrityError
+from django.views.decorators.debug import sensitive_post_parameters
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_protect
+from django.views.decorators.cache import never_cache
+from django.contrib.auth.views import LoginView as DjangoLoginView
+from django.utils.translation import gettext as _
+
 
 from .forms import LoginForm, LearnerSignupForm
 from .utils import redirect_based_on_group, get_msal_app
@@ -41,38 +48,52 @@ def courses(request):
 def privacy_policy(request):
     return render(request, 'privacy_policy.html')
 
-class LoginView(LoginView):
+class LoginView(DjangoLoginView):
     template_name = 'authentication/login.html'
     form_class = LoginForm
 
-    def post(self, request, *args, **kwargs):
-        form = self.get_form()
-        if form.is_valid():
-            return self.form_valid(form)
-        else:
-            return self.form_invalid(form)
+    @method_decorator(sensitive_post_parameters())
+    @method_decorator(csrf_protect)
+    @method_decorator(never_cache)
+    def dispatch(self, request, *args, **kwargs):
+        if self.request.user.is_authenticated:
+            return self.redirect_authenticated_user(self.request.user)
+        return super().dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):
         """Security check complete. Log the user in and redirect based on role."""
-        username = form.cleaned_data.get('username')
-        password = form.cleaned_data.get('password')
-        user = authenticate(self.request, username=username, password=password)
+        login(self.request, form.get_user())
+        logger.info(f"User {form.get_user().username} logged in successfully.")
+        messages.success(self.request, _('You have successfully logged in.'))
+        return self.redirect_authenticated_user(form.get_user())
 
-        if user is not None:
-            login(self.request, user)
-            logger.info(f"User {username} logged in successfully.")
-            return redirect_based_on_group(self.request, user)  
-
-        else:
-            messages.error(self.request, 'Invalid username or password.')
-            logger.warning(f"Failed login attempt for username: {username}")
-
-        return super().form_invalid(form)  
-    
     def form_invalid(self, form):
-        logger.error(f"Form invalid: {form.errors}")
-        messages.error(self.request, "There were errors in your form submission.")
-        return super().form_invalid(form)
+        logger.warning(f"Failed login attempt for username: {form.data.get('username')}")
+        error_messages = []
+        for field, errors in form.errors.items():
+            for error in errors:
+                if field == '__all__':
+                    error_messages.append(str(error))
+                else:
+                    error_messages.append(f"{field.capitalize()}: {error}")
+        
+        messages.error(self.request, _('Login failed. Please check the errors below.'))
+        return self.render_to_response(self.get_context_data(form=form, error_messages=error_messages))
+
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['request'] = self.request
+        return kwargs
+
+    def redirect_authenticated_user(self, user):
+        """Redirect users based on their group."""
+        if user.groups.filter(name='administrator').exists():
+            return redirect('admin_dashboard')
+        elif user.groups.filter(name='instructor').exists():
+            return redirect('instructor_dashboard')
+        else:
+            return redirect('learner_dashboard')
 
 
 class LearnerSignupView(LoginView):
@@ -107,8 +128,17 @@ class LearnerSignupView(LoginView):
         return redirect('learner_dashboard')  
 
     def form_invalid(self, form):
-        messages.error(self.request, 'Please correct the errors below.')
-        return super().form_invalid(form)
+        logger.warning(f"Failed signup attempt with data: {form.data}")
+        error_messages = []
+        for field, errors in form.errors.items():
+            for error in errors:
+                if field == '__all__':
+                    error_messages.append(str(error))
+                else:
+                    error_messages.append(f"{field.capitalize()}: {error}")
+
+        messages.error(self.request, _('Signup failed. Please check the errors below.'))
+        return self.render_to_response(self.get_context_data(form=form, error_messages=error_messages))
     
 
 

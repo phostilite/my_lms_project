@@ -23,20 +23,27 @@ class LearnerSignupForm(forms.ModelForm):
 
     def clean_username(self):
         username = self.cleaned_data.get('username')
-        if User.objects.filter(username=username).exists():
+        if User.objects.filter(username=username).exists() or User.objects.filter(email=username).exists():
             raise ValidationError("This email is already in use.")
-        EmailValidator()(username)  # Validate username as email
+        EmailValidator()(username)  
         return username
 
-    def clean_password2(self):
+    def clean_password1(self):  
         password1 = self.cleaned_data.get('password1')
         validate_password(password1)
         return password1
+    
+    def clean(self):
+        cleaned_data = super().clean()
+        if not self.errors:
+            self.clean_username()
+            self.clean_password1()
+        return cleaned_data
 
     def save(self, commit=True):
         user = super().save(commit=False)
         user.set_password(self.cleaned_data["password1"])
-        user.email = user.username  # Set email same as username
+        user.email = user.username  
         if commit:
             user.save()
         return user
