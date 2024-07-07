@@ -1,6 +1,0 @@
-app_id: "b212e1cd-fdfa-4b1c-91ec-0a8b9cf1b27b" 
-app_secret: "-ac8Q~hDNee6ugA_L5srhWJ6DdpczYnckX9sUa0s" 
-redirect: "http://localhost:8000/callback" 
-scopes:   
-    - user.read   
-authority: "https://login.microsoftonline.com/3453849c-f4dc-4e32-b926-0e1804e0c1ca"

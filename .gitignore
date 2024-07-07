@@ -330,5 +330,9 @@ oauth_settings.yaml
 auth_helper.py
 graph_helper.py
 
+accounts/oauth_settings.yaml
+accounts/auth_helper.py
+accounts/graph_helper.py
+
 
 staticfiles/
