@@ -329,3 +329,6 @@ payments_data.json
 oauth_settings.yaml
 auth_helper.py
 graph_helper.py
+
+
+staticfiles/
