@@ -3,7 +3,7 @@ from django.contrib.auth.models import AbstractUser
 
 
 class User(AbstractUser):
-    phone_number = models.CharField(max_length=15, default='')
+    phone_number = models.CharField(max_length=15, blank=True, null=True)
     gender = models.CharField(max_length=10, choices=[('male', 'Male'), ('female', 'Female'), ('other', 'Other')],
                               default='male')
     picture = models.ImageField(upload_to='user_pictures/', blank=True, null=True)

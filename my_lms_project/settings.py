@@ -63,8 +63,8 @@ MIDDLEWARE = [
 ]
 
 AUTHENTICATION_BACKENDS = (
-    'social_core.backends.google.GoogleOAuth2',  # Google backend
-    'django.contrib.auth.backends.ModelBackend',  # Your existing backend
+    'social_core.backends.google.GoogleOAuth2',  
+    'django.contrib.auth.backends.ModelBackend', 
 )
 
 SOCIAL_AUTH_PIPELINE = (

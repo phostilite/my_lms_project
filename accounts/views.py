@@ -10,11 +10,15 @@ from django.conf import settings
 import requests
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
+from django.contrib.auth.models import Group
+from django.db import transaction
+from django.db.utils import IntegrityError
 
 from .forms import LoginForm, LearnerSignupForm
 from .utils import redirect_based_on_group, get_msal_app
 from .auth_helper import get_sign_in_flow, get_token_from_code, store_user, get_token, remove_user_and_token, extract_user_details
 from .graph_helper import *
+from .models import Learner
 
 logger = logging.getLogger(__name__)
 
@@ -75,36 +79,37 @@ class LearnerSignupView(LoginView):
     template_name = 'authentication/signup.html'
     form_class = LearnerSignupForm
 
-    def post(self, request, *args, **kwargs):
-        form = self.get_form()
-        if form.is_valid():
-            return self.form_valid(form)
-        else:
-            return self.form_invalid(form)
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs.pop('request', None)  
+        return kwargs
 
+    @transaction.atomic
     def form_valid(self, form):
-        """Create a new user and log them in."""
         try:
-            first_name = form.cleaned_data.get('first_name')
-            last_name = form.cleaned_data.get('last_name')
-            username = form.cleaned_data.get('username')
-            email = form.cleaned_data.get('email')
-            password = form.cleaned_data.get('password')
-
-            # Create a new user
-            user = User.objects.create_user(username=username, email=email, password=password)
-            user.first_name = first_name
-            user.last_name = last_name
-            user.save()
-
-            # Log the user in
-            login(self.request, user)
+            user = form.save()
+            group, _ = Group.objects.get_or_create(name='learner')
+            user.groups.add(group)
+            Learner.objects.create(user=user)
             messages.success(self.request, 'Account created successfully!')
-            return redirect('learner_dashboard')
+            return self.login_and_redirect(user)
+        except IntegrityError as e:
+            logger.error(f"IntegrityError creating user: {e}")
+            messages.error(self.request, 'An account with this email already exists.')
         except Exception as e:
             logger.error(f"Error creating user: {e}")
             messages.error(self.request, 'There was an error creating your account. Please try again.')
-            return self.form_invalid(form)
+        return self.form_invalid(form)
+
+    def login_and_redirect(self, user):
+        from django.contrib.auth import login
+        login(self.request, user, backend='django.contrib.auth.backends.ModelBackend')
+        return redirect('learner_dashboard')  
+
+    def form_invalid(self, form):
+        messages.error(self.request, 'Please correct the errors below.')
+        return super().form_invalid(form)
+    
 
 
 def user_logout(request):
