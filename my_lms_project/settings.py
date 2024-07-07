@@ -71,13 +71,8 @@ SOCIAL_AUTH_PIPELINE = (
     'social_core.pipeline.social_auth.social_details',
     'social_core.pipeline.social_auth.social_uid',
     'social_core.pipeline.social_auth.auth_allowed',
-    'social_core.pipeline.social_auth.social_user',
-    'social_core.pipeline.user.get_username',
-    'social_core.pipeline.user.create_user',
-    'social_core.pipeline.social_auth.associate_user',
-    'social_core.pipeline.social_auth.load_extra_data',
-    'social_core.pipeline.user.user_details',
-    'accounts.pipelines.social_auth_user',
+    'accounts.pipelines.check_user_exists',  # Your custom function to check if user exists
+    'accounts.pipelines.social_auth_user',   # Your custom function to prevent user creation
 )
 
 ROOT_URLCONF = 'my_lms_project.urls'

@@ -48,6 +48,8 @@ def courses(request):
 def privacy_policy(request):
     return render(request, 'privacy_policy.html')
 
+
+# Django Authentication
 class LoginView(DjangoLoginView):
     template_name = 'authentication/login.html'
     form_class = LoginForm
@@ -94,6 +96,14 @@ class LoginView(DjangoLoginView):
             return redirect('instructor_dashboard')
         else:
             return redirect('learner_dashboard')
+        
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Get error messages from session (set by Google sign-in pipeline)
+        google_error_messages = self.request.session.pop('error_messages', None)
+        if google_error_messages:
+            context['error_messages'] = google_error_messages
+        return context
 
 
 class LearnerSignupView(LoginView):
@@ -140,12 +150,13 @@ class LearnerSignupView(LoginView):
         messages.error(self.request, _('Signup failed. Please check the errors below.'))
         return self.render_to_response(self.get_context_data(form=form, error_messages=error_messages))
     
-
-
 def user_logout(request):
+    remove_user_and_token(request)
     logout(request)
     return redirect('login')
 
+
+# Microsoft OAuth2
 
 def initialize_context(request):
     context = {}
@@ -165,42 +176,42 @@ def microsoft_sign_in(request):
         print(e)    
     return HttpResponseRedirect(flow['auth_uri'])
 
-def microsoft_sign_out(request):
-    # Clear out the user and token
-    remove_user_and_token(request)
-    return HttpResponseRedirect(reverse('landing_page'))
-
-# In your callback function:
+@transaction.atomic
 def callback(request):
-    # Make the token request
-    result = get_token_from_code(request)
-    if 'error' in result:
-        messages.error(request, 'There was an error logging you in with Microsoft. Please try again.')
-        return redirect('login')
-
-    # Extract user details
-    user_info = extract_user_details(result)
-    print(f"user_info: {user_info}")
-
-    # Store user information in session
-    store_user(request, user_info)
-
-    # Try to find the user by email
     try:
+        result = get_token_from_code(request)
+        if 'error' in result:
+            raise Exception(result.get('error_description', 'Unknown error occurred'))
+
+        user_info = extract_user_details(result)
         email = user_info.get('email')
+        
         if not email:
             raise KeyError("Email not found in user info")
-        
-        user = User.objects.get(email=email)
-    except (User.DoesNotExist, KeyError) as e:
-        if isinstance(e, KeyError):
-            messages.error(request, 'Unable to retrieve email from Microsoft. Please try again or contact support.')
-        else:
-            messages.error(request, 'No account found for the given email. Please contact support or try a different login method.')
-        return redirect('login')
 
-    # If the user exists, log them in
-    login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+        try:
+            user = User.objects.get(email=email)
+            if not user.is_active:
+                raise Exception("Your account is not active. Please contact support.")
+            
+            # Log the user in
+            login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+            logger.info(f"User {user.username} logged in successfully via Microsoft.")
+            return redirect_based_on_group(request, user)
 
-    # Redirect the user based on their group
-    return redirect_based_on_group(request, user)
+        except User.DoesNotExist:
+            # User doesn't exist, set error message and redirect to login page
+            error_message = "No account found with this email. Please sign up first."
+            request.session['error_messages'] = [error_message]
+            logger.warning(f"Failed login attempt via Microsoft for email: {email}")
+            return redirect('login')
+
+    except KeyError as e:
+        logger.error(f"KeyError in Microsoft callback: {e}")
+        error_message = 'Unable to retrieve email from Microsoft. Please try again or contact support.'
+    except Exception as e:
+        logger.error(f"Error in Microsoft callback: {e}")
+        error_message = str(e)
+    
+    request.session['error_messages'] = [error_message]
+    return redirect('login')

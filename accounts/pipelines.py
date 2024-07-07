@@ -1,8 +1,6 @@
 from django.contrib.auth import get_user_model, login
-from django.contrib import messages
 from django.shortcuts import redirect
-from social_core.pipeline.social_auth import social_details, associate_by_email
-from social_django.utils import load_strategy
+from social_core.pipeline.partial import partial
 import logging
 
 from .utils import redirect_based_on_group
@@ -11,22 +9,37 @@ logger = logging.getLogger(__name__)
 
 User = get_user_model()
 
-def social_auth_user(backend, details, response, *args, **kwargs):
-    """Pipeline function to handle social authentication."""
+@partial
+def check_user_exists(backend, details, response, *args, **kwargs):
+    """
+    Check if a user with the given email exists and handle accordingly.
+    """
     request = backend.strategy.request
     email = details.get('email')
+
+    error_messages = []
+
     if not email:
-        messages.error(request, "Email not found in your Google account.")
+        error_messages.append("Email not found in your Google account.")
+    else:
+        try:
+            user = User.objects.get(email=email)
+            if user.is_active:
+                login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+                return redirect_based_on_group(request, user)
+            else:
+                error_messages.append("Your account is not active. Please contact support.")
+        except User.DoesNotExist:
+            error_messages.append("No account found with this email. Please sign up first.")
+
+    if error_messages:
+        # Store error messages in the session
+        request.session['error_messages'] = error_messages
         return redirect('login')
-    try:
-        user = User.objects.get(email=email)
-        if user.is_active:
-            login(request, user, backend='django.contrib.auth.backends.ModelBackend')
-            return redirect_based_on_group(request, user)
-        else:
-            messages.error(request, "Your account is not active. Please contact support.")
-            return redirect('login')
-        
-    except User.DoesNotExist:
-        messages.error(request, "User with this email does not exist.")
-        return redirect('login')
+
+def social_auth_user(*args, **kwargs):
+    """
+    This function will not be called if check_user_exists redirects,
+    effectively preventing new user creation.
+    """
+    return None

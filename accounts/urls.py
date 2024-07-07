@@ -9,14 +9,16 @@ urlpatterns = [
     path('contact/', views.contact, name='contact'),
     path('courses/', views.courses, name='courses'),
     path('privacy_policy/', views.privacy_policy, name='privacy_policy'),
+    
+    # Django Authentication
     path('accounts/login/', views.LoginView.as_view(), name='login'),
     path('accounts/logout/', views.user_logout, name='logout'),
     path('accounts/signup/', views.LearnerSignupView.as_view(), name='signup'),
 
-
+    # Google OAuth2
     path('oauth/', include('social_django.urls', namespace='social')),
 
+    # Microsoft OAuth2
     path('signin', views.microsoft_sign_in, name='signin'),
-    path('signout', views.microsoft_sign_out, name='signout'),
     path('callback', views.callback, name='callback'),
 ]
