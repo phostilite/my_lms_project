@@ -8,7 +8,6 @@ class ScormCloudCourseForm(forms.ModelForm):
         fields = [
             'title',
             'course_id',
-            'price',
             'long_description', 
             'short_description', 
             'category', 

@@ -1,3 +1,4 @@
+from django.http import HttpResponseServerError
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 import requests
@@ -13,15 +14,27 @@ logger = logging.getLogger(__name__)
 
 @login_required
 def dashboard(request):
-    return render(request, 'administrator/dashboard.html')
-
+    try:
+        return render(request, 'administrator/dashboard.html')
+    except Exception as e:
+        logger.error(f"Error loading dashboard: {e}")
+        return HttpResponseServerError("An error occurred")
+    
 @login_required
 def calendar(request):
-    return render(request, 'administrator/calendar.html')
+    try:
+        return render(request, 'administrator/calendar.html')
+    except Exception as e:
+        logger.error(f"Error loading calendar: {e}")
+        return HttpResponseServerError("An error occurred")
 
 @login_required
 def leaderboard(request):
-    return render(request, 'administrator/leaderboard.html')
+    try:
+        return render(request, 'administrator/leaderboard.html')
+    except Exception as e:
+        logger.error(f"Error loading leaderboard: {e}")
+        return HttpResponseServerError("An error occurred")
 
 @login_required
 def course_list(request):
@@ -97,3 +110,12 @@ def upload_course(request):
     else:
         form = ScormCloudCourseForm()
     return render(request, 'administrator/upload_course.html', {'form': form})
+
+
+@login_required
+def settings(request):
+    try:
+        return render(request, 'administrator/settings.html')
+    except Exception as e:
+        logger.error(f"Error loading profile: {e}")
+        return HttpResponseServerError("An error occurred")

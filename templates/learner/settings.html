@@ -1,0 +1,857 @@
+{% extends '../base.html' %}
+{% block content %}
+{% load static %}
+{% include './navbar.html' %}
+{% include './sidebar.html' %}
+
+<div class="p-4 sm:ml-64">
+    <div class="p-4 mt-14">
+
+        <div class="mb-4 border-b border-gray-200 dark:border-gray-700">
+            <ul class="flex flex-wrap -mb-px text-sm font-medium text-center" id="default-styled-tab" data-tabs-toggle="#default-styled-tab-content" data-tabs-active-classes="text-green-600 hover:text-green-600 dark:text-green-500 dark:hover:text-green-500 border-green-600 dark:border-green-500" data-tabs-inactive-classes="dark:border-transparent text-gray-500 hover:text-gray-600 dark:text-gray-400 border-gray-100 hover:border-gray-300 dark:border-gray-700 dark:hover:text-gray-300" role="tablist">
+                <li class="me-2" role="presentation">
+                    <div class="inline-block p-4 border-b-2 rounded-t-lg flex items-center" id="profile-styled-tab" data-tabs-target="#styled-profile" role="tab" aria-controls="profile" aria-selected="false">
+                        <span>Profile</span>
+                        <button data-popover-target="popover-profile" data-popover-placement="bottom" type="button" class="ml-2">
+                            <svg class="w-4 h-4 text-gray-400 hover:text-gray-500" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </li>
+                <li class="me-2" role="presentation">
+                    <div class="inline-block p-4 border-b-2 rounded-t-lg flex items-center hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="dashboard-styled-tab" data-tabs-target="#styled-dashboard" role="tab" aria-controls="dashboard" aria-selected="false">
+                        <span>Security</span>
+                        <button data-popover-target="popover-security" data-popover-placement="bottom" type="button" class="ml-2">
+                            <svg class="w-4 h-4 text-gray-400 hover:text-gray-500" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </li>
+                <li class="me-2" role="presentation">
+                    <div class="inline-block p-4 border-b-2 rounded-t-lg flex items-center hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="settings-styled-tab" data-tabs-target="#styled-settings" role="tab" aria-controls="settings" aria-selected="false">
+                        <span>Settings</span>
+                        <button data-popover-target="popover-settings-2" data-popover-placement="bottom" type="button" class="ml-2">
+                            <svg class="w-4 h-4 text-gray-400 hover:text-gray-500" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div id="default-styled-tab-content">
+
+            <!-- ONE -->
+            <div class="hidden rounded-lg bg-gray-50 dark:bg-gray-800" id="styled-profile" role="tabpanel" aria-labelledby="profile-tab">          
+                
+
+                <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+                    <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                            <tr>
+                                <th scope="col" class="px-6 py-3">
+                                    Section
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    Field/Information
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    Display Format
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    User Action (if applicable)
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+        
+                            <tr class="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    Basic Info
+                                </th>
+                                <td class="px-6 py-4">
+                                    Profile Picture
+                                <td class="px-6 py-4">
+                                    Image (with option to enlarge)
+                                </td>
+                                <td class="px-6 py-4">
+                                    Change/Upload
+                                </td>
+                            </tr>
+
+                            <tr class="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    
+                                </th>
+                                <td class="px-6 py-4">
+                                    Full Name
+                                </td>
+                                <td class="px-6 py-4">
+                                    Text
+                                </td>
+                                <td class="px-6 py-4">
+                                    Edit
+                                </td>
+                            </tr>
+
+                            <tr class="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    
+                                </th>
+                                <td class="px-6 py-4">
+                                    Username
+                                </td>
+                                <td class="px-6 py-4">
+                                    Text (read-only)
+                                </td>
+                                <td class="px-6 py-4">
+                                    
+                                </td>
+                            </tr>
+
+                            <tr class="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    
+                                </th>
+                                <td class="px-6 py-4">
+                                    Email
+                                </td>
+                                <td class="px-6 py-4">
+                                    Text (with option to verify if unverified)
+                                </td>
+                                <td class="px-6 py-4">
+                                    Edit, Verify
+                                </td>
+                            </tr>
+                            <tr class="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    
+                                </th>
+                                <td class="px-6 py-4">
+                                    Role
+                                </td>
+                                <td class="px-6 py-4">
+                                    Text (e.g., Student, Instructor, Administrator)
+                                </td>
+                                <td class="px-6 py-4">
+                                    (Admin-controlled)
+                                </td>
+                            </tr>
+
+
+                            <tr class="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    About Me
+                                </th>
+                                <td class="px-6 py-4">
+                                    Bio/Introduction
+                                </td>
+                                <td class="px-6 py-4">
+                                    Text box (editable by the user)
+                                </td>
+                                <td class="px-6 py-4">
+                                    Edit
+                                </td>
+                            </tr>
+                            <tr class="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    
+                                </th>
+                                <td class="px-6 py-4">
+                                    Interests
+                                </td>
+                                <td class="px-6 py-4">
+                                    List or tags (editable by the user)
+                                </td>
+                                <td class="px-6 py-4">
+                                    Edit
+                                </td>
+                            </tr>
+
+
+                            <tr class="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    
+                                </th>
+                                <td class="px-6 py-4">
+                                    Location              
+                                </td>
+                                <td class="px-6 py-4">
+                                    Text (editable by the user)
+                                </td>
+                                <td class="px-6 py-4">
+                                    Edit         
+                                </td>
+                            </tr>
+                            <tr class="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    
+                                </th>
+                                <td class="px-6 py-4">
+                                    Website/Social Media Links       
+                                </td>
+                                <td class="px-6 py-4">
+                                    Links (editable by the user)
+                                </td>
+                                <td class="px-6 py-4">
+                                    Edit
+                                </td>
+                            </tr>
+                            <tr class="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    Courses
+                                </th>
+                                <td class="px-6 py-4">
+                                    Enrolled Courses    
+                                </td>
+                                <td class="px-6 py-4">
+                                    List with links to course pages
+                                </td>
+                                <td class="px-6 py-4">
+                                    View  
+                                </td>
+                            </tr>
+
+
+                            <tr class="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    
+                                </th>
+                                <td class="px-6 py-4">
+                                    Completed Courses
+                                </td>
+                                <td class="px-6 py-4">
+                                    List with links to course pages/certificates
+                                </td>
+                                <td class="px-6 py-4">
+                                    View
+                                </td>
+                            </tr>
+
+                            <tr class="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    
+                                </th>
+                                <td class="px-6 py-4">
+                                    Certificates (if applicable)  
+                                </td>
+                                <td class="px-6 py-4">
+                                    List with links to view/download
+                                </td>
+                                <td class="px-6 py-4">
+                                    View/Download
+                                </td>
+                            </tr>
+
+                            <tr class="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    Progress
+                                </th>
+                                <td class="px-6 py-4">
+                                    Overall Progress
+                                </td>
+                                <td class="px-6 py-4">
+                                    Visual progress bar (percentage)
+                                </td>
+                                <td class="px-6 py-4">
+                                    
+                                </td>
+                            </tr>
+
+                            <tr class="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    
+                                </th>
+                                <td class="px-6 py-4">
+                                    Recent Activity
+                                </td>
+                                <td class="px-6 py-4">
+                                    Timeline of recent actions (e.g., course enrollment, assignment submission)
+                                </td>
+                                <td class="px-6 py-4">
+                                    
+                                </td>
+                            </tr>
+
+                            <tr class="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    
+                                </th>
+                                <td class="px-6 py-4">
+                                    Badges/Achievements (if applicable)
+                                </td>
+                                <td class="px-6 py-4">
+                                    Display of earned badges or achievements
+                                </td>
+                                <td class="px-6 py-4">
+                                    
+                                </td>
+                            </tr>
+
+                            <tr class="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    Settings
+                                </th>
+                                <td class="px-6 py-4">
+                                    Account Settings
+                                </td>
+                                <td class="px-6 py-4">
+                                    Link to the user's settings page (see previous table for settings details)
+                                </td>
+                                <td class="px-6 py-4">
+                                    Edit
+                                </td>
+                            </tr>
+
+                            <tr class="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    
+                                </th>
+                                <td class="px-6 py-4">
+                                    Privacy Settings
+                                </td>
+                                <td class="px-6 py-4">
+                                    Link to privacy settings (control over profile visibility)
+                                </td>
+                                <td class="px-6 py-4">
+                                    Edit
+                                </td>
+                            </tr>
+
+                            <tr class="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    
+                                </th>
+                                <td class="px-6 py-4">
+                                    Notification Settings
+                                </td>
+                                <td class="px-6 py-4">
+                                    Link to notification settings
+                                </td>
+                                <td class="px-6 py-4">
+                                    Edit
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+
+            </div>
+
+            <!-- TWO -->
+            <div class="hidden rounded-lg bg-gray-50 dark:bg-gray-800" id="styled-dashboard" role="tabpanel" aria-labelledby="dashboard-tab">
+                
+                <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+                    <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                            <tr>
+                                <th scope="col" class="px-6 py-3">
+                                    Security Category
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    Security Option
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    Description
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    User Action Required?
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            <tr class="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    Password Management
+                                </th>
+                                <td class="px-6 py-4">
+                                    Strong Password Requirement
+                                <td class="px-6 py-4">
+                                    Enforces complex passwords (combination of letters, numbers, symbols) to make unauthorized access more difficult.
+                                </td>
+                                <td class="px-6 py-4">
+                                    Yes
+                                </td>
+                            </tr>
+
+                            <tr class="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    
+                                </th>
+                                <td class="px-6 py-4">
+                                    Password Expiration Policy
+                                </th>
+                                <td class="px-6 py-4">
+                                    Automatically requires users to change passwords after a set period (e.g., every 90 days).
+                                </td>
+                                <td class="px-6 py-4">
+                                    No
+                                </td>
+                            </tr>
+
+                            <tr class="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    
+                                </th>
+                                <td class="px-6 py-4">
+                                    Two-Factor Authentication (2FA)
+                                </th>
+                                <td class="px-6 py-4">
+                                    Adds an extra layer of security by requiring a code from a phone or app in addition to the password.
+                                </td>
+                                <td class="px-6 py-4">
+                                    Yes (optional)
+                                </td>
+                            </tr>
+
+                            
+
+                            <tr class="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    Account Security	
+                                </th>
+                                <td class="px-6 py-4">
+                                    Account Lockout Policy
+                                </th>
+                                <td class="px-6 py-4">
+                                    Temporarily locks an account after a certain number of failed login attempts to prevent brute-force attacks.
+                                </td>
+                                <td class="px-6 py-4">
+                                    No
+                                </td>
+                            </tr>
+
+                            <tr class="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    	
+                                </th>
+                                <td class="px-6 py-4">
+                                    Login Activity Monitoring
+                                </th>
+                                <td class="px-6 py-4">
+                                    Tracks and records login attempts, including successful and failed ones, from different devices and locations. This can help detect suspicious activity.
+                                </td>
+                                <td class="px-6 py-4">
+                                    No
+                                </td>
+                            </tr>
+
+                            
+
+                            <tr class="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    Data Privacy	
+                                </th>
+                                <td class="px-6 py-4">
+                                    Privacy Settings
+                                </th>
+                                <td class="px-6 py-4">
+                                    Allows users to control what personal information is visible to others in the LMS (e.g., email address, profile picture).
+                                </td>
+                                <td class="px-6 py-4">
+                                    Yes
+                                </td>
+                            </tr>
+
+                            <tr class="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    	
+                                </th>
+                                <td class="px-6 py-4">
+                                    Data Encryption
+                                </th>
+                                <td class="px-6 py-4">
+                                    Ensures that sensitive data transmitted within the LMS is scrambled and unreadable to unauthorized parties.
+                                </td>
+                                <td class="px-6 py-4">
+                                    No
+                                </td>
+                            </tr>
+
+                            
+
+                            <tr class="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    System Security
+                                </th>
+                                <td class="px-6 py-4">
+                                    Regular Software Updates
+                                </th>
+                                <td class="px-6 py-4">
+                                    Ensures the LMS has the latest security patches to protect against vulnerabilities.                
+                                </td>
+                                <td class="px-6 py-4">
+                                    No
+                                </td>
+                            </tr>
+
+                            <tr class="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    	
+                                </th>
+                                <td class="px-6 py-4">
+                                    Firewall Protection
+                                </th>
+                                <td class="px-6 py-4">
+                                    Acts as a barrier between the LMS and the internet, filtering out malicious traffic.          
+                                </td>
+                                <td class="px-6 py-4">
+                                    No
+                                </td>
+                            </tr>
+
+                            <tr class="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    	
+                                </th>
+                                <td class="px-6 py-4">
+                                    Intrusion Detection System (IDS)
+                                </th>
+                                <td class="px-6 py-4">
+                                    Monitors network traffic for suspicious activity that might indicate a cyberattack.        
+                                </td>
+                                <td class="px-6 py-4">
+                                    No
+                                </td>
+                            </tr>
+
+                            
+
+                            <tr class="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    User Education
+                                </th>
+                                <td class="px-6 py-4">
+                                    Security Awareness Training
+                                </th>
+                                <td class="px-6 py-4">
+                                    Provides users with information and resources on best practices for staying safe online and recognizing phishing scams.   
+                                </td>
+                                <td class="px-6 py-4">
+                                    Yes (optional)
+                                </td>
+                            </tr>
+
+                            <tr class="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    	
+                                </th>
+                                <td class="px-6 py-4">
+                                    Reporting Security Incidents
+                                </th>
+                                <td class="px-6 py-4">
+                                    Encourages users to report any suspected security breaches or vulnerabilities they encounter within the LMS.   
+                                </td>
+                                <td class="px-6 py-4">
+                                    Yes
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+
+            <!-- THREE -->
+            <div class="hidden rounded-lg bg-gray-50 dark:bg-gray-800" id="styled-settings" role="tabpanel" aria-labelledby="settings-tab">
+                
+                
+                <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+                    <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                            <tr>
+                                <th scope="col" class="px-6 py-3">
+                                    Setting Category
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    Setting Name
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    Description
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    User Options/Actions
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            
+
+                            <tr class="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    Profile
+                                </th>
+                                <td class="px-6 py-4">
+                                    Name
+                                <td class="px-6 py-4">
+                                    Full name displayed on the profile.
+                                </td>
+                                <td class="px-6 py-4">
+                                    Edit
+                                </td>
+                            </tr>
+                            <tr class="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    
+                                </th>
+                                <td class="px-6 py-4">
+                                    Email
+                                </td>
+                                <td class="px-6 py-4">
+                                    Primary email address for communication and account recovery.
+                                </td>
+                                <td class="px-6 py-4">
+                                    Edit, Verify
+                                </td>
+                            </tr>
+                            <tr class="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    
+                                </th>
+                                <td class="px-6 py-4">
+                                    Profile Picture
+                                </td>
+                                <td class="px-6 py-4">
+                                    Image displayed on the profile.
+                                </td>
+                                <td class="px-6 py-4">
+                                    Upload, Delete
+                                </td>
+                            </tr>
+
+                            <tr class="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    
+                                </th>
+                                <td class="px-6 py-4">
+                                    Time Zone
+                                </td>
+                                <td class="px-6 py-4">
+                                    Determines the time zone for scheduling and deadlines.
+                                </td>
+                                <td class="px-6 py-4">
+                                    Select from List (drop-down)
+                                </td>
+                            </tr>
+                            <tr class="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    Notifications
+                                </th>
+                                <td class="px-6 py-4">
+                                    Email Notifications
+                                </td>
+                                <td class="px-6 py-4">
+                                    Toggles email notifications for various events (e.g., new course announcements, assignment deadlines, forum posts).
+                                </td>
+                                <td class="px-6 py-4">
+                                    Enable/Disable checkboxes
+                                </td>
+                            </tr>
+
+
+                            <tr class="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    
+                                </th>
+                                <td class="px-6 py-4">
+                                    Notification Frequency
+                                </td>
+                                <td class="px-6 py-4">
+                                    Sets how often email notifications are sent (e.g., daily, weekly, immediately).
+                                </td>
+                                <td class="px-6 py-4">
+                                    Select from List (drop-down)
+                                </td>
+                            </tr>
+                            <tr class="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    Privacy
+                                </th>
+                                <td class="px-6 py-4">
+                                    Profile Visibility
+                                </td>
+                                <td class="px-6 py-4">
+                                    Controls who can see the user's profile information (e.g., everyone, only instructors, only classmates).
+                                </td>
+                                <td class="px-6 py-4">
+                                    Select from List (drop-down)
+                                </td>
+                            </tr>
+
+
+                            <tr class="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    
+                                </th>
+                                <td class="px-6 py-4">
+                                    Course History Visibility              
+                                </td>
+                                <td class="px-6 py-4">
+                                    Determines if completed courses are visible on the profile.
+                                </td>
+                                <td class="px-6 py-4">
+                                    Enable/Disable checkbox             
+                                </td>
+                            </tr>
+                            <tr class="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    Accessibility
+                                </th>
+                                <td class="px-6 py-4">
+                                    Font Size          
+                                </td>
+                                <td class="px-6 py-4">
+                                    Adjusts the default font size for easier reading.
+                                </td>
+                                <td class="px-6 py-4">
+                                    Select from List, Slider
+                                </td>
+                            </tr>
+                            <tr class="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    
+                                </th>
+                                <td class="px-6 py-4">
+                                    Color Scheme       
+                                </td>
+                                <td class="px-6 py-4">
+                                    Changes the overall color scheme of the LMS interface.
+                                </td>
+                                <td class="px-6 py-4">
+                                    Select from Preset Themes     
+                                </td>
+                            </tr>
+
+
+                            <tr class="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    
+                                </th>
+                                <td class="px-6 py-4">
+                                    Closed Captioning (for videos)
+                                </td>
+                                <td class="px-6 py-4">
+                                    Enables/disables closed captions for video content.
+                                </td>
+                                <td class="px-6 py-4">
+                                    Enable/Disable checkbox
+                                </td>
+                            </tr>
+                            <tr class="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    Language
+                                </th>
+                                <td class="px-6 py-4">
+                                    Display Language  
+                                </td>
+                                <td class="px-6 py-4">
+                                    Sets the language for the LMS interface (if multiple languages are supported).
+                                </td>
+                                <td class="px-6 py-4">
+                                    Select from List (drop-down)
+                                </td>
+                            </tr>
+                            <tr class="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    Other
+                                </th>
+                                <td class="px-6 py-4">
+                                    Password
+                                </td>
+                                <td class="px-6 py-4">
+                                    Change the current password.
+                                </td>
+                                <td class="px-6 py-4">
+                                    Edit
+                                </td>
+                            </tr>
+                            <tr class="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    
+                                </th>
+                                <td class="px-6 py-4">
+                                    Deactivate Account
+                                </td>
+                                <td class="px-6 py-4">
+                                    Temporarily or permanently disable the account.
+                                </td>
+                                <td class="px-6 py-4">
+                                    Confirm Action Button
+                                </td>
+                            </tr>
+                            <tr class="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    
+                                </th>
+                                <td class="px-6 py-4">
+                                    Delete Account
+                                </td>
+                                <td class="px-6 py-4">
+                                    Permanently delete the account and all associated data.
+                                </td>
+                                <td class="px-6 py-4">
+                                    Confirm Action Button
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+
+            </div>
+
+            <!-- FOUR -->
+            <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="styled-contacts" role="tabpanel" aria-labelledby="contacts-tab">
+                <p class="text-sm text-gray-500 dark:text-gray-400">This is some placeholder content the <strong class="font-medium text-gray-800 dark:text-white">Contacts tab's associated content</strong>. Clicking another tab will toggle the visibility of this one for the next. The tab JavaScript swaps classes to control the content visibility and styling.</p>
+            </div>
+        </div>
+        
+
+    </div>
+</div>
+
+
+<div data-popover id="popover-profile" role="tooltip" class="absolute z-50 invisible inline-block text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0 w-72 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-400">
+    <div class="p-3 space-y-2">
+        <h3 class="font-semibold text-gray-900 dark:text-white">Profile Information</h3>
+        <p>Your profile showcases your personal information, course progress, and achievements on the learning platform. Keeping your profile up-to-date helps personalize your learning experience and connect with other learners.</p>
+        <h3 class="font-semibold text-gray-900 dark:text-white">Key Sections</h3>
+        <p>The profile includes Basic Info, About Me, Courses, Progress, and Settings. Each section allows you to view and manage different aspects of your learning journey.</p>
+        <a href="#" class="flex items-center font-medium text-blue-600 dark:text-blue-500 dark:hover:text-blue-600 hover:text-blue-700 hover:underline">Profile guide <svg class="w-2 h-2 ms-1.5 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
+  </svg></a>
+    </div>
+    <div data-popper-arrow></div>
+</div>
+
+<div data-popover id="popover-security" role="tooltip" class="absolute z-50 invisible inline-block text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0 w-72 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-400">
+    <div class="p-3 space-y-2">
+        <h3 class="font-semibold text-gray-900 dark:text-white">Security Features</h3>
+        <p>This page outlines the various security measures implemented to protect your account and data within the learning management system (LMS).</p>
+        <h3 class="font-semibold text-gray-900 dark:text-white">Key Categories</h3>
+        <p>Security features are grouped into Password Management, Account Security, Data Privacy, System Security, and User Education. Some features require user action, while others are system-managed.</p>
+        <a href="#" class="flex items-center font-medium text-blue-600 dark:text-blue-500 dark:hover:text-blue-600 hover:text-blue-700 hover:underline">Learn more about security <svg class="w-2 h-2 ms-1.5 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
+  </svg></a>
+    </div>
+    <div data-popper-arrow></div>
+</div>
+
+
+<div data-popover id="popover-settings-2" role="tooltip" class="absolute z-50 invisible inline-block text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0 w-72 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-400">
+    <div class="p-3 space-y-2">
+        <h3 class="font-semibold text-gray-900 dark:text-white">User Settings</h3>
+        <p>This page allows you to customize various aspects of your learning management system (LMS) experience, from personal information to interface preferences.</p>
+        <h3 class="font-semibold text-gray-900 dark:text-white">Key Categories</h3>
+        <p>Settings are grouped into Profile, Notifications, Privacy, Accessibility, Language, and Other options. Each setting can be adjusted to suit your needs and preferences.</p>
+        <a href="#" class="flex items-center font-medium text-blue-600 dark:text-blue-500 dark:hover:text-blue-600 hover:text-blue-700 hover:underline">Settings guide <svg class="w-2 h-2 ms-1.5 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
+  </svg></a>
+    </div>
+    <div data-popper-arrow></div>
+</div>
+{% endblock %}

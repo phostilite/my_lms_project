@@ -19,6 +19,19 @@ from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.cache import never_cache
 from django.contrib.auth.views import LoginView as DjangoLoginView
 from django.utils.translation import gettext as _
+from django.urls import reverse
+from django.conf import settings
+from urllib.parse import urlencode
+from django.http.response import HttpResponseRedirect
+from django.shortcuts import redirect
+from . import constants
+from django.contrib.auth import authenticate, login
+from .backends import GoogleSignInBackend
+from django.contrib import messages
+from django.urls import reverse_lazy
+from django.contrib.auth.views import PasswordResetView
+from django.contrib.messages.views import SuccessMessageMixin
+from django.core.mail import EmailMultiAlternatives, send_mail
 
 
 from .forms import LoginForm, LearnerSignupForm
@@ -91,7 +104,7 @@ class LoginView(DjangoLoginView):
     def redirect_authenticated_user(self, user):
         """Redirect users based on their group."""
         if user.groups.filter(name='administrator').exists():
-            return redirect('admin_dashboard')
+            return redirect('administrator_leaderboard')
         elif user.groups.filter(name='instructor').exists():
             return redirect('instructor_dashboard')
         else:
@@ -167,17 +180,41 @@ def initialize_context(request):
     return context
 
 def microsoft_sign_in(request):
-    # Get the sign-in flow
     flow = get_sign_in_flow()
-    # Save the expected flow so we can use it in the callback
-    try:
-        request.session['auth_flow'] = flow
-    except Exception as e:
-        print(e)    
+
+    request.session['auth_action'] = 'sign_in'
+
+    # Save the flow and redirect
+    request.session['auth_flow'] = flow
+    return HttpResponseRedirect(flow['auth_uri'])
+
+def microsoft_sign_up(request):
+    flow = get_sign_in_flow()
+
+    request.session['auth_action'] = 'sign_up'
+
+    # Save the flow and redirect
+    request.session['auth_flow'] = flow
     return HttpResponseRedirect(flow['auth_uri'])
 
 @transaction.atomic
-def callback(request):
+def microsoft_callback(request):
+    # Retrieve the auth action from the session
+    auth_action = request.session.pop('auth_action', None) 
+
+    if auth_action == 'sign_in':
+        # Call your sign-in callback logic
+        return microsoft_sign_in_callback(request)
+    elif auth_action == 'sign_up':
+        # Call your sign-up callback logic
+        return microsoft_sign_up_callback(request)
+    else:
+        # Handle invalid or missing auth action
+        logger.error("Invalid or missing auth_action in Microsoft callback")
+        return redirect('login')  # Or an appropriate error page
+
+@transaction.atomic
+def microsoft_sign_in_callback(request):
     try:
         result = get_token_from_code(request)
         if 'error' in result:
@@ -215,3 +252,107 @@ def callback(request):
     
     request.session['error_messages'] = [error_message]
     return redirect('login')
+
+
+@transaction.atomic
+def microsoft_sign_up_callback(request):
+    try:
+        result = get_token_from_code(request)
+        if 'error' in result:
+            raise Exception(result.get('error_description', 'Unknown error occurred'))
+
+        user_info = extract_user_details(result)
+        email = user_info.get('email')
+        full_name = user_info.get('name')
+
+        if not email:
+            raise KeyError("Email not found in user info")
+        
+        # Check if user already exists
+        if User.objects.filter(email=email).exists():
+            error_message = "An account with this email already exists. Please sign in instead."
+            request.session['error_messages'] = [error_message]
+            logger.warning(f"Failed signup attempt via Microsoft (email already exists): {email}")
+            return redirect('login')
+
+        if full_name:
+            first_name, last_name = full_name.split(' ', 1)
+        else:
+            first_name, last_name = "", ""
+
+        # Create new user
+        user = User.objects.create_user(
+            username=email,
+            email=email,
+            first_name=first_name,
+            last_name=last_name,
+        )
+        user.is_active = True
+        user.save()
+        group, _ = Group.objects.get_or_create(name='learner')
+        user.groups.add(group)
+        Learner.objects.create(user=user)
+
+        logger.info(f"New user {user.username} created via Microsoft.")
+        
+        # Optionally send welcome/verification email
+
+        login(request, user, backend='django.contrib.auth.backends.ModelBackend')  # Log them in immediately
+        return redirect('set_password')
+
+    except KeyError as e:
+        logger.error(f"KeyError in Microsoft sign-up callback: {e}")
+        error_message = 'Unable to retrieve email from Microsoft. Please try again or contact support.'
+    except Exception as e:
+        logger.error(f"Error in Microsoft sign-up callback: {e}")
+        error_message = str(e)
+
+    request.session['error_messages'] = [error_message]
+    return redirect('login')
+
+
+def google_auth(request):
+    return HttpResponseRedirect(constants.GOOGLE_LOGIN_REDIRECT_URI)
+
+
+def google_auth_callback(request):
+    print(f'Google Callback: {request.GET}')
+    error_messages = []
+
+    flow = 'signin'
+
+    if flow == 'signin':
+        if 'error' in request.GET:
+            error_messages.append("Google authentication failed. Please try again.")
+            request.session['error_messages'] = error_messages
+            return redirect('login')
+
+        if 'code' in request.GET:
+            user = authenticate(request, code=request.GET.get('code'), backend='accounts.backends.GoogleSignInBackend')
+            if user:
+                login(request, user=user)
+                return redirect_based_on_group(request, user)
+            else:
+                error_messages.append("No account found with this email. Please sign up first.")
+                request.session['error_messages'] = error_messages
+                return redirect('login')
+
+        error_messages.append("Invalid request. Please try again.")
+        request.session['error_messages'] = error_messages
+        return redirect('login')
+    else:
+        error_messages.append("Invalid flow. Please try again.")
+        request.session['error_messages'] = error_messages
+        return redirect('login')
+    
+
+
+class ResetPasswordView(SuccessMessageMixin, PasswordResetView):
+    template_name = 'resets/password_reset_form.html'
+    email_template_name = 'resets/password_reset_email.html'
+    subject_template_name = 'resets/password_reset_subject.txt'
+    success_message = "We've emailed you instructions for setting your password, " \
+                      "if an account exists with the email you entered. You should receive them shortly." \
+                      " If you don't receive an email, " \
+                      "please make sure you've entered the address you registered with, and check your spam folder."
+    success_url = reverse_lazy('landing_page')

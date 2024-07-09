@@ -49,6 +49,8 @@ INSTALLED_APPS = [
     'administrator',
     'social_django',
     'django.contrib.sites',
+    'rest_framework',
+    'anymail',
 ]
 
 
@@ -63,17 +65,11 @@ MIDDLEWARE = [
 ]
 
 AUTHENTICATION_BACKENDS = (
-    'social_core.backends.google.GoogleOAuth2',  
+    'accounts.backends.GoogleSignInBackend',
+    'accounts.backends.GoogleSignUpBackend',
     'django.contrib.auth.backends.ModelBackend', 
 )
 
-SOCIAL_AUTH_PIPELINE = (
-    'social_core.pipeline.social_auth.social_details',
-    'social_core.pipeline.social_auth.social_uid',
-    'social_core.pipeline.social_auth.auth_allowed',
-    'accounts.pipelines.check_user_exists',  # Your custom function to check if user exists
-    'accounts.pipelines.social_auth_user',   # Your custom function to prevent user creation
-)
 
 ROOT_URLCONF = 'my_lms_project.urls'
 
@@ -189,16 +185,25 @@ LOGGING = {
 CLOUDSCORM_APP_ID = os.getenv('CLOUDSCORM_APP_ID')
 CLOUDSCORM_SECRET_KEY = os.getenv('CLOUDSCORM_SECRET_KEY')
 
-DOMAIN_NAME = 'http://127.0.0.1:8000' 
+DOMAIN_NAME = os.getenv('DOMAIN_NAME')
 
 SITE_ID = 1
-
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.getenv('SOCIAL_AUTH_GOOGLE_OAUTH2_KEY')
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.getenv('SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET')
 
 SOCIAL_AUTH_MICROSOFT_OAUTH2_KEY = os.getenv('MICROSOFT_CLIENT_ID')
 SOCIAL_AUTH_MICROSOFT_OAUTH2_SECRET = os.getenv('MICROSOFT_CLIENT_SECRET')
 SOCIAL_AUTH_MICROSOFT_OAUTH2_TENANT_ID = os.getenv('MICROSOFT_TENANT_ID')
 
-SOCIAL_AUTH_LOGIN_REDIRECT_URL = 'https://lms.learnknowdigital.com/oauth/complete/google-oauth2/'
-SOCIAL_AUTH_URL_NAMESPACE = 'social' 
+GOOGLE_OAUTH2_CLIENT_ID = os.getenv('GOOGLE_OAUTH2_CLIENT_ID')
+GOOGLE_OAUTH2_CLIENT_SECRET = os.getenv('GOOGLE_OAUTH2_CLIENT_SECRET')
+GOOGLE_OAUTH2_PROJECT_ID = os.getenv('GOOGLE_OAUTH2_PROJECT_ID')
+
+EMAIL_BACKEND = os.getenv('EMAIL_BACKEND')
+EMAIL_HOST = os.getenv('EMAIL_HOST')
+EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS')
+EMAIL_PORT = os.getenv('EMAIL_PORT')  
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+
+SITE_NAME = "Local Development Site"
+DOMAIN = "localhost:8000"  
+

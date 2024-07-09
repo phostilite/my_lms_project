@@ -94,3 +94,11 @@ def leaderboard(request):
     except Exception as e:
         logger.error(f"Error loading leaderboard: {e}")
         return HttpResponseServerError("An error occurred")
+    
+@login_required
+def settings(request):
+    try:
+        return render(request, 'learner/settings.html')
+    except Exception as e:
+        logger.error(f"Error loading profile: {e}")
+        return HttpResponseServerError("An error occurred")
