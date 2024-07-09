@@ -33,6 +33,50 @@
                <span class="flex-1 ms-3 whitespace-nowrap">Leaderboard</span>
             </a>
          </li>
+         <li>
+            <button type="button" class="flex items-center w-full p-2 text-base text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700" aria-controls="dropdown-example" data-collapse-toggle="dropdown-example">
+               <svg class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="50" height="50" viewBox="0 0 50 50">
+                  <path d="M 34.800781 33.800781 C 33.101563 33.101563 31 32.199219 31 31.5 L 31 27 C 33.5 25.101563 35 22.101563 35 19 L 35 13 C 35 7.5 30.5 3 25 3 C 19.5 3 15 7.5 15 13 L 15 19 C 15 22.101563 16.5 25.199219 19 27 L 19 31.5 C 19 32.101563 16.898438 33 15.199219 33.800781 C 11.101563 35.5 5 38.101563 5 45 L 5 46 L 45 46 L 45 45 C 45 38.101563 38.898438 35.5 34.800781 33.800781 Z"></path>
+              </svg>
+                  <span class="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">Users</span>
+                  <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+                  </svg>
+            </button>
+            <ul id="dropdown-example" class="hidden py-2 space-y-2">
+                  <li>
+                     <a href="{% url 'administrator_learner_list' %}" class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Learners</a>
+                  </li>
+                  <li>
+                     <a href="{% url 'administrator_supervisor_list' %}" class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Supervisiors</a>
+                  </li>
+            </ul>
+         </li>
+         <li>
+            <button type="button" class="flex items-center w-full p-2 text-base text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700" aria-controls="dropdown-reports" data-collapse-toggle="dropdown-reports">
+               <svg class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="50" height="50" viewBox="0 0 50 50">
+                  <path d="M 34.800781 33.800781 C 33.101563 33.101563 31 32.199219 31 31.5 L 31 27 C 33.5 25.101563 35 22.101563 35 19 L 35 13 C 35 7.5 30.5 3 25 3 C 19.5 3 15 7.5 15 13 L 15 19 C 15 22.101563 16.5 25.199219 19 27 L 19 31.5 C 19 32.101563 16.898438 33 15.199219 33.800781 C 11.101563 35.5 5 38.101563 5 45 L 5 46 L 45 46 L 45 45 C 45 38.101563 38.898438 35.5 34.800781 33.800781 Z"></path>
+              </svg>
+                  <span class="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">Reports</span>
+                  <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+                  </svg>
+            </button>
+            <ul id="dropdown-reports" class="hidden py-2 space-y-2">
+                  <li>
+                     <a href="{% url 'administrator_enrollment_activity' %}" class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Enrollment & Activity</a>
+                  </li>
+                  <li>
+                     <a href="{% url 'administrator_progress_performance' %}" class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Progress & Performance</a>
+                  </li>
+                  <li>
+                     <a href="{% url 'administrator_engagement_feedback' %}" class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Engagement & Feedback</a>
+                  </li>
+                  <li>
+                     <a href="{% url 'administrator_system_usuage' %}" class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">System Usage</a>
+                  </li>
+            </ul>
+         </li>
           <li>
              <a href="#" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
                 <svg class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="50" height="50" viewBox="0 0 50 50">

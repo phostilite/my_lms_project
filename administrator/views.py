@@ -1,3 +1,4 @@
+from django.forms import ValidationError
 from django.http import HttpResponseServerError
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
@@ -6,11 +7,20 @@ from django.conf import settings
 from django.shortcuts import redirect
 import logging
 from decimal import Decimal
+from django.db import transaction
+from django.db import IntegrityError, transaction
+from django.contrib import messages
+from django.contrib.auth import get_user_model
 
 from courses.models import ScormCloudCourse
 from courses.forms import ScormCloudCourseForm
+from accounts.models import Learner, Supervisor
+from learner.forms import LearnerForm
+from supervisor.forms import SupervisorForm
 
 logger = logging.getLogger(__name__)
+
+User = get_user_model()
 
 @login_required
 def dashboard(request):
@@ -118,4 +128,118 @@ def settings(request):
         return render(request, 'administrator/settings.html')
     except Exception as e:
         logger.error(f"Error loading profile: {e}")
+        return HttpResponseServerError("An error occurred")
+    
+def learner_list(request):
+    try:
+        learners = Learner.objects.all()
+    except Learner.DoesNotExist:
+        learners = None
+    return render(request, 'administrator/learner_list.html', {'learners': learners})
+
+def supervisor_list(request):
+    try:
+        supervisors = Supervisor.objects.all()
+    except Supervisor.DoesNotExist:
+        supervisors = None
+    return render(request, 'administrator/supervisor_list.html', {'supervisors': supervisors})
+
+
+@transaction.atomic
+def register_learner(request):
+    if request.method == 'POST':
+        form = LearnerForm(request.POST)
+        if form.is_valid():
+            try:
+                with transaction.atomic():
+                    form.save()
+                messages.success(request, 'Learner registered successfully!')
+                return redirect('administrator_learner_list')
+            except IntegrityError:
+                messages.error(request, 'A learner with this email already exists.')
+                # Explicitly return to avoid further operations in the same transaction block
+                return render(request, 'administrator/register_learner.html', {'form': form})
+            except ValidationError as e:
+                for field, errors in e.message_dict.items():
+                    for error in errors:
+                        messages.error(request, f'{field.capitalize()}: {error}')
+                # Return here if you want to stop further processing and show the form again
+                return render(request, 'administrator/register_learner.html', {'form': form})
+            except Exception as e:
+                logger.error(f'Error registering learner: {e}')
+                messages.error(request, 'An error occurred during registration. Please try again.')
+                # Return here to handle any other exceptions and stop further processing
+                return render(request, 'administrator/register_learner.html', {'form': form})
+        else:
+            # Iterate through form errors and add them as messages
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f'{field.capitalize()}: {error}')
+    else:
+        form = LearnerForm()
+
+    return render(request, 'administrator/register_learner.html', {'form': form})
+
+@transaction.atomic
+def register_supervisor(request):
+    if request.method == 'POST':
+        form = SupervisorForm(request.POST)
+        if form.is_valid():
+            try:
+                with transaction.atomic():
+                    form.save()
+                messages.success(request, 'Supervisor registered successfully!')
+                return redirect('administrator_supervisor_list')
+            except IntegrityError:
+                messages.error(request, 'A supervisor with this email already exists.')
+                # Explicitly return to avoid further operations in the same transaction block
+                return render(request, 'administrator/register_supervisor.html', {'form': form})
+            except ValidationError as e:
+                for field, errors in e.message_dict.items():
+                    for error in errors:
+                        messages.error(request, f'{field.capitalize()}: {error}')
+                # Return here if you want to stop further processing and show the form again
+                return render(request, 'administrator/register_supervisor.html', {'form': form})
+            except Exception as e:
+                logger.error(f'Error registering supervisor: {e}')
+                messages.error(request, 'An error occurred during registration. Please try again.')
+                # Return here to handle any other exceptions and stop further processing
+                return render(request, 'administrator/register_supervisor.html', {'form': form})
+        else:
+            # Iterate through form errors and add them as messages
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f'{field.capitalize()}: {error}')
+    else:
+        form = SupervisorForm()
+
+    return render(request, 'administrator/register_supervisor.html', {'form': form})
+
+
+def enrollment_activity(request):
+    try:
+        return render(request, 'administrator/enrollment_activity.html')
+    except Exception as e:
+        logger.error(f"Error loading enrollment_activity: {e}")
+        return HttpResponseServerError("An error occurred")
+    
+def progress_performance(request):
+    try:
+        return render(request, 'administrator/progress_performance.html')
+    except Exception as e:
+        logger.error(f"Error loading progress_performance: {e}")
+        return HttpResponseServerError("An error occurred")
+    
+def engagement_feedback(request):
+    try:
+        return render(request, 'administrator/engagement_feedback.html')
+    except Exception as e:
+        logger.error(f"Error loading engagement_feedback: {e}")
+        return HttpResponseServerError("An error occurred")
+
+def system_usuage(request):
+    try:
+        return render(request, 'administrator/system_usuage.html')
+    except Exception as e:
+        logger.error(f"Error loading system_usuage: {e}")
         return HttpResponseServerError("An error occurred")

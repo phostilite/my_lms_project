@@ -1,0 +1,231 @@
+{% extends '../base.html' %}
+{% block content %}
+{% load static %}
+{% include './navbar.html' %}
+{% include './sidebar.html' %}
+
+<script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                colors: {
+                    'primary': '#10B981',
+                    'primary-dark': '#059669',
+                    'primary-light': '#D1FAE5',
+                }
+            }
+        }
+    }
+</script>
+
+<div class="p-4 sm:ml-64 mt-14 bg-green-50">
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-4xl font-bold mb-8 text-primary-dark text-center">Engagement & Feedback Dashboard</h1>
+
+        <!-- Forum Participation -->
+        <section class="mb-12">
+            <h2 class="text-2xl font-semibold mb-6 text-primary-dark">Forum Participation</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-primary transition duration-300 hover:shadow-lg">
+                    <h3 class="text-lg font-medium mb-2 text-gray-600">Total Posts</h3>
+                    <p class="text-3xl font-bold text-primary">12,345</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-primary transition duration-300 hover:shadow-lg">
+                    <h3 class="text-lg font-medium mb-2 text-gray-600">Total Replies</h3>
+                    <p class="text-3xl font-bold text-primary">45,678</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-primary transition duration-300 hover:shadow-lg">
+                    <h3 class="text-lg font-medium mb-2 text-gray-600">Active Users</h3>
+                    <p class="text-3xl font-bold text-primary">3,456</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-primary transition duration-300 hover:shadow-lg">
+                    <h3 class="text-lg font-medium mb-2 text-gray-600">Avg. Posts per User</h3>
+                    <p class="text-3xl font-bold text-primary">5.7</p>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <h3 class="text-xl font-semibold mb-4 text-primary-dark">Forum Activity Trend</h3>
+                    <canvas id="forumActivityChart"></canvas>
+                </div>
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <h3 class="text-xl font-semibold mb-4 text-primary-dark">Most Active Users</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm text-left text-gray-500">
+                            <thead class="text-xs text-primary-dark uppercase bg-primary-light">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3 rounded-tl-lg">User</th>
+                                    <th scope="col" class="px-6 py-3">Posts</th>
+                                    <th scope="col" class="px-6 py-3 rounded-tr-lg">Replies</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="bg-white border-b border-primary-light">
+                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">Alice Johnson</th>
+                                    <td class="px-6 py-4">234</td>
+                                    <td class="px-6 py-4">567</td>
+                                </tr>
+                                <tr class="bg-white border-b border-primary-light">
+                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">Bob Smith</th>
+                                    <td class="px-6 py-4">189</td>
+                                    <td class="px-6 py-4">432</td>
+                                </tr>
+                                <tr class="bg-white">
+                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">Charlie Brown</th>
+                                    <td class="px-6 py-4">156</td>
+                                    <td class="px-6 py-4">378</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Popular Topics -->
+        <section class="mb-12">
+            <h2 class="text-2xl font-semibold mb-6 text-primary-dark">Popular Topics</h2>
+            <div class="bg-white rounded-xl shadow-md p-6">
+                <canvas id="popularTopicsChart"></canvas>
+            </div>
+        </section>
+
+        <!-- Survey Results -->
+        <section>
+            <h2 class="text-2xl font-semibold mb-6 text-primary-dark">Survey Results</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-primary transition duration-300 hover:shadow-lg">
+                    <h3 class="text-lg font-medium mb-2 text-gray-600">Overall Satisfaction</h3>
+                    <p class="text-3xl font-bold text-primary">4.5 / 5</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-primary transition duration-300 hover:shadow-lg">
+                    <h3 class="text-lg font-medium mb-2 text-gray-600">Total Responses</h3>
+                    <p class="text-3xl font-bold text-primary">2,345</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-primary transition duration-300 hover:shadow-lg">
+                    <h3 class="text-lg font-medium mb-2 text-gray-600">Response Rate</h3>
+                    <p class="text-3xl font-bold text-primary">78%</p>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <h3 class="text-xl font-semibold mb-4 text-primary-dark">Satisfaction by Course</h3>
+                    <canvas id="satisfactionChart"></canvas>
+                </div>
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <h3 class="text-xl font-semibold mb-4 text-primary-dark">Recent Feedback Comments</h3>
+                    <ul class="space-y-4">
+                        <li class="bg-primary-light rounded-lg p-4">
+                            <p class="text-gray-700 italic">"The course content was excellent and very informative. I especially enjoyed the practical exercises."</p>
+                            <p class="text-sm text-gray-500 mt-2">- Introduction to Programming</p>
+                        </li>
+                        <li class="bg-primary-light rounded-lg p-4">
+                            <p class="text-gray-700 italic">"The instructor was very knowledgeable, but some concepts were explained too quickly. More examples would be helpful."</p>
+                            <p class="text-sm text-gray-500 mt-2">- Data Science Fundamentals</p>
+                        </li>
+                        <li class="bg-primary-light rounded-lg p-4">
+                            <p class="text-gray-700 italic">"Great course overall! The project-based learning approach really helped me understand the material."</p>
+                            <p class="text-sm text-gray-500 mt-2">- Web Development Bootcamp</p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Forum Activity Chart
+        const activityCtx = document.getElementById('forumActivityChart').getContext('2d');
+        new Chart(activityCtx, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                datasets: [{
+                    label: 'Posts',
+                    data: [1200, 1900, 3000, 5000, 4000, 3000],
+                    borderColor: '#10B981',
+                    backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                    fill: true
+                }, {
+                    label: 'Replies',
+                    data: [1800, 2500, 5000, 8000, 6000, 4500],
+                    borderColor: '#059669',
+                    backgroundColor: 'rgba(5, 150, 105, 0.1)',
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Popular Topics Chart
+        const topicsCtx = document.getElementById('popularTopicsChart').getContext('2d');
+        new Chart(topicsCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Programming Basics', 'Data Structures', 'Web Design', 'Machine Learning', 'Database Management'],
+                datasets: [{
+                    label: 'Number of Posts',
+                    data: [500, 450, 400, 350, 300],
+                    backgroundColor: '#10B981',
+                    borderColor: '#059669',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
+
+        // Satisfaction Chart
+        const satisfactionCtx = document.getElementById('satisfactionChart').getContext('2d');
+        new Chart(satisfactionCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Intro to Programming', 'Data Science', 'Web Development', 'Machine Learning', 'Mobile App Dev'],
+                datasets: [{
+                    label: 'Satisfaction Rating',
+                    data: [4.5, 4.3, 4.7, 4.2, 4.6],
+                    backgroundColor: '#10B981',
+                    borderColor: '#059669',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 5,
+                        ticks: {
+                            stepSize: 1
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
+    </script>
+</div>
+
+{% endblock %}

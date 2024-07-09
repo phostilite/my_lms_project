@@ -11,7 +11,6 @@ class User(AbstractUser):
 
 class Learner(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    # Learner-specific fields (e.g., enrollment_date, courses_enrolled)
 
     def __str__(self):
         return self.user.first_name + ' ' + self.user.last_name
@@ -19,7 +18,6 @@ class Learner(models.Model):
 
 class Instructor(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    # Instructor-specific fields (e.g., bio, qualifications)
 
     def __str__(self):
         return self.user.first_name + ' ' + self.user.last_name
@@ -27,7 +25,12 @@ class Instructor(models.Model):
 
 class Administrator(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    # Administrator-specific fields (if needed)
+
+    def __str__(self):
+        return self.user.first_name + ' ' + self.user.last_name
+
+class Supervisor(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.user.first_name + ' ' + self.user.last_name

@@ -1,0 +1,207 @@
+{% extends '../base.html' %}
+{% block content %}
+{% load static %}
+{% include './navbar.html' %}
+{% include './sidebar.html' %}
+
+<script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                colors: {
+                    'primary': '#10B981',
+                    'primary-dark': '#059669',
+                    'primary-light': '#D1FAE5',
+                }
+            }
+        }
+    }
+</script>
+
+<div class="p-4 sm:ml-64 mt-14 bg-green-50">
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-4xl font-bold mb-8 text-primary-dark text-center">System Usage Dashboard</h1>
+
+        <!-- Usage Statistics -->
+        <section class="mb-12">
+            <h2 class="text-2xl font-semibold mb-6 text-primary-dark">Usage Statistics</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-primary transition duration-300 hover:shadow-lg">
+                    <h3 class="text-lg font-medium mb-2 text-gray-600">Daily Active Users</h3>
+                    <p class="text-3xl font-bold text-primary">12,345</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-primary transition duration-300 hover:shadow-lg">
+                    <h3 class="text-lg font-medium mb-2 text-gray-600">Peak Usage Time</h3>
+                    <p class="text-3xl font-bold text-primary">2:00 PM</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-primary transition duration-300 hover:shadow-lg">
+                    <h3 class="text-lg font-medium mb-2 text-gray-600">Most Popular Course</h3>
+                    <p class="text-3xl font-bold text-primary">Web Dev</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-primary transition duration-300 hover:shadow-lg">
+                    <h3 class="text-lg font-medium mb-2 text-gray-600">Mobile Users</h3>
+                    <p class="text-3xl font-bold text-primary">45%</p>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <h3 class="text-xl font-semibold mb-4 text-primary-dark">Usage by Time of Day</h3>
+                    <canvas id="usageByTimeChart"></canvas>
+                </div>
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <h3 class="text-xl font-semibold mb-4 text-primary-dark">Browser Usage</h3>
+                    <canvas id="browserUsageChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- Geographic Distribution -->
+        <section class="mb-12">
+            <h2 class="text-2xl font-semibold mb-6 text-primary-dark">Geographic Distribution</h2>
+            <div class="bg-white rounded-xl shadow-md p-6">
+                <div id="map" style="height: 400px;"></div>
+            </div>
+        </section>
+
+        <!-- Error Logs -->
+        <section class="mb-12">
+            <h2 class="text-2xl font-semibold mb-6 text-primary-dark">Error Logs</h2>
+            <div class="bg-white rounded-xl shadow-md p-6">
+                <h3 class="text-xl font-semibold mb-4 text-primary-dark">Recent Errors</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm text-left text-gray-500">
+                        <thead class="text-xs text-primary-dark uppercase bg-primary-light">
+                            <tr>
+                                <th scope="col" class="px-6 py-3 rounded-tl-lg">Timestamp</th>
+                                <th scope="col" class="px-6 py-3">Error Type</th>
+                                <th scope="col" class="px-6 py-3">Description</th>
+                                <th scope="col" class="px-6 py-3 rounded-tr-lg">Affected Users</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="bg-white border-b border-primary-light">
+                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">2023-05-10 14:23:15</th>
+                                <td class="px-6 py-4">Database Connection</td>
+                                <td class="px-6 py-4">Failed to connect to database</td>
+                                <td class="px-6 py-4">150</td>
+                            </tr>
+                            <tr class="bg-white border-b border-primary-light">
+                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">2023-05-10 10:15:30</th>
+                                <td class="px-6 py-4">404 Error</td>
+                                <td class="px-6 py-4">Page not found</td>
+                                <td class="px-6 py-4">23</td>
+                            </tr>
+                            <tr class="bg-white">
+                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">2023-05-09 18:45:22</th>
+                                <td class="px-6 py-4">Server Timeout</td>
+                                <td class="px-6 py-4">Request timed out</td>
+                                <td class="px-6 py-4">78</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Technical Reports -->
+        <section>
+            <h2 class="text-2xl font-semibold mb-6 text-primary-dark">Technical Reports</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-primary transition duration-300 hover:shadow-lg">
+                    <h3 class="text-lg font-medium mb-2 text-gray-600">System Uptime</h3>
+                    <p class="text-3xl font-bold text-primary">99.9%</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-primary transition duration-300 hover:shadow-lg">
+                    <h3 class="text-lg font-medium mb-2 text-gray-600">Avg. Response Time</h3>
+                    <p class="text-3xl font-bold text-primary">250ms</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-primary transition duration-300 hover:shadow-lg">
+                    <h3 class="text-lg font-medium mb-2 text-gray-600">Database Size</h3>
+                    <p class="text-3xl font-bold text-primary">500 GB</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-primary transition duration-300 hover:shadow-lg">
+                    <h3 class="text-lg font-medium mb-2 text-gray-600">API Health</h3>
+                    <p class="text-3xl font-bold text-primary">Good</p>
+                </div>
+            </div>
+        </section>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.css" />
+    <script>
+        // Usage by Time of Day Chart
+        const usageCtx = document.getElementById('usageByTimeChart').getContext('2d');
+        new Chart(usageCtx, {
+            type: 'line',
+            data: {
+                labels: ['12am', '3am', '6am', '9am', '12pm', '3pm', '6pm', '9pm'],
+                datasets: [{
+                    label: 'Active Users',
+                    data: [500, 200, 300, 1000, 1500, 2000, 1800, 1200],
+                    borderColor: '#10B981',
+                    backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Browser Usage Chart
+        const browserCtx = document.getElementById('browserUsageChart').getContext('2d');
+        new Chart(browserCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Chrome', 'Firefox', 'Safari', 'Edge', 'Others'],
+                datasets: [{
+                    data: [50, 20, 15, 10, 5],
+                    backgroundColor: ['#10B981', '#34D399', '#6EE7B7', '#A7F3D0', '#D1FAE5'],
+                    borderColor: '#FFFFFF',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'right'
+                    }
+                }
+            }
+        });
+
+        // Geographic Distribution Map
+        const map = L.map('map').setView([0, 0], 2);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // Sample data for user distribution
+        const locations = [
+            {lat: 40.7128, lon: -74.0060, users: 1000},
+            {lat: 51.5074, lon: -0.1278, users: 800},
+            {lat: 48.8566, lon: 2.3522, users: 600},
+            {lat: 35.6762, lon: 139.6503, users: 750},
+            {lat: -33.8688, lon: 151.2093, users: 500}
+        ];
+
+        locations.forEach(loc => {
+            L.circleMarker([loc.lat, loc.lon], {
+                radius: Math.sqrt(loc.users) / 2,
+                fillColor: "#10B981",
+                color: "#059669",
+                weight: 1,
+                opacity: 1,
+                fillOpacity: 0.8
+            }).addTo(map).bindPopup(`Users: ${loc.users}`);
+        });
+    </script>
+</div>
+
+{% endblock %}

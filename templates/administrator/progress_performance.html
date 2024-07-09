@@ -1,0 +1,214 @@
+{% extends '../base.html' %}
+{% block content %}
+{% load static %}
+{% include './navbar.html' %}
+{% include './sidebar.html' %}
+
+<script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                colors: {
+                    'primary': '#10B981',
+                    'primary-dark': '#059669',
+                    'primary-light': '#D1FAE5',
+                }
+            }
+        }
+    }
+</script>
+<div class="p-4 sm:ml-64 mt-14 bg-green-50">
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-4xl font-bold mb-8 text-primary-dark text-center">Progress & Performance Dashboard</h1>
+
+        <!-- Course Completion -->
+        <section class="mb-12">
+            <h2 class="text-2xl font-semibold mb-6 text-primary-dark">Course Completion</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-primary transition duration-300 hover:shadow-lg">
+                    <h3 class="text-lg font-medium mb-2 text-gray-600">Average Completion Rate</h3>
+                    <p class="text-3xl font-bold text-primary">78%</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-primary transition duration-300 hover:shadow-lg">
+                    <h3 class="text-lg font-medium mb-2 text-gray-600">Avg. Time to Complete</h3>
+                    <p class="text-3xl font-bold text-primary">4.5 weeks</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-primary transition duration-300 hover:shadow-lg">
+                    <h3 class="text-lg font-medium mb-2 text-gray-600">Total Completed Courses</h3>
+                    <p class="text-3xl font-bold text-primary">1,234</p>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl shadow-md p-6">
+                <h3 class="text-xl font-semibold mb-4 text-primary-dark">Completion Rates by Course</h3>
+                <canvas id="completionRatesChart"></canvas>
+            </div>
+        </section>
+
+        <!-- Assessment Results -->
+        <section class="mb-12">
+            <h2 class="text-2xl font-semibold mb-6 text-primary-dark">Assessment Results</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-primary transition duration-300 hover:shadow-lg">
+                    <h3 class="text-lg font-medium mb-2 text-gray-600">Average Score</h3>
+                    <p class="text-3xl font-bold text-primary">82%</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-primary transition duration-300 hover:shadow-lg">
+                    <h3 class="text-lg font-medium mb-2 text-gray-600">Pass Rate</h3>
+                    <p class="text-3xl font-bold text-primary">91%</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-primary transition duration-300 hover:shadow-lg">
+                    <h3 class="text-lg font-medium mb-2 text-gray-600">Total Assessments</h3>
+                    <p class="text-3xl font-bold text-primary">5,678</p>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <h3 class="text-xl font-semibold mb-4 text-primary-dark">Grade Distribution</h3>
+                    <canvas id="gradeDistributionChart"></canvas>
+                </div>
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <h3 class="text-xl font-semibold mb-4 text-primary-dark">Most Missed Questions</h3>
+                    <ul class="list-disc list-inside text-gray-700">
+                        <li>Question 7: Data Structures (45% incorrect)</li>
+                        <li>Question 12: Algorithms (38% incorrect)</li>
+                        <li>Question 3: Database Design (33% incorrect)</li>
+                        <li>Question 9: Network Protocols (30% incorrect)</li>
+                        <li>Question 15: Software Testing (28% incorrect)</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Individual Learner Progress -->
+        <section>
+            <h2 class="text-2xl font-semibold mb-6 text-primary-dark">Individual Learner Progress</h2>
+            <div class="mb-6">
+                <label for="learner-select" class="block mb-2 text-sm font-medium text-gray-900">Select Learner</label>
+                <select id="learner-select" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary focus:border-primary block w-full p-2.5">
+                    <option selected>Choose a learner</option>
+                    <option value="1">Alice Johnson</option>
+                    <option value="2">Bob Smith</option>
+                    <option value="3">Charlie Brown</option>
+                </select>
+            </div>
+            <div id="learner-progress" class="bg-white rounded-xl shadow-md p-6">
+                <h3 class="text-xl font-semibold mb-6 text-primary-dark">Learner Progress: <span id="learner-name">Alice Johnson</span></h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <div class="bg-primary-light rounded-lg p-4">
+                        <h4 class="text-lg font-medium mb-2 text-primary-dark">Course Progress</h4>
+                        <ul class="list-disc list-inside text-gray-700">
+                            <li>Introduction to Programming (85% complete)</li>
+                            <li>Data Science Fundamentals (60% complete)</li>
+                            <li>Web Development Bootcamp (30% complete)</li>
+                        </ul>
+                    </div>
+                    <div class="bg-primary-light rounded-lg p-4">
+                        <h4 class="text-lg font-medium mb-2 text-primary-dark">Recent Grades</h4>
+                        <ul class="list-disc list-inside text-gray-700">
+                            <li>Programming Quiz 3: 90%</li>
+                            <li>Data Analysis Project: 85%</li>
+                            <li>HTML/CSS Assignment: 95%</li>
+                        </ul>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="text-lg font-medium mb-4 text-primary-dark">Assignment Completion Status</h4>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm text-left text-gray-500">
+                            <thead class="text-xs text-primary-dark uppercase bg-primary-light">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3 rounded-tl-lg">Assignment</th>
+                                    <th scope="col" class="px-6 py-3">Course</th>
+                                    <th scope="col" class="px-6 py-3">Due Date</th>
+                                    <th scope="col" class="px-6 py-3 rounded-tr-lg">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="bg-white border-b border-primary-light">
+                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">Final Project</th>
+                                    <td class="px-6 py-4">Introduction to Programming</td>
+                                    <td class="px-6 py-4">2023-05-15</td>
+                                    <td class="px-6 py-4"><span class="bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded">In Progress</span></td>
+                                </tr>
+                                <tr class="bg-white border-b border-primary-light">
+                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">Data Visualization</th>
+                                    <td class="px-6 py-4">Data Science Fundamentals</td>
+                                    <td class="px-6 py-4">2023-05-10</td>
+                                    <td class="px-6 py-4"><span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">Completed</span></td>
+                                </tr>
+                                <tr class="bg-white">
+                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">Responsive Design</th>
+                                    <td class="px-6 py-4">Web Development Bootcamp</td>
+                                    <td class="px-6 py-4">2023-05-20</td>
+                                    <td class="px-6 py-4"><span class="bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded">Not Started</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Completion Rates Chart
+        const completionCtx = document.getElementById('completionRatesChart').getContext('2d');
+        new Chart(completionCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Intro to Programming', 'Data Science', 'Web Development', 'Machine Learning', 'Mobile App Dev'],
+                datasets: [{
+                    label: 'Completion Rate',
+                    data: [85, 72, 68, 60, 55],
+                    backgroundColor: '#10B981',
+                    borderColor: '#059669',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100,
+                        ticks: {
+                            callback: function(value) {
+                                return value + '%';
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
+
+        // Grade Distribution Chart
+        const gradeCtx = document.getElementById('gradeDistributionChart').getContext('2d');
+        new Chart(gradeCtx, {
+            type: 'pie',
+            data: {
+                labels: ['A', 'B', 'C', 'D', 'F'],
+                datasets: [{
+                    data: [30, 25, 20, 15, 10],
+                    backgroundColor: ['#10B981', '#34D399', '#6EE7B7', '#A7F3D0', '#D1FAE5'],
+                    borderColor: '#FFFFFF',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'right'
+                    }
+                }
+            }
+        });
+    </script>
+</div>
+
+{% endblock %}

@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'accounts',
     'learner',
     'instructor',
+    'supervisor',
     'courses',
     'assignments',
     'certificates',
