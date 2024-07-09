@@ -4,9 +4,236 @@
 {% include './navbar.html' %}
 {% include './sidebar.html' %}
 
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <div class="p-4 sm:ml-64 mt-14 bg-green-50">
 
 
+            <!-- Main content area -->
+            <main class="flex-1 overflow-y-auto p-4">
+                <div class="max-w-7xl mx-auto">
+                    <!-- Key Metrics -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                        <div class="bg-white rounded-lg shadow p-4">
+                            <h2 class="text-lg font-semibold mb-2">Total Learners</h2>
+                            <p class="text-3xl font-bold text-green-600">1,234</p>
+                        </div>
+                        <div class="bg-white rounded-lg shadow p-4">
+                            <h2 class="text-lg font-semibold mb-2">Active Courses</h2>
+                            <p class="text-3xl font-bold text-green-600">56</p>
+                        </div>
+                        <div class="bg-white rounded-lg shadow p-4">
+                            <h2 class="text-lg font-semibold mb-2">Completion Rate</h2>
+                            <p class="text-3xl font-bold text-green-600">78%</p>
+                        </div>
+                        <div class="bg-white rounded-lg shadow p-4">
+                            <h2 class="text-lg font-semibold mb-2">Avg. Engagement</h2>
+                            <p class="text-3xl font-bold text-green-600">4.2 hrs/week</p>
+                        </div>
+                    </div>
 
-  
+                    <!-- Calendar and Chat -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-8">
+    <!-- Calendar Section -->
+    <div class="bg-white rounded-lg shadow p-4">
+        <h2 class="text-lg font-semibold mb-4">Calendar</h2>
+        <div class="border rounded-lg p-4">
+            <div class="flex justify-between items-center mb-4">
+                <button class="text-green-600 hover:text-green-800">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <h3 class="text-xl font-semibold">July 2024</h3>
+                <button class="text-green-600 hover:text-green-800">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+            <div class="grid grid-cols-7 gap-2 text-center">
+                <div class="text-sm font-semibold">Sun</div>
+                <div class="text-sm font-semibold">Mon</div>
+                <div class="text-sm font-semibold">Tue</div>
+                <div class="text-sm font-semibold">Wed</div>
+                <div class="text-sm font-semibold">Thu</div>
+                <div class="text-sm font-semibold">Fri</div>
+                <div class="text-sm font-semibold">Sat</div>
+                
+                <!-- Calendar days -->
+                <div class="text-gray-400">30</div>
+                <div>1</div>
+                <div>2</div>
+                <div>3</div>
+                <div>4</div>
+                <div>5</div>
+                <div>6</div>
+                <div>7</div>
+                <div>8</div>
+                <div class="bg-green-100 rounded-full">9</div>
+                <div>10</div>
+                <div>11</div>
+                <div>12</div>
+                <div>13</div>
+                <div>14</div>
+                <div>15</div>
+                <div>16</div>
+                <div>17</div>
+                <div>18</div>
+                <div>19</div>
+                <div>20</div>
+                <div>21</div>
+                <div>22</div>
+                <div>23</div>
+                <div>24</div>
+                <div>25</div>
+                <div>26</div>
+                <div>27</div>
+                <div>28</div>
+                <div>29</div>
+                <div>30</div>
+                <div>31</div>
+                <div class="text-gray-400">1</div>
+                <div class="text-gray-400">2</div>
+                <div class="text-gray-400">3</div>
+            </div>
+            <div class="mt-4">
+                <h4 class="font-semibold mb-2">Upcoming Events:</h4>
+                <ul class="space-y-1">
+                    <li class="text-sm"><span class="text-green-600 font-semibold">Jul 9:</span> New Course Launch</li>
+                    <li class="text-sm"><span class="text-green-600 font-semibold">Jul 15:</span> Staff Meeting</li>
+                    <li class="text-sm"><span class="text-green-600 font-semibold">Jul 22:</span> Webinar: Advanced Teaching Techniques</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chat Section -->
+    <div class="bg-white rounded-lg shadow p-4">
+        <h2 class="text-lg font-semibold mb-4">Chat</h2>
+        <div class="border rounded-lg p-4 h-96 flex flex-col">
+            <div class="flex-1 overflow-y-auto mb-4">
+                <div class="flex flex-col space-y-2">
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0 mr-3">
+                            <div class="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center text-white font-semibold">
+                                J
+                            </div>
+                        </div>
+                        <div class="bg-gray-100 rounded-lg p-2 max-w-xs">
+                            <p class="text-sm">Hello! I'm having trouble accessing the new course materials. Can you help?</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start justify-end">
+                        <div class="bg-green-100 rounded-lg p-2 max-w-xs">
+                            <p class="text-sm">Of course! I'd be happy to help. Can you please provide more details about the issue you're experiencing?</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0 mr-3">
+                            <div class="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center text-white font-semibold">
+                                J
+                            </div>
+                        </div>
+                        <div class="bg-gray-100 rounded-lg p-2 max-w-xs">
+                            <p class="text-sm">When I click on the "Module 1" link, I get an error message saying "Access Denied".</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start justify-end">
+                        <div class="bg-green-100 rounded-lg p-2 max-w-xs">
+                            <p class="text-sm">I see. Let me check your account permissions real quick. Can you please hold for a moment?</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="flex items-center">
+                <input type="text" placeholder="Type your message..." class="flex-1 border rounded-l-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500">
+                <button class="bg-green-500 text-white px-4 py-2 rounded-r-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+                    <!-- Notifications and Support -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-8">
+                        <div class="bg-white rounded-lg shadow p-4">
+                            <h2 class="text-lg font-semibold mb-4">Notifications</h2>
+                            <ul class="space-y-2">
+                                <li class="flex items-center text-sm">
+                                    <span class="w-2 h-2 bg-red-500 rounded-full mr-2"></span>
+                                    <span>New course submission: "Advanced Machine Learning"</span>
+                                </li>
+                                <li class="flex items-center text-sm">
+                                    <span class="w-2 h-2 bg-yellow-500 rounded-full mr-2"></span>
+                                    <span>5 students completed "Introduction to Python"</span>
+                                </li>
+                                <li class="flex items-center text-sm">
+                                    <span class="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
+                                    <span>System update scheduled for next week</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="bg-white rounded-lg shadow p-4">
+                            <h2 class="text-lg font-semibold mb-4">Support Tickets</h2>
+                            <ul class="space-y-2">
+                                <li class="flex justify-between items-center text-sm">
+                                    <span>Unable to access course materials</span>
+                                    <span class="px-2 py-1 bg-yellow-200 text-yellow-800 rounded-full text-xs">In Progress</span>
+                                </li>
+                                <li class="flex justify-between items-center text-sm">
+                                    <span>Request for refund</span>
+                                    <span class="px-2 py-1 bg-red-200 text-red-800 rounded-full text-xs">Urgent</span>
+                                </li>
+                                <li class="flex justify-between items-center text-sm">
+                                    <span>Question about certification</span>
+                                    <span class="px-2 py-1 bg-green-200 text-green-800 rounded-full text-xs">Resolved</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Recent Activity and Quick Links -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                        <div class="bg-white rounded-lg shadow p-4">
+                            <h2 class="text-lg font-semibold mb-4">Recent Activity</h2>
+                            <ul class="space-y-2">
+                                <li class="flex items-center text-sm">
+                                    <i class="fas fa-user-graduate mr-2 text-green-500"></i>
+                                    <span>John Doe enrolled in "Web Development Bootcamp"</span>
+                                </li>
+                                <li class="flex items-center text-sm">
+                                    <i class="fas fa-chalkboard-teacher mr-2 text-blue-500"></i>
+                                    <span>New instructor application: Jane Smith</span>
+                                </li>
+                                <li class="flex items-center text-sm">
+                                    <i class="fas fa-star mr-2 text-yellow-500"></i>
+                                    <span>5-star review for "Data Science Fundamentals"</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="bg-white rounded-lg shadow p-4">
+                            <h2 class="text-lg font-semibold mb-4">Quick Links</h2>
+                            <div class="grid grid-cols-2 gap-4">
+                                <a href="{% url 'course_list' %}" class="flex items-center justify-center p-4 bg-green-100 text-green-700 rounded-lg hover:bg-green-200">
+                                    <i class="fas fa-plus-circle mr-2"></i>
+                                    <span>Add New Course</span>
+                                </a>
+                                <a href="{% url 'administrator_learner_list' %}" class="flex items-center justify-center p-4 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200">
+                                    <i class="fas fa-users mr-2"></i>
+                                    <span>Manage Users</span>
+                                </a>
+                                <a href="{% url 'administrator_enrollment_activity' %}" class="flex items-center justify-center p-4 bg-purple-100 text-purple-700 rounded-lg hover:bg-purple-200">
+                                    <i class="fas fa-chart-line mr-2"></i>
+                                    <span>View Reports</span>
+                                </a>
+                                <a href="{%  url 'administrator_settings' %}" class="flex items-center justify-center p-4 bg-yellow-100 text-yellow-700 rounded-lg hover:bg-yellow-200">
+                                    <i class="fas fa-cog mr-2"></i>
+                                    <span>System Settings</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
 
 {% endblock %}
