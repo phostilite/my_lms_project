@@ -1,12 +1,13 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin  
 
-from .models import User, Learner, Instructor, Administrator, Supervisor
+from .models import User, Learner, Instructor, Administrator, Supervisor, Facilitator
 
 admin.site.register(Learner)
 admin.site.register(Instructor)
 admin.site.register(Administrator)
 admin.site.register(Supervisor)
+admin.site.register(Facilitator)
 
 @admin.register(User)
 class UserAdmin(UserAdmin):

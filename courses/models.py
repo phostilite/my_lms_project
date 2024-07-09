@@ -1,8 +1,15 @@
 from django.conf import settings
 from django.db import models
 import uuid
+from django.contrib.auth import get_user_model
 
-from accounts.models import Learner
+import random
+import string
+
+
+from accounts.models import Learner, Facilitator
+
+User = get_user_model()
 
 class ScormCloudCourse(models.Model):
     course_id = models.CharField(max_length=50, unique=True)  
@@ -30,3 +37,82 @@ class ScormCloudRegistration(models.Model):
 
     def __str__(self):
         return f"Registration {self.registration_id} for {self.learner}"
+    
+
+class CourseDelivery(models.Model):
+    DELIVERY_TYPES = (
+        ('SELF_PACED', 'Self Paced'),
+        ('INSTRUCTOR_LED', 'Instructor Led'),
+    )
+    ENROLLMENT_TYPES = (
+        ('OPEN', 'Open Enrollment'),
+        ('INVITE', 'By Invitation'),
+    )
+
+    title = models.CharField(max_length=255, null=True, blank=True)
+    course = models.ForeignKey(ScormCloudCourse, on_delete=models.CASCADE, related_name='deliveries')
+    delivery_code = models.CharField(max_length=50, unique=True)
+    delivery_type = models.CharField(max_length=20, choices=DELIVERY_TYPES)
+    enrollment_type = models.CharField(max_length=20, choices=ENROLLMENT_TYPES)
+    all_participants_access = models.BooleanField(default=True)
+    facilitators = models.ManyToManyField(Facilitator, related_name='facilitated_deliveries')
+    participants = models.ManyToManyField(Learner, related_name='enrolled_deliveries')
+    start_date = models.DateField(null=True, blank=True)
+    end_date = models.DateField(null=True, blank=True)
+    deactivation_date = models.DateField(null=True, blank=True)
+    is_mandatory = models.BooleanField(default=False)
+    requires_attendance = models.BooleanField(default=False)
+    requires_feedback = models.BooleanField(default=False)
+    requires_completion_certificate = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+
+    @classmethod
+    def generate_unique_delivery_code(cls):
+        while True:
+            code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
+            if not cls.objects.filter(delivery_code=code).exists():
+                return code
+
+    def __str__(self):
+        return f"{self.course.title} - {self.delivery_code}"
+    
+
+class Enrollment(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    course_delivery = models.ForeignKey(CourseDelivery, on_delete=models.CASCADE)
+    enrollment_date = models.DateTimeField(auto_now_add=True)
+    completion_date = models.DateTimeField(null=True, blank=True)
+    is_completed = models.BooleanField(default=False)
+
+    class Meta:
+        unique_together = ('user', 'course_delivery')
+
+    def __str__(self):
+        return f"{self.user.username} - {self.course_delivery.delivery_code}"
+    
+
+class Feedback(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    course_delivery = models.ForeignKey(CourseDelivery, on_delete=models.CASCADE)
+    rating = models.IntegerField()
+    comments = models.TextField()
+    submission_date = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'course_delivery')
+
+    def __str__(self):
+        return f"Feedback for {self.course_delivery.delivery_code} by {self.user.username}"
+    
+    
+class Attendance(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    course_delivery = models.ForeignKey(CourseDelivery, on_delete=models.CASCADE)
+    date = models.DateField()
+    is_present = models.BooleanField(default=False)
+
+    class Meta:
+        unique_together = ('user', 'course_delivery', 'date')
+
+    def __str__(self):
+        return f"{self.user.username} - {self.course_delivery.delivery_code} - {self.date}"

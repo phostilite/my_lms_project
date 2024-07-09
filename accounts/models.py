@@ -16,6 +16,13 @@ class Learner(models.Model):
         return self.user.first_name + ' ' + self.user.last_name
 
 
+class Administrator(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.user.first_name + ' ' + self.user.last_name
+    
+
 class Instructor(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
@@ -23,13 +30,13 @@ class Instructor(models.Model):
         return self.user.first_name + ' ' + self.user.last_name
 
 
-class Administrator(models.Model):
+class Supervisor(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.user.first_name + ' ' + self.user.last_name
-
-class Supervisor(models.Model):
+    
+class Facilitator(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
     def __str__(self):

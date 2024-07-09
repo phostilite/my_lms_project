@@ -11,9 +11,11 @@ from django.db import transaction
 from django.db import IntegrityError, transaction
 from django.contrib import messages
 from django.contrib.auth import get_user_model
+from django.views import View
+from django.shortcuts import render, redirect, get_object_or_404
 
-from courses.models import ScormCloudCourse
-from courses.forms import ScormCloudCourseForm
+from courses.models import ScormCloudCourse, CourseDelivery, Enrollment, Feedback, Attendance
+from courses.forms import ScormCloudCourseForm, CourseDeliveryForm
 from accounts.models import Learner, Supervisor
 from learner.forms import LearnerForm
 from supervisor.forms import SupervisorForm
@@ -243,3 +245,69 @@ def system_usuage(request):
     except Exception as e:
         logger.error(f"Error loading system_usuage: {e}")
         return HttpResponseServerError("An error occurred")
+    
+
+def course_delivery_list(request, pk):
+    try:
+        course = ScormCloudCourse.objects.get(pk=pk)
+        deliveries = course.deliveries.all()
+    except ScormCloudCourse.DoesNotExist:
+        course = None
+        deliveries = None
+    return render(request, 'administrator/course_delivery/course_delivery_list.html', {'course': course, 'deliveries': deliveries})
+
+
+class CourseDeliveryCreateView(View):
+    def get(self, request, pk=None):
+        logger.debug("Entering GET method")
+        try:
+            form = CourseDeliveryForm()
+            course = None
+            if pk:
+                course = get_object_or_404(ScormCloudCourse, pk=pk)
+                logger.info(f"Course with pk={pk} found")
+            return render(request, 'administrator/course_delivery/course_delivery_create.html', {'form': form, 'course': course})
+        except Exception as e:
+            logger.error(f"Error in GET method: {e}")
+            # Handle the error or redirect to an error page
+            return render(request, 'errors/error_page.html', {'error': e})
+
+    def post(self, request, pk=None):
+        logger.debug("Entering POST method")
+        print(f"Entering POST method with pk={pk} and data={request.POST}")
+        try:
+            form = CourseDeliveryForm(request.POST)
+            if form.is_valid():
+                course_delivery = form.save(commit=False)
+                # Fetch the course using the pk and assign it to the course_delivery object
+                if pk:
+                    course = get_object_or_404(ScormCloudCourse, pk=pk)
+                    course_delivery.course = course  # Assuming 'course' is the field name in CourseDelivery model
+                    logger.info(f"Assigned course with pk={pk} to course delivery")
+                    print(f"Assigned course with pk={pk} to course delivery")
+                
+                if not course_delivery.delivery_code:
+                    course_delivery.delivery_code = CourseDelivery.generate_unique_delivery_code()
+                    logger.info("Generated unique delivery code")
+                    print(f"Generated unique delivery code: {course_delivery.delivery_code}")
+                
+                course_delivery.save()
+                form.save_m2m()
+                logger.info("Course delivery saved successfully")
+                print("Course delivery saved successfully")
+                return redirect('course_delivery_list', pk=course.pk)
+            else:
+                logger.warning(f"Form is not valid: {form.errors}")
+            
+            course = None
+            if pk:
+                course = get_object_or_404(ScormCloudCourse, pk=pk)
+                logger.info(f"Course with pk={pk} found for POST")
+                print(f"Course with pk={pk} found for POST")
+            
+            return render(request, 'administrator/course_delivery/course_delivery_create.html', {'form': form, 'course': course})
+        except Exception as e:
+            logger.error(f"Error in POST method: {e}")
+            print(f"Error in POST method: {e}")
+            # Handle the error or redirect to an error page
+            return render(request, 'errors/error_page.html', {'error': e})

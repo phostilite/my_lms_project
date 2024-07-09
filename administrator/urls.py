@@ -20,4 +20,7 @@ urlpatterns = [
     path('progress_performance/', views.progress_performance, name='administrator_progress_performance'),
     path('engagement_feedback/', views.engagement_feedback, name='administrator_engagement_feedback'),
     path('system_usuage/', views.system_usuage, name='administrator_system_usuage'),
+
+    path('course_delivery/<int:pk>/list/', views.course_delivery_list, name='course_delivery_list'),
+    path('course_delivery/<int:pk>/create/', views.CourseDeliveryCreateView.as_view(), name='course_delivery_create'),
 ]
