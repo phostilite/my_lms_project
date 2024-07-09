@@ -13,11 +13,14 @@ import zipfile
 import uuid
 from django.views.decorators.http import require_POST, require_GET
 from django.http import JsonResponse, HttpResponseRedirect
+from django.contrib.auth import get_user_model
 
 from courses.models import ScormCloudCourse
 from .utils import course_id_is_valid
 from accounts.models import Learner
 from courses.models import ScormCloudCourse, ScormCloudRegistration
+
+User = get_user_model()
 
 logger = logging.getLogger(__name__)
 
@@ -96,6 +99,7 @@ def create_course(request, course_id):
                 version=version,
                 created_at=created_at,
                 updated_at=updated_at,
+                published_by=request.user,
                 web_path=web_path
             )
             scorm_course.save()
