@@ -1,4 +1,16 @@
 {% load static %}
+
+<style>
+  .responsive-text {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .responsive-text {
+    display: inline-block;
+  }
+}
+</style>
 <nav class="fixed top-0 z-50 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
     <div class="px-3 py-3 lg:px-5 lg:pl-3">
       <div class="flex items-center justify-between">
@@ -11,7 +23,7 @@
            </button>
           <a href="{% url 'learner_dashboard' %}" class="flex ms-2 md:me-24">
             <img src="{% static 'img/logo.png' %}" class="h-8 me-3" alt="LearnKnow Digital Logo" />
-            <span class="hidden md:inline-block self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white">LearnKnow Digital LMS</span>
+            <span class="responsive-text self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white">LearnKnow Digital LMS</span>
           </a>
         </div>
         <div class="flex items-center">
