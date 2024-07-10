@@ -1,0 +1,184 @@
+{% extends '../base.html' %}
+{% block content %}
+{% include './navbar.html' %}
+{% include './sidebar.html' %}
+
+<div class="p-8 sm:ml-64 mt-14 bg-green-50">
+    <div class="max-w-7xl mx-auto">
+        <h1 class="text-3xl font-bold text-green-800 mb-6">Introduction to Digital Marketing</h1>
+
+        <!-- SCORM Content iframe -->
+        <div class="mb-8">
+            <iframe src="https://via.placeholder.com/1200x600?text=SCORM+Content+Placeholder" class="w-full h-[600px] border-2 border-green-300 rounded-lg"></iframe>
+        </div>
+
+        <!-- Tabbed Content -->
+        <div class="mb-4 border-b border-gray-200 dark:border-gray-700">
+            <ul class="flex flex-wrap -mb-px text-sm font-medium text-center" id="courseTab" data-tabs-toggle="#courseTabContent" role="tablist">
+                <li class="mr-2" role="presentation">
+                    <button class="inline-block p-4 border-b-2 rounded-t-lg" id="overview-tab" data-tabs-target="#overview" type="button" role="tab" aria-controls="overview" aria-selected="false">Course Overview</button>
+                </li>
+                <li class="mr-2" role="presentation">
+                    <button class="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="progress-tab" data-tabs-target="#progress" type="button" role="tab" aria-controls="progress" aria-selected="false">Progress</button>
+                </li>
+                <li class="mr-2" role="presentation">
+                    <button class="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="qa-tab" data-tabs-target="#qa" type="button" role="tab" aria-controls="qa" aria-selected="false">Q&A Forum</button>
+                </li>
+                <li role="presentation">
+                    <button class="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="resources-tab" data-tabs-target="#resources" type="button" role="tab" aria-controls="resources" aria-selected="false">Resources</button>
+                </li>
+            </ul>
+        </div>
+        <div id="courseTabContent">
+            <!-- Course Overview Tab -->
+            <div class="hidden p-4 rounded-lg bg-white" id="overview" role="tabpanel" aria-labelledby="overview-tab">
+                <h2 class="text-2xl font-semibold text-green-700 mb-4">Course Overview</h2>
+                <p class="text-gray-600 mb-4">This comprehensive course on digital marketing covers essential topics such as search engine optimization (SEO), content marketing, social media strategies, email marketing, and analytics. You'll learn how to create effective digital marketing campaigns, understand consumer behavior online, and measure the success of your marketing efforts.</p>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                    <div>
+                        <p class="font-semibold text-gray-700">Duration</p>
+                        <p class="text-gray-600">8 weeks</p>
+                    </div>
+                    <div>
+                        <p class="font-semibold text-gray-700">Instructor</p>
+                        <p class="text-gray-600">Dr. Sarah Johnson</p>
+                    </div>
+                    <div>
+                        <p class="font-semibold text-gray-700">Start Date</p>
+                        <p class="text-gray-600">2024-07-15</p>
+                    </div>
+                    <div>
+                        <p class="font-semibold text-gray-700">End Date</p>
+                        <p class="text-gray-600">2024-09-09</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Progress Tab -->
+            <div class="hidden p-4 rounded-lg bg-white" id="progress" role="tabpanel" aria-labelledby="progress-tab">
+                <h2 class="text-2xl font-semibold text-green-700 mb-4">Your Progress</h2>
+                <div class="mb-4">
+                    <div class="flex justify-between text-sm text-gray-600 mb-1">
+                        <span>Overall Progress</span>
+                        <span>50%</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2.5">
+                        <div class="bg-green-600 h-2.5 rounded-full" style="width: 50%"></div>
+                    </div>
+                </div>
+                <div class="space-y-2">
+                    <div>
+                        <div class="flex justify-between text-sm text-gray-600 mb-1">
+                            <span>Module 1: Introduction to Digital Marketing</span>
+                            <span>100%</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div class="bg-green-500 h-2 rounded-full" style="width: 100%"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-sm text-gray-600 mb-1">
+                            <span>Module 2: Search Engine Optimization</span>
+                            <span>75%</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div class="bg-green-500 h-2 rounded-full" style="width: 75%"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-sm text-gray-600 mb-1">
+                            <span>Module 3: Content Marketing</span>
+                            <span>25%</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div class="bg-green-500 h-2 rounded-full" style="width: 25%"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-sm text-gray-600 mb-1">
+                            <span>Module 4: Social Media Marketing</span>
+                            <span>0%</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div class="bg-green-500 h-2 rounded-full" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Q&A Forum Tab -->
+            <div class="hidden p-4 rounded-lg bg-white" id="qa" role="tabpanel" aria-labelledby="qa-tab">
+                <h2 class="text-2xl font-semibold text-green-700 mb-4">Q&A Forum</h2>
+                <div class="mb-4">
+                    <textarea class="w-full p-2 border border-gray-300 rounded-md" rows="3" placeholder="Ask a question..."></textarea>
+                    <button class="mt-2 bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded transition duration-300">
+                        Post Question
+                    </button>
+                </div>
+                <div class="space-y-4">
+                    <div class="border-b border-gray-200 pb-4">
+                        <p class="font-semibold text-gray-800">What are the most effective SEO techniques for 2024?</p>
+                        <p class="text-sm text-gray-600">Asked by John Smith on 2024-07-18</p>
+                        <p class="mt-2 text-gray-700"><span class="font-semibold">Answer:</span> The most effective SEO techniques for 2024 include optimizing for voice search, focusing on user experience, creating high-quality content, optimizing for mobile, and leveraging AI and machine learning for content creation and optimization.</p>
+                    </div>
+                    <div class="border-b border-gray-200 pb-4">
+                        <p class="font-semibold text-gray-800">How do I measure the ROI of my social media marketing efforts?</p>
+                        <p class="text-sm text-gray-600">Asked by Emily Chen on 2024-07-20</p>
+                        <p class="mt-2 text-gray-700"><span class="font-semibold">Answer:</span> To measure ROI of social media marketing, track metrics such as engagement rate, conversions, website traffic from social media, and customer acquisition cost. Use tools like Google Analytics and social media platform insights to gather data.</p>
+                    </div>
+                    <div class="border-b border-gray-200 pb-4">
+                        <p class="font-semibold text-gray-800">What's the difference between organic and paid social media marketing?</p>
+                        <p class="text-sm text-gray-600">Asked by Alex Johnson on 2024-07-22</p>
+                        <p class="mt-2 text-gray-500 italic">Not answered yet</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Resources Tab -->
+            <div class="hidden p-4 rounded-lg bg-white" id="resources" role="tabpanel" aria-labelledby="resources-tab">
+                <h2 class="text-2xl font-semibold text-green-700 mb-4">Course Resources</h2>
+                <ul class="space-y-2">
+                    <li>
+                        <a href="#" class="text-green-600 hover:underline flex items-center">
+                            <i class="fas fa-file-pdf mr-2"></i>Digital Marketing Fundamentals eBook
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="text-green-600 hover:underline flex items-center">
+                            <i class="fas fa-video mr-2"></i>Video: SEO Best Practices for 2024
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="text-green-600 hover:underline flex items-center">
+                            <i class="fas fa-file-alt mr-2"></i>Content Marketing Strategy Template
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="text-green-600 hover:underline flex items-center">
+                            <i class="fas fa-link mr-2"></i>Google Analytics Academy
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="text-green-600 hover:underline flex items-center">
+                            <i class="fas fa-file-powerpoint mr-2"></i>Social Media Marketing Slides
+                        </a>
+                    </li>
+                </ul>
+                
+                <h2 class="text-2xl font-semibold text-green-700 mt-8 mb-4">Your Notes</h2>
+                <textarea class="w-full p-2 border border-gray-300 rounded-md" rows="10" placeholder="Take notes here...">Module 1 Notes:
+- Digital marketing encompasses all marketing efforts that use electronic devices or the internet
+- Key components: SEO, content marketing, social media marketing, email marketing, PPC advertising
+- Important to set SMART goals for digital marketing campaigns
+- Always consider the target audience and their online behavior
+
+TODO: Research more about marketing automation tools</textarea>
+                <button class="mt-2 bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded transition duration-300">
+                    Save Notes
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

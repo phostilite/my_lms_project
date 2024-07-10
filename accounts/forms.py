@@ -4,6 +4,11 @@ from django.core.validators import EmailValidator
 from django.core.exceptions import ValidationError
 from django.contrib.auth.password_validation import validate_password
 from django.contrib.auth import get_user_model
+import pytz
+import logging
+
+
+logger = logging.getLogger(__name__)
 
 User = get_user_model()
 
@@ -47,3 +52,12 @@ class LearnerSignupForm(forms.ModelForm):
         if commit:
             user.save()
         return user
+    
+
+class UserTimeZoneForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['timezone']
+        widgets = {
+            'timezone': forms.Select(attrs={'class': 'form-control'}),
+        }

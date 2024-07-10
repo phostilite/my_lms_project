@@ -12,4 +12,7 @@ urlpatterns = [
     path('leaderboard/', views.leaderboard, name='learner_leaderboard'),
     path('progress/', views.progress, name='learner_progress'),
     path('settings/', views.settings, name='learner_settings'),
+
+    path('enrolled_courses/', views.enrolled_courses, name='learner_enrolled_courses'),
+    path('play_course/', views.play_course, name='learner_play_course'),
 ]

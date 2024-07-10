@@ -1,11 +1,12 @@
 import logging
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponseServerError
 from django.http import Http404
 from django.contrib.auth.decorators import login_required
 
-from courses.models import ScormCloudCourse, ScormCloudRegistration
+from courses.models import ScormCloudCourse, ScormCloudRegistration, CourseDelivery
 from accounts.models import Learner
+from accounts.forms import UserTimeZoneForm
 
 
 # Configure the logger
@@ -30,6 +31,7 @@ def calendar(request):
     except Exception as e:
         logger.error(f"Error loading calendar: {e}")
         return HttpResponseServerError("An error occurred")
+    
 
 @login_required
 def course_catalog(request):
@@ -98,7 +100,28 @@ def leaderboard(request):
 @login_required
 def settings(request):
     try:
-        return render(request, 'learner/settings.html')
+        if request.method == 'POST':
+            form = UserTimeZoneForm(request.POST, instance=request.user)
+            if form.is_valid():
+                form.save()
+                return redirect('learner_settings')
+        else:
+            form = UserTimeZoneForm(instance=request.user)
+        return render(request, 'learner/settings.html', {'form': form})
     except Exception as e:
         logger.error(f"Error loading profile: {e}")
         return HttpResponseServerError("An error occurred")
+    
+
+@login_required
+def enrolled_courses(request):
+    # Assuming the user model has a relation to the Learner model
+    learner = request.user.learner
+    enrolled_deliveries = CourseDelivery.objects.filter(participants=learner)
+    
+    # For a web response
+    return render(request, 'learner/enrolled_deliveries.html', {'enrolled_deliveries': enrolled_deliveries})
+    
+
+def play_course(request):
+    return render(request, 'learner/play_course.html')

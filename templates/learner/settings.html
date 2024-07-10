@@ -6,7 +6,6 @@
 
 <div class="p-4 sm:ml-64">
     <div class="p-4 mt-14">
-
         <div class="mb-4 border-b border-gray-200 dark:border-gray-700">
             <ul class="flex flex-wrap -mb-px text-sm font-medium text-center" id="default-styled-tab" data-tabs-toggle="#default-styled-tab-content" data-tabs-active-classes="text-green-600 hover:text-green-600 dark:text-green-500 dark:hover:text-green-500 border-green-600 dark:border-green-500" data-tabs-inactive-classes="dark:border-transparent text-gray-500 hover:text-gray-600 dark:text-gray-400 border-gray-100 hover:border-gray-300 dark:border-gray-700 dark:hover:text-gray-300" role="tablist">
                 <li class="me-2" role="presentation">
@@ -74,7 +73,7 @@
                                 <td class="px-6 py-4">
                                     Profile Picture
                                 <td class="px-6 py-4">
-                                    Image (with option to enlarge)
+                                    
                                 </td>
                                 <td class="px-6 py-4">
                                     Change/Upload
@@ -89,7 +88,7 @@
                                     Full Name
                                 </td>
                                 <td class="px-6 py-4">
-                                    Text
+                                    {{ request.user.first_name }} {{ request.user.last_name }}
                                 </td>
                                 <td class="px-6 py-4">
                                     Edit
@@ -104,7 +103,7 @@
                                     Username
                                 </td>
                                 <td class="px-6 py-4">
-                                    Text (read-only)
+                                    {{ request.user.username }}
                                 </td>
                                 <td class="px-6 py-4">
                                     
@@ -119,7 +118,7 @@
                                     Email
                                 </td>
                                 <td class="px-6 py-4">
-                                    Text (with option to verify if unverified)
+                                    {{ request.user.email }}
                                 </td>
                                 <td class="px-6 py-4">
                                     Edit, Verify
@@ -133,7 +132,7 @@
                                     Role
                                 </td>
                                 <td class="px-6 py-4">
-                                    Text (e.g., Student, Instructor, Administrator)
+                                    {{ request.user.group }}
                                 </td>
                                 <td class="px-6 py-4">
                                     (Admin-controlled)
@@ -588,7 +587,7 @@
                                 <td class="px-6 py-4">
                                     Name
                                 <td class="px-6 py-4">
-                                    Full name displayed on the profile.
+                                    {{ request.user.first_name }} {{ request.user.last_name }}
                                 </td>
                                 <td class="px-6 py-4">
                                     Edit
@@ -602,7 +601,7 @@
                                     Email
                                 </td>
                                 <td class="px-6 py-4">
-                                    Primary email address for communication and account recovery.
+                                    {{ request.user.email }}
                                 </td>
                                 <td class="px-6 py-4">
                                     Edit, Verify
@@ -631,11 +630,25 @@
                                     Time Zone
                                 </td>
                                 <td class="px-6 py-4">
-                                    Determines the time zone for scheduling and deadlines.
+                                    <form method="post">
+                                        {% csrf_token %}
+                                        <div class="mb-4">
+                                            <label for="id_timezone" class="block text-gray-700 text-sm font-bold mb-1 mt-5"></label>
+                                            <select name="timezone" id="id_timezone" class="form-select appearance-none block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding bg-no-repeat border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none">
+                                                {% for value, display in form.fields.timezone.choices %}
+                                                    <option value="{{ value }}" {% if form.instance.timezone == value %}selected{% endif %}>{{ display }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
                                 </td>
                                 <td class="px-6 py-4">
-                                    Select from List (drop-down)
+                                    <button type="submit" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                                        Save Timezone
+                                    </button>
+                                    </form>
                                 </td>
+                                
+                                   
                             </tr>
                             <tr class="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600">
                                 <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
