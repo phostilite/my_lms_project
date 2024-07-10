@@ -50,6 +50,10 @@ class CourseDelivery(models.Model):
         ('OPEN', 'Open Enrollment'),
         ('INVITE', 'By Invitation'),
     )
+    STATUS = (
+        ('ACTIVE', 'Active'),
+        ('INACTIVE', 'Inactive'),
+    )
 
     title = models.CharField(max_length=255, null=True, blank=True)
     course = models.ForeignKey(ScormCloudCourse, on_delete=models.CASCADE, related_name='deliveries')
@@ -70,6 +74,7 @@ class CourseDelivery(models.Model):
     requires_feedback = models.BooleanField(default=False)
     requires_completion_certificate = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    status = models.CharField(max_length=20, choices=STATUS, default='ACTIVE')
 
     @classmethod
     def generate_unique_delivery_code(cls):

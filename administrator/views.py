@@ -290,7 +290,8 @@ class CourseDeliveryCreateView(View):
                 # Fetch the course using the pk and assign it to the course_delivery object
                 if pk:
                     course = get_object_or_404(ScormCloudCourse, pk=pk)
-                    course_delivery.course = course  # Assuming 'course' is the field name in CourseDelivery model
+                    course_delivery.course = course  
+                    course_delivery.status = 'INACTIVE'
                     logger.info(f"Assigned course with pk={pk} to course delivery")
                     print(f"Assigned course with pk={pk} to course delivery")
                 
@@ -302,10 +303,10 @@ class CourseDeliveryCreateView(View):
                 # Set the course title based on the delivery type
                 delivery_type = form.cleaned_data.get('delivery_type')
                 if delivery_type == 'SELF_PACED':
-                    course_delivery.title = 'course_title_self_paced'
+                    course_delivery.title = f"{course.title} - Self Paced"
                 elif delivery_type == 'INSTRUCTOR_LED':
-                    course_delivery.title = 'course_title_instructor_led'
-                logger.info(f"Course title set based on delivery type: {course_delivery.course_title}")
+                    course_delivery.title = f"{course.title} - Instructor Led"
+                logger.info(f"Course title set based on delivery type: {course_delivery.title}")
                 
                 course_delivery.save()
                 form.save_m2m()
