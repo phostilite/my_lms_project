@@ -50,6 +50,9 @@
                         <li class="mr-2" role="presentation">
                             <button class="inline-block p-4 border-b-2 rounded-t-lg" id="overview-tab" data-tabs-target="#overview" type="button" role="tab" aria-controls="overview" aria-selected="false">Course Overview</button>
                         </li>
+                        <li role="presentation">
+                            <button class="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="scheduler-tab" data-tabs-target="#scheduler" type="button" role="tab" aria-controls="scheduler" aria-selected="false">Scheduler</button>
+                        </li>
                         <li class="mr-2" role="presentation">
                             <button class="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="activities-tab" data-tabs-target="#activities" type="button" role="tab" aria-controls="activities" aria-selected="false">Recent Activities</button>
                         </li>
@@ -99,6 +102,7 @@
                             </button>
                         </div>
 
+
                         <!-- Participant Table -->
                         <div class="relative overflow-x-auto shadow-md sm:rounded-lg mb-6">
                             <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
@@ -140,6 +144,110 @@
                             Export Reports
                         </button>
                     </div>
+
+
+                    <!-- Scheduler Tab -->
+<div class="hidden p-4 rounded-lg bg-white" id="scheduler" role="tabpanel" aria-labelledby="scheduler-tab">
+    <h3 class="text-2xl font-bold text-green-700 mb-4">Course Scheduler</h3>
+    
+    <!-- Key Metrics -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <div class="bg-green-100 p-4 rounded-lg shadow">
+            <h4 class="text-lg font-semibold text-green-800">Start Date</h4>
+            <p class="text-2xl font-bold text-green-600">{{ delivery.start_date|date:"M d, Y" }}</p>
+        </div>
+        <div class="bg-green-100 p-4 rounded-lg shadow">
+            <h4 class="text-lg font-semibold text-green-800">End Date</h4>
+            <p class="text-2xl font-bold text-green-600">{{ delivery.end_date|date:"M d, Y" }}</p>
+        </div>
+        <div class="bg-green-100 p-4 rounded-lg shadow">
+            <h4 class="text-lg font-semibold text-green-800">Deactivation Date</h4>
+            <p class="text-2xl font-bold text-green-600">{{ delivery.deactivation_date|date:"M d, Y" }}</p>
+        </div>
+    </div>
+
+    <!-- Calendar and Actions -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Calendar -->
+        <div class="lg:col-span-2">
+            <div class="bg-white p-4 rounded-lg shadow">
+                <h4 class="text-xl font-semibold text-green-700 mb-4">Session Calendar</h4>
+                <!-- Placeholder for calendar component -->
+                <!-- Replace the placeholder calendar div with this component -->
+<div id="calendar" class="bg-white p-4 rounded-lg shadow">
+    <div class="flex justify-between items-center mb-4">
+        <button id="prevMonth" class="text-green-600 hover:text-green-800">
+            <i class="fas fa-chevron-left"></i>
+        </button>
+        <h2 id="currentMonth" class="text-xl font-bold text-green-700"></h2>
+        <button id="nextMonth" class="text-green-600 hover:text-green-800">
+            <i class="fas fa-chevron-right"></i>
+        </button>
+    </div>
+    <div class="grid grid-cols-7 gap-2 mb-2">
+        <div class="text-center font-semibold text-green-600">Sun</div>
+        <div class="text-center font-semibold text-green-600">Mon</div>
+        <div class="text-center font-semibold text-green-600">Tue</div>
+        <div class="text-center font-semibold text-green-600">Wed</div>
+        <div class="text-center font-semibold text-green-600">Thu</div>
+        <div class="text-center font-semibold text-green-600">Fri</div>
+        <div class="text-center font-semibold text-green-600">Sat</div>
+    </div>
+    <div id="calendarDays" class="grid grid-cols-7 gap-2">
+        <!-- Calendar days will be inserted here by JavaScript -->
+    </div>
+</div>
+            </div>
+        </div>
+
+        <!-- Actions -->
+        <div>
+            <div class="bg-white p-4 rounded-lg shadow">
+                <h4 class="text-xl font-semibold text-green-700 mb-4">Quick Actions</h4>
+                <div class="space-y-4">
+                    <button class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded">
+                        Reschedule Session
+                    </button>
+                    <button class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded">
+                        Notify Participants
+                    </button>
+                    <button id="exportAttendance" class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded">
+                        Export Attendance
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Upcoming Sessions -->
+    <div class="mt-8">
+        <h4 class="text-xl font-semibold text-green-700 mb-4">Upcoming Sessions</h4>
+        <div class="bg-white rounded-lg shadow overflow-hidden">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Time</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Topic</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap">2024-07-15</td>
+                        <td class="px-6 py-4 whitespace-nowrap">10:00 AM - 12:00 PM</td>
+                        <td class="px-6 py-4 whitespace-nowrap">Introduction to Course</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                            <a href="#" class="text-green-600 hover:text-green-900">Edit</a>
+                            <a href="#" class="ml-3 text-red-600 hover:text-red-900">Cancel</a>
+                        </td>
+                    </tr>
+                    <!-- Add more rows as needed -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 
                     <!-- Recent Activities Tab -->
                     <div class="hidden p-4 rounded-lg bg-white" id="activities" role="tabpanel" aria-labelledby="activities-tab">
@@ -256,4 +364,153 @@
     </div>
 </div>
 
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        let currentDate = new Date();
+        const calendarDays = document.getElementById('calendarDays');
+        const currentMonthElement = document.getElementById('currentMonth');
+        const prevMonthButton = document.getElementById('prevMonth');
+        const nextMonthButton = document.getElementById('nextMonth');
+
+        function renderCalendar(year, month) {
+            const firstDay = new Date(year, month, 1);
+            const lastDay = new Date(year, month + 1, 0);
+            const daysInMonth = lastDay.getDate();
+            const startingDay = firstDay.getDay();
+
+            currentMonthElement.textContent = firstDay.toLocaleString('default', { month: 'long', year: 'numeric' });
+
+            calendarDays.innerHTML = '';
+
+            for (let i = 0; i < startingDay; i++) {
+                calendarDays.innerHTML += '<div></div>';
+            }
+
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dateDiv = document.createElement('div');
+                dateDiv.textContent = day;
+                dateDiv.className = 'text-center p-2 border border-gray-200 rounded-lg hover:bg-green-100 cursor-pointer';
+                
+                // Highlight current day
+                if (year === currentDate.getFullYear() && month === currentDate.getMonth() && day === currentDate.getDate()) {
+                    dateDiv.classList.add('bg-green-500', 'text-white');
+                }
+
+                // Add click event to show sessions for this day (you can customize this)
+                dateDiv.addEventListener('click', () => {
+                    alert(`Show sessions for ${year}-${month + 1}-${day}`);
+                });
+
+                calendarDays.appendChild(dateDiv);
+            }
+        }
+
+        renderCalendar(currentDate.getFullYear(), currentDate.getMonth());
+
+        prevMonthButton.addEventListener('click', () => {
+            currentDate.setMonth(currentDate.getMonth() - 1);
+            renderCalendar(currentDate.getFullYear(), currentDate.getMonth());
+        });
+
+        nextMonthButton.addEventListener('click', () => {
+            currentDate.setMonth(currentDate.getMonth() + 1);
+            renderCalendar(currentDate.getFullYear(), currentDate.getMonth());
+        });
+    });
+</script><script>
+    document.addEventListener('DOMContentLoaded', function() {
+        let currentDate = new Date();
+        const calendarDays = document.getElementById('calendarDays');
+        const currentMonthElement = document.getElementById('currentMonth');
+        const prevMonthButton = document.getElementById('prevMonth');
+        const nextMonthButton = document.getElementById('nextMonth');
+
+        function renderCalendar(year, month) {
+            const firstDay = new Date(year, month, 1);
+            const lastDay = new Date(year, month + 1, 0);
+            const daysInMonth = lastDay.getDate();
+            const startingDay = firstDay.getDay();
+
+            currentMonthElement.textContent = firstDay.toLocaleString('default', { month: 'long', year: 'numeric' });
+
+            calendarDays.innerHTML = '';
+
+            for (let i = 0; i < startingDay; i++) {
+                calendarDays.innerHTML += '<div></div>';
+            }
+
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dateDiv = document.createElement('div');
+                dateDiv.textContent = day;
+                dateDiv.className = 'text-center p-2 border border-gray-200 rounded-lg hover:bg-green-100 cursor-pointer';
+                
+                // Highlight current day
+                if (year === currentDate.getFullYear() && month === currentDate.getMonth() && day === currentDate.getDate()) {
+                    dateDiv.classList.add('bg-green-500', 'text-white');
+                }
+
+                // Add click event to show sessions for this day (you can customize this)
+                dateDiv.addEventListener('click', () => {
+                    alert(`Show sessions for ${year}-${month + 1}-${day}`);
+                });
+
+                calendarDays.appendChild(dateDiv);
+            }
+        }
+
+        renderCalendar(currentDate.getFullYear(), currentDate.getMonth());
+
+        prevMonthButton.addEventListener('click', () => {
+            currentDate.setMonth(currentDate.getMonth() - 1);
+            renderCalendar(currentDate.getFullYear(), currentDate.getMonth());
+        });
+
+        nextMonthButton.addEventListener('click', () => {
+            currentDate.setMonth(currentDate.getMonth() + 1);
+            renderCalendar(currentDate.getFullYear(), currentDate.getMonth());
+        });
+    });
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const exportAttendanceButton = document.getElementById('exportAttendance');
+        
+        exportAttendanceButton.addEventListener('click', function() {
+            // Show loading indicator
+            exportAttendanceButton.textContent = 'Generating...';
+            exportAttendanceButton.disabled = true;
+    
+            // Make an AJAX request to the backend
+            fetch('/administrator/export_attendance/{{ delivery.id }}/')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.blob();
+                })
+                .then(blob => {
+                    // Create a temporary URL for the blob
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.style.display = 'none';
+                    a.href = url;
+                    // Set the file name
+                    a.download = 'Course_Attendance_{{ delivery.delivery_code }}.xlsx';
+                    document.body.appendChild(a);
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while generating the report. Please try again.');
+                })
+                .finally(() => {
+                    // Reset button state
+                    exportAttendanceButton.textContent = 'Export Attendance';
+                    exportAttendanceButton.disabled = false;
+                });
+        });
+    });
+    </script>
 {% endblock %}

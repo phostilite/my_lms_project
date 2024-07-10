@@ -24,4 +24,5 @@ urlpatterns = [
     path('course_delivery/<int:pk>/list/', views.course_delivery_list, name='course_delivery_list'),
     path('course_delivery/<int:pk>/create/', views.CourseDeliveryCreateView.as_view(), name='course_delivery_create'),
     path('course_delivery/<int:course_id>/<str:delivery_id>/', views.course_delivery_detail, name='course_delivery_detail'),
+    path('export_attendance/<int:delivery_id>/', views.export_attendance, name='export_attendance'),
 ]

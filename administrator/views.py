@@ -13,6 +13,9 @@ from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.views import View
 from django.shortcuts import render, redirect, get_object_or_404
+from django.http import HttpResponse
+from openpyxl import Workbook
+from openpyxl.styles import Font, Alignment
 
 from courses.models import ScormCloudCourse, CourseDelivery, Enrollment, Feedback, Attendance
 from courses.forms import ScormCloudCourseForm, CourseDeliveryForm
@@ -328,3 +331,65 @@ class CourseDeliveryCreateView(View):
             print(f"Error in POST method: {e}")
             # Handle the error or redirect to an error page
             return render(request, 'errors/error_page.html', {'error': e})
+        
+
+def export_attendance(request, delivery_id):
+    delivery = get_object_or_404(CourseDelivery, id=delivery_id)
+    participants = Learner.objects.filter(enrolled_deliveries=delivery)
+
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Attendance Report"
+
+    # Add course delivery information at the top
+    course_info = [
+        ['Course Title', delivery.course.title],
+        ['Delivery Code', delivery.delivery_code],
+        ['Start Date', delivery.start_date.strftime('%Y-%m-%d')],
+        ['End Date', delivery.end_date.strftime('%Y-%m-%d')],
+        ['Deactivation Date', delivery.deactivation_date.strftime('%Y-%m-%d')],
+    ]
+
+    for row in course_info:
+        ws.append(row)
+        ws.cell(ws.max_row, 1).font = Font(bold=True)
+        ws.cell(ws.max_row, 2).alignment = Alignment(horizontal='left')
+
+    # Add a blank row
+    ws.append([])
+
+    # Add participant details header
+    participant_headers = ['Participant Name', 'Email', 'Total Time Spent (hours)']
+    ws.append(participant_headers)
+    for cell in ws[ws.max_row]:
+        cell.font = Font(bold=True)
+
+    # Add participant data
+    for participant in participants:
+        ws.append([
+            participant.user.first_name,
+            participant.user.email,
+            # participant.get_total_time_spent()  # You'll need to implement this method
+        ])
+
+    # Adjust column widths
+    for column in ws.columns:
+        max_length = 0
+        column_letter = column[0].column_letter
+        for cell in column:
+            try:
+                if len(str(cell.value)) > max_length:
+                    max_length = len(cell.value)
+            except:
+                pass
+        adjusted_width = (max_length + 2) * 1.2
+        ws.column_dimensions[column_letter].width = adjusted_width
+
+    # Create the HttpResponse object with Excel mime type
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = f'attachment; filename=Course_Attendance_{delivery.delivery_code}.xlsx'
+
+    # Save the workbook to the response
+    wb.save(response)
+
+    return response
