@@ -24,7 +24,9 @@ class ScormCloudCourse(models.Model):
     category = models.CharField(max_length=100, null=True, blank=True)  
     duration = models.DurationField(null=True, blank=True) 
     cover_image = models.ImageField(upload_to='course_covers/', null=True, blank=True)
-    published_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING, related_name='published_courses', null=True, blank=True)    
+    published_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING, related_name='published_courses',
+    null=True, blank=True)   
+    registration_id = models.CharField(max_length=255, null=True, blank=True) 
 
     def __str__(self):
         return f"Course: {self.title} (ID: {self.course_id})"
