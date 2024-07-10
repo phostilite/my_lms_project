@@ -99,7 +99,6 @@ def create_course(request, course_id):
                 version=version,
                 created_at=created_at,
                 updated_at=updated_at,
-                published_by=request.user,
                 web_path=web_path
             )
             scorm_course.save()

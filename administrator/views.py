@@ -75,7 +75,7 @@ def upload_course(request):
 
             try:
                 response = requests.post(
-                    f'{settings.DOMAIN_NAME}/api/create_course/{course_id}/',
+                    f'http://localhost:8000/api/create_course/{course_id}/',
                     files=files,
                 )
 
@@ -256,6 +256,14 @@ def course_delivery_list(request, pk):
         deliveries = None
     return render(request, 'administrator/course_delivery/course_delivery_list.html', {'course': course, 'deliveries': deliveries})
 
+def course_delivery_detail(request, course_id, delivery_id):
+    try:
+        course = ScormCloudCourse.objects.get(id=course_id)
+        delivery = CourseDelivery.objects.get(course=course, delivery_code=delivery_id)
+    except ScormCloudCourse.DoesNotExist:
+        course = None
+        delivery = None
+    return render(request, 'administrator/course_delivery/course_delivery_detail.html', {'course': course, 'delivery': delivery})
 
 class CourseDeliveryCreateView(View):
     def get(self, request, pk=None):
@@ -290,6 +298,14 @@ class CourseDeliveryCreateView(View):
                     course_delivery.delivery_code = CourseDelivery.generate_unique_delivery_code()
                     logger.info("Generated unique delivery code")
                     print(f"Generated unique delivery code: {course_delivery.delivery_code}")
+                
+                # Set the course title based on the delivery type
+                delivery_type = form.cleaned_data.get('delivery_type')
+                if delivery_type == 'SELF_PACED':
+                    course_delivery.title = 'course_title_self_paced'
+                elif delivery_type == 'INSTRUCTOR_LED':
+                    course_delivery.title = 'course_title_instructor_led'
+                logger.info(f"Course title set based on delivery type: {course_delivery.course_title}")
                 
                 course_delivery.save()
                 form.save_m2m()

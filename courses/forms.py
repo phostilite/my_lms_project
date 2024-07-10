@@ -2,6 +2,7 @@ from django import forms
 from .models import ScormCloudCourse
 from accounts.models import Facilitator, Learner
 from .models import CourseDelivery, ScormCloudCourse
+from datetime import datetime
 
 class ScormCloudCourseForm(forms.ModelForm):
     file = forms.FileField()
@@ -51,15 +52,4 @@ class CourseDeliveryForm(forms.ModelForm):
             self.fields['delivery_code'].initial = CourseDelivery.generate_unique_delivery_code()
 
     def clean(self):
-        cleaned_data = super().clean()
-        start_date = cleaned_data.get('start_date')
-        end_date = cleaned_data.get('end_date')
-        deactivation_date = cleaned_data.get('deactivation_date')
-
-        if start_date and end_date and start_date > end_date:
-            raise forms.ValidationError("End date should be after the start date.")
-
-        if end_date and deactivation_date and deactivation_date < end_date:
-            raise forms.ValidationError("Deactivation date should be after the end date.")
-
-        return cleaned_data
+        pass

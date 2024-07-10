@@ -58,8 +58,11 @@ class CourseDelivery(models.Model):
     facilitators = models.ManyToManyField(Facilitator, related_name='facilitated_deliveries')
     participants = models.ManyToManyField(Learner, related_name='enrolled_deliveries')
     start_date = models.DateField(null=True, blank=True)
+    start_time = models.TimeField(null=True, blank=True)
     end_date = models.DateField(null=True, blank=True)
+    end_time = models.TimeField(null=True, blank=True)
     deactivation_date = models.DateField(null=True, blank=True)
+    deactivation_time = models.TimeField(null=True, blank=True)
     is_mandatory = models.BooleanField(default=False)
     requires_attendance = models.BooleanField(default=False)
     requires_feedback = models.BooleanField(default=False)
@@ -74,7 +77,7 @@ class CourseDelivery(models.Model):
                 return code
 
     def __str__(self):
-        return f"{self.course.title} - {self.delivery_code}"
+        return f"Course Delivery: (Code: {self.delivery_code})"
     
 
 class Enrollment(models.Model):
