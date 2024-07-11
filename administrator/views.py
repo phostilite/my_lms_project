@@ -22,6 +22,7 @@ from courses.forms import ScormCloudCourseForm, CourseDeliveryForm
 from accounts.models import Learner, Supervisor
 from learner.forms import LearnerForm
 from supervisor.forms import SupervisorForm
+from accounts.forms import UserTimeZoneForm
 
 logger = logging.getLogger(__name__)
 
@@ -130,7 +131,14 @@ def upload_course(request):
 @login_required
 def settings(request):
     try:
-        return render(request, 'administrator/settings.html')
+        if request.method == 'POST':
+            form = UserTimeZoneForm(request.POST, instance=request.user)
+            if form.is_valid():
+                form.save()
+                return redirect('administrator_settings')
+        else:
+            form = UserTimeZoneForm(instance=request.user)
+        return render(request, 'administrator/settings.html', {'form': form})
     except Exception as e:
         logger.error(f"Error loading profile: {e}")
         return HttpResponseServerError("An error occurred")
@@ -393,3 +401,6 @@ def export_attendance(request, delivery_id):
     wb.save(response)
 
     return response
+
+
+    

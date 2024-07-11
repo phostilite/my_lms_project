@@ -769,10 +769,22 @@
                                     Time Zone
                                 </td>
                                 <td class="px-6 py-4">
-                                    Determines the time zone for scheduling and deadlines.
+                                    <form method="post">
+                                        {% csrf_token %}
+                                        <div class="mb-4">
+                                            <label for="id_timezone" class="block text-gray-700 text-sm font-bold mb-1 mt-5"></label>
+                                            <select name="timezone" id="id_timezone" class="form-select appearance-none block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding bg-no-repeat border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none">
+                                                {% for value, display in form.fields.timezone.choices %}
+                                                    <option value="{{ value }}" {% if form.instance.timezone == value %}selected{% endif %}>{{ display }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
                                 </td>
                                 <td class="px-6 py-4">
-                                    Select from List (drop-down)
+                                    <button type="submit" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                                        Save Timezone
+                                    </button>
+                                    </form>
                                 </td>
                             </tr>
                             <tr class="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600">
