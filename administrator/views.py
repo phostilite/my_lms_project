@@ -1,31 +1,25 @@
-from django.forms import ValidationError
-from django.http import HttpResponseServerError
-from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
-import requests
-import os
-from dotenv import load_dotenv  # If using python-dotenv
-load_dotenv() 
-from django.conf import settings
-from django.shortcuts import redirect
 import logging
 from decimal import Decimal
-from django.db import transaction
-from django.db import IntegrityError, transaction
+
+import requests
+from django.conf import settings as django_settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
-from django.views import View
+from django.contrib.auth.decorators import login_required
+from django.db import IntegrityError, transaction
+from django.forms import ValidationError
+from django.http import HttpResponse, HttpResponseServerError
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponse
+from django.views import View
 from openpyxl import Workbook
-from openpyxl.styles import Font, Alignment
+from openpyxl.styles import Alignment, Font
 
-from courses.models import ScormCloudCourse, CourseDelivery, Enrollment, Feedback, Attendance
-from courses.forms import ScormCloudCourseForm, CourseDeliveryForm
+from accounts.forms import UserTimeZoneForm
 from accounts.models import Learner, Supervisor
+from courses.forms import CourseDeliveryForm, ScormCloudCourseForm
+from courses.models import Attendance, CourseDelivery, Enrollment, Feedback, ScormCloudCourse
 from learner.forms import LearnerForm
 from supervisor.forms import SupervisorForm
-from accounts.forms import UserTimeZoneForm
 
 logger = logging.getLogger(__name__)
 
@@ -65,6 +59,7 @@ def course_list(request):
 
 @login_required
 def upload_course(request):
+    domain = django_settings.DOMAIN_NAME
     if request.method == 'POST':
         form = ScormCloudCourseForm(request.POST, request.FILES)
         if form.is_valid():
@@ -82,7 +77,7 @@ def upload_course(request):
 
             try:
                 response = requests.post(
-                    settings.DOMAIN_NAME + f'/api/create_course/{course_id}/',
+                    f'{domain}/api/create_course/{course_id}/',
                     files=files,
                 )
 
