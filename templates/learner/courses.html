@@ -49,7 +49,11 @@
             <div class="flex items-center justify-center mb-4 rounded bg-gray-50 dark:bg-gray-800">
                 <div class="h-48 w-full"> <!-- Set a fixed height for the box -->
                     <a href="#" data-learner-id="{{ item.registration.learner_id }}" data-registration-id="{{ item.registration.registration_id }}" class="launch-course-link flex flex-col bg-white border border-gray-200 rounded-lg shadow md:flex-row w-full h-full hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
-                        <img class="object-cover rounded-t-lg md:rounded-none md:rounded-s-lg md:w-64" src="{{ item.course.cover_image.url }}" alt="">
+                        {% if item.course.cover_image.url %}
+                            <img class="object-cover rounded-t-lg md:rounded-none md:rounded-s-lg md:w-64" src="{{ item.course.cover_image.url }}" alt="">
+                        {% else %}
+                            <img class="object-cover rounded-t-lg md:rounded-none md:rounded-s-lg md:w-64" src="https://placehold.co/600x400" alt="">
+                        {% endif %}
                         <div class="flex flex-col justify-between p-4 leading-normal">
                             <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{ item.course.title }}</h5>
                             <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">{{ item.course.short_description }}</p>

@@ -68,7 +68,6 @@ def upload_course(request):
 
             category = form.cleaned_data.get('category', '')
             duration = form.cleaned_data.get('duration', '')
-            price = form.cleaned_data.get('price', Decimal('0.00'))
             short_description = form.cleaned_data.get('short_description', '')
             long_description = form.cleaned_data.get('long_description', '')
             cover_image = form.cleaned_data.get('cover_image', '')
