@@ -3,6 +3,9 @@ from django.http import HttpResponseServerError
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 import requests
+import os
+from dotenv import load_dotenv  # If using python-dotenv
+load_dotenv() 
 from django.conf import settings
 from django.shortcuts import redirect
 import logging
