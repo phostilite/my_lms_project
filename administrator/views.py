@@ -79,6 +79,7 @@ def upload_course(request):
                 response = requests.post(
                     f'{domain}/api/create_course/{course_id}/',
                     files=files,
+                    timeout=300,
                 )
 
                 response.raise_for_status()  # Raise exception for bad responses (4xx and 5xx)
