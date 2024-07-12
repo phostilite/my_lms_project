@@ -79,7 +79,7 @@ def upload_course(request):
 
             try:
                 response = requests.post(
-                    f'http://localhost:8000/api/create_course/{course_id}/',
+                    f'{settings.DOMAIN_NAME}/api/create_course/{course_id}/',
                     files=files,
                 )
 
