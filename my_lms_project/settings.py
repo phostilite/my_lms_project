@@ -161,26 +161,19 @@ AUTH_USER_MODEL = 'accounts.User'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
     'handlers': {
         'file': {
-            'level': 'DEBUG',
-            'class': 'logging.FileHandler',
-            'filename': 'debug.log',
-        },
-        'console': {  # Define a new handler for console output
             'level': 'INFO',
-            'class': 'logging.StreamHandler',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(BASE_DIR, 'debug.log'),
         },
     },
-    'loggers': {
-        'django': {
-            'handlers': ['file', 'console'],  # Add 'console' to the handlers list
-            'level': 'INFO',
-        },
+    'root': {
+        'handlers': ['file'],
+        'level': 'INFO',
     },
 }
 
