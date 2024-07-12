@@ -2,6 +2,8 @@ from django.conf import settings
 from django.db import models
 import uuid
 from django.contrib.auth import get_user_model
+from datetime import datetime, timedelta
+import dateutil.relativedelta
 
 import random
 import string
@@ -69,11 +71,13 @@ class CourseDelivery(models.Model):
     end_time = models.TimeField(null=True, blank=True)
     deactivation_date = models.DateField(null=True, blank=True)
     deactivation_time = models.TimeField(null=True, blank=True)
+    timezone = models.CharField(max_length=50, default='UTC')
     is_mandatory = models.BooleanField(default=False)
     requires_attendance = models.BooleanField(default=False)
     requires_feedback = models.BooleanField(default=False)
     requires_completion_certificate = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    created_by = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='created_deliveries', null=True, blank=True)
     status = models.CharField(max_length=20, choices=STATUS, default='ACTIVE')
 
     @classmethod
@@ -82,6 +86,42 @@ class CourseDelivery(models.Model):
             code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
             if not cls.objects.filter(delivery_code=code).exists():
                 return code
+            
+    def duration(self):
+        if not self.start_date or not self.end_date or not self.start_time or not self.end_time:
+            return "Not available"
+
+        start_datetime = datetime.combine(self.start_date, self.start_time)
+        end_datetime = datetime.combine(self.end_date, self.end_time)
+        delta = end_datetime - start_datetime
+
+        if delta < timedelta(days=1):
+            hours = delta.seconds // 3600
+            return f"{hours} Hours" if hours != 1 else "1 Hour"
+
+        if delta < timedelta(weeks=1):
+            days = delta.days
+            return f"{days} Days" if days != 1 else "1 Day"
+
+        # For durations longer than a week, use dateutil's relativedelta
+        diff = dateutil.relativedelta.relativedelta(end_datetime, start_datetime)
+        years, months, weeks, days = diff.years, diff.months, diff.weeks, diff.days
+
+        # Adjust days to be the remainder after accounting for full weeks
+        total_days = (end_datetime - start_datetime).days
+        weeks, days = divmod(total_days, 7)
+
+        readable = []
+        if years:
+            readable.append(f"{years} Years" if years != 1 else "1 Year")
+        if months:
+            readable.append(f"{months} Months" if months != 1 else "1 Month")
+        if weeks:
+            readable.append(f"{weeks} Weeks" if weeks != 1 else "1 Week")
+        if days:
+            readable.append(f"{days} Days" if days != 1 else "1 Day")
+
+        return ", ".join(readable)
 
     def __str__(self):
         return f"Course Delivery: (Code: {self.delivery_code})"

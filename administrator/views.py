@@ -303,6 +303,8 @@ class CourseDeliveryCreateView(View):
                     course = get_object_or_404(ScormCloudCourse, pk=pk)
                     course_delivery.course = course  
                     course_delivery.status = 'INACTIVE'
+                    course_delivery.created_by = request.user
+                    course_delivery.timezone = request.user.timezone
                     logger.info(f"Assigned course with pk={pk} to course delivery")
                     print(f"Assigned course with pk={pk} to course delivery")
                 

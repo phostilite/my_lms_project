@@ -3,6 +3,8 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponseServerError
 from django.http import Http404
 from django.contrib.auth.decorators import login_required
+import pytz
+from datetime import datetime
 
 from courses.models import ScormCloudCourse, ScormCloudRegistration, CourseDelivery
 from accounts.models import Learner
@@ -112,16 +114,43 @@ def settings(request):
         logger.error(f"Error loading profile: {e}")
         return HttpResponseServerError("An error occurred")
     
+def play_course(request):
+    return render(request, 'learner/play_course.html')
+    
+
+from django.utils import timezone
 
 @login_required
 def enrolled_courses(request):
-    # Assuming the user model has a relation to the Learner model
     learner = request.user.learner
-    enrolled_deliveries = CourseDelivery.objects.filter(participants=learner)
-    
-    # For a web response
-    return render(request, 'learner/enrolled_deliveries.html', {'enrolled_deliveries': enrolled_deliveries})
-    
+    learner_timezone = pytz.timezone(learner.user.timezone)
 
-def play_course(request):
-    return render(request, 'learner/play_course.html')
+    enrolled_deliveries = CourseDelivery.objects.filter(participants=learner)
+
+    for delivery in enrolled_deliveries:
+        creator_timezone = pytz.timezone(delivery.timezone)
+
+        # Create datetime objects in the creator's timezone
+        start_datetime = creator_timezone.localize(datetime.combine(delivery.start_date, delivery.start_time))
+        end_datetime = creator_timezone.localize(datetime.combine(delivery.end_date, delivery.end_time))
+
+        # Convert to learner's timezone
+        delivery.start_datetime_local = start_datetime.astimezone(learner_timezone)
+        delivery.end_datetime_local = end_datetime.astimezone(learner_timezone)
+
+        if delivery.deactivation_date and delivery.deactivation_time:
+            deactivation_datetime = creator_timezone.localize(datetime.combine(delivery.deactivation_date, delivery.deactivation_time))
+            delivery.deactivation_datetime_local = deactivation_datetime.astimezone(learner_timezone)
+        else:
+            delivery.deactivation_datetime_local = None
+
+        delivery.start_datetime_raw = delivery.start_datetime_local
+        delivery.end_datetime_raw = delivery.end_datetime_local
+
+        print(f"Start Datetime (Creator's TZ): {start_datetime}")
+        print(f"Start Datetime (Learner's TZ): {delivery.start_datetime_local}")
+
+    return render(request, 'learner/enrolled_deliveries.html', {
+        'enrolled_deliveries': enrolled_deliveries,
+        'learner_timezone': learner_timezone,
+    })

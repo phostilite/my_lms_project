@@ -1,11 +1,19 @@
 {% extends '../base.html' %}
 {% block content %}
+{% load tz %}
 {% include './navbar.html' %}
 {% include './sidebar.html' %}
 
 <div class="p-8 sm:ml-64 mt-14 bg-green-50">
     <div class="max-w-7xl mx-auto">
-        <h1 class="text-3xl font-bold text-green-800 mb-6">My Enrolled Courses</h1>
+        <h1 class="text-3xl font-bold text-green-800 mb-6 flex justify-between items-center">
+            My Enrolled Courses
+            <span>
+                <p id="currentTime" class="text-xl text-green-600"></p>
+                <p class="text-xl text-green-600">{{ learner_timezone }}</p>
+            </span>
+            
+        </h1>
 
         <!-- Search and Filters -->
         <div class="mb-6 flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0 md:space-x-4">
@@ -32,92 +40,11 @@
         </div>
         
         <div id="courseContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <!-- Course Card Template -->
+            
+            {% for delivery in enrolled_deliveries %}
             <div class="course-card bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 flex flex-col">
                 <div class="p-6 flex-grow">
-                    <h2 class="text-xl font-semibold text-green-700 mb-2">Introduction to Python</h2>
-                    <p class="text-gray-600 mb-4 h-12 overflow-hidden">Learn the basics of Python programming, including syntax, data types, and control structures.</p>
-                    
-                    <div class="mb-4">
-                        <div class="flex justify-between text-sm text-gray-600 mb-1">
-                            <span>Progress</span>
-                            <span>75%</span>
-                        </div>
-                        <div class="w-full bg-gray-200 rounded-full h-2.5">
-                            <div class="bg-green-600 h-2.5 rounded-full" style="width: 75%"></div>
-                        </div>
-                    </div>
-                    
-                    <div class="grid grid-cols-2 gap-4 text-sm mb-4">
-                        <div>
-                            <p class="font-semibold text-gray-700">Duration</p>
-                            <p class="text-gray-600">6 weeks</p>
-                        </div>
-                        <div>
-                            <p class="font-semibold text-gray-700">Assigned Date</p>
-                            <p class="text-gray-600">Jun 1, 2023</p>
-                        </div>
-                        <div>
-                            <p class="font-semibold text-gray-700">Start Date</p>
-                            <p class="text-gray-600">Jun 15, 2023</p>
-                        </div>
-                        <div>
-                            <p class="font-semibold text-gray-700">Last Attempt</p>
-                            <p class="text-gray-600">Jul 10, 2023</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="p-6 pt-0">
-                    <a href="{% url 'learner_play_course' %}" class="inline-block w-full text-center bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded transition duration-300">
-                        Continue Course
-                    </a>
-                </div>
-            </div>
-
-            <div class="course-card bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 flex flex-col">
-                <div class="p-6 flex-grow">
-                    <h2 class="text-xl font-semibold text-green-700 mb-2">Web Development Fundamentals</h2>
-                    <p class="text-gray-600 mb-4 h-12 overflow-hidden">Master the core technologies of web development: HTML, CSS, and JavaScript.</p>
-                    
-                    <div class="mb-4">
-                        <div class="flex justify-between text-sm text-gray-600 mb-1">
-                            <span>Progress</span>
-                            <span>30%</span>
-                        </div>
-                        <div class="w-full bg-gray-200 rounded-full h-2.5">
-                            <div class="bg-green-600 h-2.5 rounded-full" style="width: 30%"></div>
-                        </div>
-                    </div>
-                    
-                    <div class="grid grid-cols-2 gap-4 text-sm mb-4">
-                        <div>
-                            <p class="font-semibold text-gray-700">Duration</p>
-                            <p class="text-gray-600">8 weeks</p>
-                        </div>
-                        <div>
-                            <p class="font-semibold text-gray-700">Assigned Date</p>
-                            <p class="text-gray-600">May 15, 2023</p>
-                        </div>
-                        <div>
-                            <p class="font-semibold text-gray-700">Start Date</p>
-                            <p class="text-gray-600">Jun 1, 2023</p>
-                        </div>
-                        <div>
-                            <p class="font-semibold text-gray-700">Last Attempt</p>
-                            <p class="text-gray-600">Jul 5, 2023</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="p-6 pt-0">
-                    <a href="#" class="inline-block w-full text-center bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded transition duration-300">
-                        Continue Course
-                    </a>
-                </div>
-            </div>
-
-            <div class="course-card bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 flex flex-col">
-                <div class="p-6 flex-grow">
-                    <h2 class="text-xl font-semibold text-green-700 mb-2">Data Science Essentials</h2>
+                    <h2 class="text-xl font-semibold text-green-700 mb-2">{{ delivery.title }}</h2>
                     <p class="text-gray-600 mb-4 h-12 overflow-hidden">Explore the fundamentals of data science, including statistics, machine learning, and data visualization.</p>
                     
                     <div class="mb-4">
@@ -133,15 +60,17 @@
                     <div class="grid grid-cols-2 gap-4 text-sm mb-4">
                         <div>
                             <p class="font-semibold text-gray-700">Duration</p>
-                            <p class="text-gray-600">10 weeks</p>
+                            <p class="text-gray-600">{{ delivery.duration }}</p>
                         </div>
                         <div>
                             <p class="font-semibold text-gray-700">Assigned Date</p>
-                            <p class="text-gray-600">Jul 1, 2023</p>
+                            <p class="text-gray-600">
+                                {% timezone learner_timezone %}{{ delivery.start_datetime_raw|date:"d M Y, H:i" }}{% endtimezone %}
+                            </p>
                         </div>
                         <div>
                             <p class="font-semibold text-gray-700">Start Date</p>
-                            <p class="text-gray-600">Jul 15, 2023</p>
+                            <p class="text-gray-600">N/A</p>
                         </div>
                         <div>
                             <p class="font-semibold text-gray-700">Last Attempt</p>
@@ -150,16 +79,30 @@
                     </div>
                 </div>
                 <div class="p-6 pt-0">
-                    <a href="#" class="inline-block w-full text-center bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded transition duration-300">
+                    <a href="{% url 'learner_play_course' %}" class="inline-block w-full text-center bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded transition duration-300">
                         Start Course
                     </a>
                 </div>
             </div>
+            {% endfor %}
 
         </div>
     </div>
+</div>
 
 
-    {% endblock %}
+<script>
+    function updateTime(timezone) {
+        const timeElement = document.getElementById('currentTime');
+        const options = { hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: timezone, timeZoneName: 'short' };
+        const now = new Date().toLocaleTimeString('en-US', options);
+        timeElement.textContent = now;
+    }
+
+    const learnerTimezone = "{{ learner_timezone }}"; // Pass the timezone from the template
+    updateTime(learnerTimezone);
+    setInterval(() => updateTime(learnerTimezone), 1000);
+</script>
+{% endblock %}
 
             
