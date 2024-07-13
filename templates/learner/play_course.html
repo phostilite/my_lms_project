@@ -5,10 +5,14 @@
 
 <div class="p-8 sm:ml-64 mt-14 bg-green-50">
     <div class="max-w-7xl mx-auto">
-        <h1 class="text-3xl font-bold text-green-800 mb-6">Introduction to Digital Marketing</h1>
+        <h1 class="text-3xl font-bold text-green-800 mb-6">{{ delivery.title }}</h1>
 
         <!-- SCORM Content iframe -->
-        <div class="mb-8">
+        <div class="mb-8" id="scorm-container">
+            
+        </div>
+
+        <div id="loading-indicator">
             <iframe src="https://via.placeholder.com/1200x600?text=SCORM+Content+Placeholder" class="w-full h-[600px] border-2 border-green-300 rounded-lg"></iframe>
         </div>
 
@@ -33,7 +37,7 @@
             <!-- Course Overview Tab -->
             <div class="hidden p-4 rounded-lg bg-white" id="overview" role="tabpanel" aria-labelledby="overview-tab">
                 <h2 class="text-2xl font-semibold text-green-700 mb-4">Course Overview</h2>
-                <p class="text-gray-600 mb-4">This comprehensive course on digital marketing covers essential topics such as search engine optimization (SEO), content marketing, social media strategies, email marketing, and analytics. You'll learn how to create effective digital marketing campaigns, understand consumer behavior online, and measure the success of your marketing efforts.</p>
+                <p class="text-gray-600 mb-4">{{ course.long_description }}</p>
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                     <div>
                         <p class="font-semibold text-gray-700">Duration</p>
@@ -167,12 +171,12 @@
                 
                 <h2 class="text-2xl font-semibold text-green-700 mt-8 mb-4">Your Notes</h2>
                 <textarea class="w-full p-2 border border-gray-300 rounded-md" rows="10" placeholder="Take notes here...">Module 1 Notes:
-- Digital marketing encompasses all marketing efforts that use electronic devices or the internet
-- Key components: SEO, content marketing, social media marketing, email marketing, PPC advertising
-- Important to set SMART goals for digital marketing campaigns
-- Always consider the target audience and their online behavior
+                    - Digital marketing encompasses all marketing efforts that use electronic devices or the internet
+                    - Key components: SEO, content marketing, social media marketing, email marketing, PPC advertising
+                    - Important to set SMART goals for digital marketing campaigns
+                    - Always consider the target audience and their online behavior
 
-TODO: Research more about marketing automation tools</textarea>
+                    TODO: Research more about marketing automation tools</textarea>
                 <button class="mt-2 bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded transition duration-300">
                     Save Notes
                 </button>
@@ -180,5 +184,135 @@ TODO: Research more about marketing automation tools</textarea>
         </div>
     </div>
 </div>
+
+
+<script>
+    class ScormContentManager {
+        constructor() {
+            this.scormContainer = document.getElementById('scorm-container');
+            this.loadButton = document.getElementById('load-scorm-button');
+            this.errorMessage = document.getElementById('error-message');
+            this.loadingIndicator = document.getElementById('loading-indicator');
+
+            this.initEventListeners();
+        }
+
+        initEventListeners() {
+            window.addEventListener('load', () => this.loadScormContent());
+        }
+
+        showLoading(show) {
+            if (this.loadingIndicator) {
+                this.loadingIndicator.style.display = show ? 'block' : 'none';
+            }
+        }
+
+        showError(message) {
+            if (this.errorMessage) {
+                this.errorMessage.textContent = message;
+                this.errorMessage.style.display = 'block';
+            }
+        }
+
+        hideError() {
+            if (this.errorMessage) {
+                this.errorMessage.style.display = 'none';
+            }
+        }
+
+        setAppConfiguration() {
+            return fetch('/api/scorm_cloud_operations/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': this.getCookie('csrftoken')
+                },
+                body: JSON.stringify({})
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+                console.log(data.message);
+            });
+        }
+
+        getLaunchLink(learnerId, registrationId) {
+            this.showLoading(true);
+            this.hideError();
+
+            return fetch(`/api/scorm_cloud_operations/?learner_id=${learnerId}&registration_id=${registrationId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        throw new Error(data.error);
+                    }
+                    return data.launch_link;
+                })
+                .finally(() => {
+                    this.showLoading(false);
+                });
+        }
+
+        embedScormContent(launchLink) {
+            const iframe = document.createElement('iframe');
+            iframe.src = launchLink;
+            iframe.width = '100%';
+            iframe.height = '600px';
+            iframe.style.border = 'none';
+            iframe.allow = 'fullscreen';
+            
+            this.scormContainer.innerHTML = '';
+            this.scormContainer.appendChild(iframe);
+        }
+
+        loadScormContent() {
+            const learnerId = "{{ learner_id }}";
+            const registrationId = "{{ registration_id }}";
+
+            this.getLaunchLink(learnerId, registrationId)
+                .then(launchLink => {
+                    this.embedScormContent(launchLink);
+                })
+                .catch(error => {
+                    console.error('Error loading SCORM content:', error);
+                    this.showError(`Error loading content: ${error.message}`);
+                });
+        }
+
+        getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+    }
+
+    // Initialize the ScormContentManager when the DOM is fully loaded
+    document.addEventListener('DOMContentLoaded', () => {
+        const scormManager = new ScormContentManager();
+
+        // Set app configuration once when the page loads
+        scormManager.setAppConfiguration()
+            .then(() => {
+                console.log('Application configuration updated successfully');
+                // Enable the load button after configuration is set
+                scormManager.loadButton.disabled = false;
+            })
+            .catch(error => {
+                console.error('Error setting app configuration:', error);
+                scormManager.showError(`Error setting app configuration: ${error.message}`);
+            });
+    });
+</script>
 
 {% endblock %}

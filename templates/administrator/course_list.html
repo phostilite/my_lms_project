@@ -181,36 +181,4 @@
         });
     });
 </script>
-
-
-<script>
-    // Inside your courses.html template (within a <script> tag)
-
-// Assuming your course links have a specific class (e.g., "launch-course-link")
-const launchLinks = document.querySelectorAll('.launch-course-link');
-launchLinks.forEach(link => {
-    link.addEventListener('click', (event) => {
-        event.preventDefault(); // Prevent default link behavior
-
-        const learnerId = link.dataset.learnerId; // Get data attributes from the link
-        const registrationId = link.dataset.registrationId;
-
-        fetch(`{% url 'get_launch_link' %}?learner_id=${learnerId}&registration_id=${registrationId}`) // Update the URL pattern name
-            .then(response => response.json())
-            .then(data => {
-                if (data.launch_link) {
-                    window.open(data.launch_link, '_blank');
-                } else {
-                    // Handle error if no launch link is received
-                    alert('Error getting launch link. Please try again.');
-                }
-            })
-            .catch(error => {
-                // Handle fetch errors
-                alert('An error occurred. Please try again.');
-            });
-    });
-});
-
-</script>
 {% endblock %}

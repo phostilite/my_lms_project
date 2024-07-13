@@ -7,7 +7,7 @@ import base64
 from django.conf import settings as django_settings
 from django.contrib.auth.decorators import login_required
 from django.http import Http404, HttpResponseServerError, JsonResponse
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, get_object_or_404
 import pytz
 import requests
 
@@ -135,14 +135,53 @@ def enrolled_courses(request):
     return render(request, 'learner/enrolled_deliveries.html', {
         'enrolled_deliveries': enrolled_deliveries,
         'learner_timezone': learner_timezone,
+        'learner': learner,
     })
 
 
-def play_course(request):
-    return render(request, 'learner/play_course.html')
-
 def launch_course(request):
-    return render(request, 'learner/launch.html')
+    return render(request, 'learner/launch_course.html')
 
+def play_course(request):
+    try:
+        # Extract learner_id and delivery_id from the request
+        learner_id = request.GET.get('learner_id')
+        delivery_id = request.GET.get('delivery_id')
+
+        # Validate and fetch the Learner object
+        learner = get_object_or_404(Learner, id=learner_id)
+
+        # Validate and fetch the CourseDelivery object
+        delivery = get_object_or_404(CourseDelivery, id=delivery_id)
+
+        # Validate if the delivery belongs to the requested course
+        if not delivery.course:
+            raise ValueError("The delivery does not have an associated course.")
+
+        # Fetch the ScormCloudCourse using the course from delivery
+        course = get_object_or_404(ScormCloudCourse, id=delivery.course.id)
+
+        # Validate and fetch the ScormCloudRegistration object
+        registration = get_object_or_404(ScormCloudRegistration, learner=learner, course_id=course.course_id)
+
+        # Prepare context data for rendering
+        context = {
+            'learner_id': learner_id,
+            'registration_id': registration.registration_id,
+            'course': course,
+            'delivery': delivery,
+        }
+
+        return render(request, 'learner/play_course.html', context)
+
+    except Http404 as e:
+        logger.error(f"Resource not found: {str(e)}")
+        return JsonResponse({'error': 'Resource not found'}, status=404)
+    except ValueError as e:
+        logger.error(str(e))
+        return JsonResponse({'error': str(e)}, status=400)
+    except Exception as e:
+        logger.exception("Unexpected error occurred while launching the course.")
+        return JsonResponse({'error': 'An unexpected error occurred'}, status=500)
 
 
