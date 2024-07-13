@@ -6,9 +6,17 @@ from django.contrib.auth.decorators import login_required
 import pytz
 from datetime import datetime
 
+from django.http import JsonResponse
+import requests 
+import base64
+
+from django.conf import settings as django_settings
+
 from courses.models import ScormCloudCourse, ScormCloudRegistration, CourseDelivery
 from accounts.models import Learner
 from accounts.forms import UserTimeZoneForm
+
+
 
 
 # Configure the logger
@@ -154,3 +162,12 @@ def enrolled_courses(request):
         'enrolled_deliveries': enrolled_deliveries,
         'learner_timezone': learner_timezone,
     })
+
+
+
+
+def launch_course(request):
+    return render(request, 'learner/launch.html')
+
+
+

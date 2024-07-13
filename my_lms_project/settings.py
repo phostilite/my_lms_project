@@ -202,3 +202,4 @@ EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 SITE_NAME = "Local Development Site"
 DOMAIN = "localhost:8000"  
 
+CORS_ALLOW_ALL_ORIGINS = True

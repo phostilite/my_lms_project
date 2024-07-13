@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SCORM Content Loader</title>
+    <style>
+        #loading-indicator {
+            display: none;
+            /* Add styling for your loading indicator */
+        }
+        #error-message {
+            display: none;
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <h1>SCORM Content Loader</h1>
+    <button id="load-scorm-button">Load SCORM Content</button>
+    <div id="loading-indicator">Loading...</div>
+    <div id="error-message"></div>
+    <div id="scorm-container"></div>
+
+    <script>
+        class ScormContentManager {
+    constructor() {
+        this.scormContainer = document.getElementById('scorm-container');
+        this.loadButton = document.getElementById('load-scorm-button');
+        this.errorMessage = document.getElementById('error-message');
+        this.loadingIndicator = document.getElementById('loading-indicator');
+
+        this.initEventListeners();
+    }
+
+    initEventListeners() {
+        this.loadButton.addEventListener('click', () => this.loadScormContent());
+    }
+
+    showLoading(show) {
+        if (this.loadingIndicator) {
+            this.loadingIndicator.style.display = show ? 'block' : 'none';
+        }
+    }
+
+    showError(message) {
+        if (this.errorMessage) {
+            this.errorMessage.textContent = message;
+            this.errorMessage.style.display = 'block';
+        }
+    }
+
+    hideError() {
+        if (this.errorMessage) {
+            this.errorMessage.style.display = 'none';
+        }
+    }
+
+    setAppConfiguration() {
+        return fetch('/api/scorm_cloud_operations/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': this.getCookie('csrftoken')
+            },
+            body: JSON.stringify({})
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                throw new Error(data.error);
+            }
+            console.log(data.message);
+        });
+    }
+
+    getLaunchLink(learnerId, registrationId) {
+        this.showLoading(true);
+        this.hideError();
+
+        return fetch(`/api/scorm_cloud_operations/?learner_id=${learnerId}&registration_id=${registrationId}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+                return data.launch_link;
+            })
+            .finally(() => {
+                this.showLoading(false);
+            });
+    }
+
+    embedScormContent(launchLink) {
+        const iframe = document.createElement('iframe');
+        iframe.src = launchLink;
+        iframe.width = '100%';
+        iframe.height = '600px';
+        iframe.style.border = 'none';
+        iframe.allow = 'fullscreen';
+        
+        this.scormContainer.innerHTML = '';
+        this.scormContainer.appendChild(iframe);
+    }
+
+    loadScormContent() {
+        const learnerId = '6';
+        const registrationId = '392fafc9-272a-475b-b8c6-53ccc369679f';
+
+        this.getLaunchLink(learnerId, registrationId)
+            .then(launchLink => {
+                this.embedScormContent(launchLink);
+            })
+            .catch(error => {
+                console.error('Error loading SCORM content:', error);
+                this.showError(`Error loading content: ${error.message}`);
+            });
+    }
+
+    getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+}
+
+// Initialize the ScormContentManager when the DOM is fully loaded
+document.addEventListener('DOMContentLoaded', () => {
+    const scormManager = new ScormContentManager();
+
+    // Set app configuration once when the page loads
+    scormManager.setAppConfiguration()
+        .then(() => {
+            console.log('Application configuration updated successfully');
+            // Enable the load button after configuration is set
+            scormManager.loadButton.disabled = false;
+        })
+        .catch(error => {
+            console.error('Error setting app configuration:', error);
+            scormManager.showError(`Error setting app configuration: ${error.message}`);
+        });
+});
+    </script>
+</body>
+</html>

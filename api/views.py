@@ -14,6 +14,8 @@ import uuid
 from django.views.decorators.http import require_POST, require_GET
 from django.http import JsonResponse, HttpResponseRedirect
 from django.contrib.auth import get_user_model
+from django.views.decorators.http import require_http_methods
+from django.views.decorators.csrf import csrf_exempt
 
 from courses.models import ScormCloudCourse
 from .utils import course_id_is_valid
@@ -209,11 +211,28 @@ def register_and_create_scorm_registration(request):
         return JsonResponse({'error': 'Registration failed'}, status=500)
     
 
-@require_GET
+@require_http_methods(["GET", "POST"])
+def scorm_cloud_operations(request):
+    try:
+        # ScormCloud Configuration
+        config = scorm_cloud.Configuration()
+        config.username = settings.CLOUDSCORM_APP_ID
+        config.password = settings.CLOUDSCORM_SECRET_KEY
+        scorm_cloud.Configuration().set_default(config)
+
+        if request.method == 'GET':
+            return get_launch_link(request)
+        elif request.method == 'POST':
+            return set_application_configuration(request)
+
+    except Exception as e:
+        logger.exception("Error in SCORM Cloud operations:")
+        return JsonResponse({'error': str(e)}, status=500)
+    
 def get_launch_link(request):
     try:
         learner_id = request.GET.get('learner_id')
-        registration_id = request.GET.get('registration_id')  # Get registration ID from the request
+        registration_id = request.GET.get('registration_id')
 
         if not learner_id or not registration_id:
             raise ValueError("Learner ID and Registration ID are required.")
@@ -222,32 +241,62 @@ def get_launch_link(request):
         learner = Learner.objects.get(pk=learner_id)
         registration = ScormCloudRegistration.objects.get(registration_id=registration_id, learner=learner)
 
-        # ScormCloud Configuration
-        config = scorm_cloud.Configuration()
-        config.username = settings.CLOUDSCORM_APP_ID
-        config.password = settings.CLOUDSCORM_SECRET_KEY
-        scorm_cloud.Configuration().set_default(config)
         registration_api = scorm_cloud.RegistrationApi()
 
         # Build Launch Link
-        launch_settings = scorm_cloud.LaunchLinkRequestSchema(redirect_on_exit_url="Message")  # Redirect back to your LMS after course completion
-        launch_link_response = registration_api.build_registration_launch_link(str(registration.registration_id), launch_settings)
+        launch_link_request = {
+            "redirectOnExitUrl": "https://your-lms.com/exit",  # Replace with your actual exit URL
+            "launchAuth": {
+                "type": "vault"
+            },
+            "expiry": 3600, 
+            "tracking": True
+        }
         
-        # Return Launch Link as JSON
+        launch_link_response = registration_api.build_registration_launch_link(
+            registration_id=str(registration.registration_id), 
+            launch_link_request=launch_link_request,
+        )
+        
         return JsonResponse({'launch_link': launch_link_response.launch_link})
 
-    except Learner.DoesNotExist:
-        logger.error(f"Learner with ID {learner_id} not found.")
-        return JsonResponse({'error': 'Learner not found'}, status=404)
-    except ScormCloudRegistration.DoesNotExist:
-        logger.error(f"Registration with ID {registration_id} for learner {learner_id} not found.")
-        return JsonResponse({'error': 'Registration not found'}, status=404)
+    except (Learner.DoesNotExist, ScormCloudRegistration.DoesNotExist) as e:
+        logger.error(f"Resource not found: {str(e)}")
+        return JsonResponse({'error': str(e)}, status=404)
+    except ValueError as e:
+        logger.error(str(e))
+        return JsonResponse({'error': str(e)}, status=400)
     except scorm_cloud.rest.ApiException as api_e:
         logger.error(f"ScormCloud API Error: {api_e}")
         return JsonResponse({'error': f'ScormCloud launch link generation failed: {api_e.reason}'}, status=500)
-    except ValueError as e:
-        logger.error(str(e)) 
-        return JsonResponse({'error': str(e)}, status=400)
-    except Exception as e:
-        logger.exception("Error during launch link generation:")
-        return JsonResponse({'error': 'Launch link generation failed'}, status=500)
+
+def set_application_configuration(request):
+    try:
+        app_management_api = scorm_cloud.ApplicationManagementApi()
+
+        config_settings = {
+            "settings": [
+                {
+                    "settingId": "PlayerLaunchType",
+                    "value": "FRAMESET",
+                    "explicit": True
+                },
+                {
+                    "settingId": "PlayerScoLaunchType",
+                    "value": "FRAMESET",
+                    "explicit": True
+                },
+                {
+                    "settingId": "LaunchAuthType",
+                    "value": "vault",
+                    "explicit": True
+                }
+            ]
+        }
+
+        response = app_management_api.set_application_configuration(config_settings)
+        return JsonResponse({'message': 'Application configuration updated successfully'})
+
+    except scorm_cloud.rest.ApiException as api_e:
+        logger.error(f"ScormCloud API Error: {api_e}")
+        return JsonResponse({'error': f'Failed to update application configuration: {api_e.reason}'}, status=500)
