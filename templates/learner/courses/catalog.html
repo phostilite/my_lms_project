@@ -1,0 +1,118 @@
+{% extends '../../base.html' %}
+{% block content %}
+{% include '../navbar.html' %}
+{% include '../sidebar.html' %}
+
+<style>
+    .course-card {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
+    .course-content {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+    }
+    .course-info {
+        flex-grow: 1;
+    }
+    .course-footer {
+        margin-top: auto;
+    }
+</style>
+
+<div class="p-8 sm:ml-64 mt-14">
+    <h1 class="text-3xl font-bold mb-8">Course Catalog</h1>
+
+
+    <!-- Search and Filter Section -->
+    <div class="mb-8 bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
+        <form id="search-filter-form" method="get">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div>
+                    <label for="search" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Search</label>
+                    <input type="text" id="search" name="search" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-green-500 dark:focus:border-green-500" placeholder="Search courses...">
+                </div>
+                <div>
+                    <label for="category" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Category</label>
+                    <select id="category" name="category" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-green-500 dark:focus:border-green-500">
+                        <option value="">All Categories</option>
+                        {% for category in categories %}
+                            <option value="{{ category.id }}">{{ category.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div>
+                    <label for="rating" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Minimum Rating</label>
+                    <select id="rating" name="rating" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-green-500 dark:focus:border-green-500">
+                        <option value="">Any Rating</option>
+                        <option value="4">4+ Stars</option>
+                        <option value="3">3+ Stars</option>
+                        <option value="2">2+ Stars</option>
+                        <option value="1">1+ Star</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="year" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Year</label>
+                    <select id="year" name="year" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-green-500 dark:focus:border-green-500">
+                        <option value="">All Years</option>
+                        {% for year in years %}
+                            <option value="{{ year }}">{{ year }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="mt-4 flex items-center">
+                <input id="enrolled" name="enrolled" type="checkbox" class="w-4 h-4 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 dark:focus:ring-green-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                <label for="enrolled" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Show only enrolled courses</label>
+            </div>
+            <div class="mt-4">
+                <button type="submit" class="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">Apply Filters</button>
+                <button type="reset" class="text-green-700 hover:text-white border border-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:border-green-500 dark:text-green-500 dark:hover:text-white dark:hover:bg-green-600 dark:focus:ring-green-800 ml-2">Reset Filters</button>
+            </div>
+        </form>
+    </div>
+
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for course in courses %}
+        <div class="course-card bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+            <a href="" class="flex-shrink-0">
+                {% if course.cover_image %}
+                    <img class="rounded-t-lg w-full h-48 object-cover" src="{{ course.cover_image.url }}" alt="{{ course.title }}">
+                {% else %}
+                    <img class="rounded-t-lg w-full h-48 object-cover" src="https://placehold.co/600x400" alt="Course Cover">
+                {% endif %}
+            </a>
+            <div class="course-content p-5">
+                <div class="course-info">
+                    <a href="" class="mb-2 block">
+                        <h5 class="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{ course.title }}</h5>
+                    </a>
+                    <div class="mb-3 font-normal text-gray-700 dark:text-gray-400">
+                        {% if course.short_description %}
+                            {{ course.short_description }}
+                        {% else %}
+                            <p class="text-gray-500 italic">No description available</p>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="course-footer">
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300">{{ course.category }}</span>
+                        <span class="text-sm text-gray-500 dark:text-gray-400"><i class="fas fa-clock mr-1"></i>{{ course.duration }}</span>
+                    </div>
+                    <a href="{% url 'learner_course_details' course.id %}" class="inline-flex items-center justify-center w-full px-3 py-2 text-sm font-medium text-center text-white bg-green-700 rounded-lg hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
+                        Learn more
+                        <svg class="w-3.5 h-3.5 ml-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
