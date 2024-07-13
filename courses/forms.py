@@ -48,6 +48,7 @@ class CourseDeliveryForm(forms.ModelForm):
         self.fields['participants'].queryset = Learner.objects.all()
 
         # Make some fields optional
+        self.fields['facilitators'].required = False
         self.fields['start_date'].required = False
         self.fields['end_date'].required = False
         self.fields['deactivation_date'].required = False

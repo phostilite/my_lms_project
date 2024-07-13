@@ -17,7 +17,7 @@ from openpyxl.styles import Alignment, Font
 from accounts.forms import UserTimeZoneForm
 from accounts.models import Learner, Supervisor
 from courses.forms import CourseDeliveryForm, ScormCloudCourseForm
-from courses.models import Attendance, CourseDelivery, Enrollment, Feedback, ScormCloudCourse
+from courses.models import Attendance, CourseDelivery, Enrollment, Feedback, ScormCloudCourse, ScormCloudRegistration
 from learner.forms import LearnerForm
 from supervisor.forms import SupervisorForm
 
@@ -401,6 +401,21 @@ def export_attendance(request, delivery_id):
     wb.save(response)
 
     return response
+
+
+def preview_course(request, learner_id, course_id):
+    try:
+        learner = get_object_or_404(Learner, id=learner_id)
+        course = get_object_or_404(ScormCloudCourse, id=course_id)
+        registration = get_object_or_404(ScormCloudRegistration, learner=learner, course_id=course.course_id)
+        return render(request, 'administrator/preview_course.html', { 
+            'learner_id': learner_id,
+            'registration_id': registration.registration_id,
+            'course': course,
+        })
+    except Exception as e:
+        logger.error(f"Error loading preview_course: {e}")
+        return HttpResponseServerError("An error occurred")
 
 
     

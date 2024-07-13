@@ -1,0 +1,183 @@
+{% extends '../base.html' %}
+{% block content %}
+{% include './navbar.html' %}
+{% include './sidebar.html' %}
+
+<div class="p-8 sm:ml-64 mt-14 bg-green-50">
+    <div class="max-w-7xl mx-auto">
+        <h1 class="text-3xl font-bold text-green-800 mb-6">Course Preview: {{ course.title }}</h1>
+
+        <!-- SCORM Content iframe -->
+        <div class="mb-8" id="scorm-container">
+            
+        </div>
+
+        <div id="loading-indicator">
+            <iframe src="https://via.placeholder.com/1200x600?text=SCORM+Content+Placeholder" class="w-full h-[600px] border-2 border-green-300 rounded-lg"></iframe>
+        </div>
+
+        <!-- Tabbed Content -->
+        <div class="mb-4 border-b border-gray-200 dark:border-gray-700">
+            <ul class="flex flex-wrap -mb-px text-sm font-medium text-center" id="courseTab" data-tabs-toggle="#courseTabContent" role="tablist">
+                <li class="mr-2" role="presentation">
+                    <button class="inline-block p-4 border-b-2 rounded-t-lg" id="overview-tab" data-tabs-target="#overview" type="button" role="tab" aria-controls="overview" aria-selected="false">Course Overview</button>
+                </li>
+            </ul>
+        </div>
+
+        <div id="courseTabContent">
+            <!-- Course Overview Tab -->
+            <div class="hidden p-4 rounded-lg bg-white" id="overview" role="tabpanel" aria-labelledby="overview-tab">
+                <h2 class="text-2xl font-semibold text-green-700 mb-4">Course Overview</h2>
+                <p class="text-gray-600 mb-4">{{ course.long_description }}</p>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                    <div>
+                        <p class="font-semibold text-gray-700">Duration</p>
+                        <p class="text-gray-600">8 weeks</p>
+                    </div>
+                    <div>
+                        <p class="font-semibold text-gray-700">Published By</p>
+                        <p class="text-gray-600">Dr. Sarah Johnson</p>
+                    </div>
+                    <div>
+                        <p class="font-semibold text-gray-700">Published Date</p>
+                        <p class="text-gray-600">2024-07-15</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<script>
+    class ScormContentManager {
+        constructor() {
+            this.scormContainer = document.getElementById('scorm-container');
+            this.loadButton = document.getElementById('load-scorm-button');
+            this.errorMessage = document.getElementById('error-message');
+            this.loadingIndicator = document.getElementById('loading-indicator');
+
+            this.initEventListeners();
+        }
+
+        initEventListeners() {
+            window.addEventListener('load', () => this.loadScormContent());
+        }
+
+        showLoading(show) {
+            if (this.loadingIndicator) {
+                this.loadingIndicator.style.display = show ? 'block' : 'none';
+            }
+        }
+
+        showError(message) {
+            if (this.errorMessage) {
+                this.errorMessage.textContent = message;
+                this.errorMessage.style.display = 'block';
+            }
+        }
+
+        hideError() {
+            if (this.errorMessage) {
+                this.errorMessage.style.display = 'none';
+            }
+        }
+
+        setAppConfiguration() {
+            return fetch('/api/scorm_cloud_operations/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': this.getCookie('csrftoken')
+                },
+                body: JSON.stringify({})
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+                console.log(data.message);
+            });
+        }
+
+        getLaunchLink(learnerId, registrationId) {
+            this.showLoading(true);
+            this.hideError();
+
+            return fetch(`/api/scorm_cloud_operations/?learner_id=${learnerId}&registration_id=${registrationId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        throw new Error(data.error);
+                    }
+                    return data.launch_link;
+                })
+                .finally(() => {
+                    this.showLoading(false);
+                });
+        }
+
+        embedScormContent(launchLink) {
+            const iframe = document.createElement('iframe');
+            iframe.src = launchLink;
+            iframe.width = '100%';
+            iframe.height = '600px';
+            iframe.style.border = 'none';
+            iframe.allow = 'fullscreen';
+            
+            this.scormContainer.innerHTML = '';
+            this.scormContainer.appendChild(iframe);
+        }
+
+        loadScormContent() {
+            const learnerId = "{{ learner_id }}";
+            const registrationId = "{{ registration_id }}";
+
+            this.getLaunchLink(learnerId, registrationId)
+                .then(launchLink => {
+                    this.embedScormContent(launchLink);
+                })
+                .catch(error => {
+                    console.error('Error loading SCORM content:', error);
+                    this.showError(`Error loading content: ${error.message}`);
+                });
+        }
+
+        getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+    }
+
+    // Initialize the ScormContentManager when the DOM is fully loaded
+    document.addEventListener('DOMContentLoaded', () => {
+        const scormManager = new ScormContentManager();
+
+        // Set app configuration once when the page loads
+        scormManager.setAppConfiguration()
+            .then(() => {
+                console.log('Application configuration updated successfully');
+                // Enable the load button after configuration is set
+                scormManager.loadButton.disabled = false;
+            })
+            .catch(error => {
+                console.error('Error setting app configuration:', error);
+                scormManager.showError(`Error setting app configuration: ${error.message}`);
+            });
+    });
+</script>
+
+{% endblock %}

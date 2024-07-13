@@ -1,44 +1,37 @@
-from django.contrib.auth.views import LoginView
-from django.shortcuts import redirect, render
-from django.contrib import messages
-from social_django.models import UserSocialAuth
-from django.contrib.auth import authenticate, login, logout, get_user_model
 import logging
 import uuid
-from msal import ConfidentialClientApplication
-from django.conf import settings
-import requests
-from django.http import HttpResponse, HttpResponseRedirect
-from django.urls import reverse
-from django.contrib.auth.models import Group
-from django.db import transaction
-from django.db.utils import IntegrityError
-from django.views.decorators.debug import sensitive_post_parameters
-from django.utils.decorators import method_decorator
-from django.views.decorators.csrf import csrf_protect
-from django.views.decorators.cache import never_cache
-from django.contrib.auth.views import LoginView as DjangoLoginView
-from django.utils.translation import gettext as _
-from django.urls import reverse
-from django.conf import settings
 from urllib.parse import urlencode
-from django.http.response import HttpResponseRedirect
-from django.shortcuts import redirect
-from . import constants
-from django.contrib.auth import authenticate, login
-from .backends import GoogleSignInBackend
+
+import requests
+from django.conf import settings
 from django.contrib import messages
-from django.urls import reverse_lazy
-from django.contrib.auth.views import PasswordResetView
+from django.contrib.auth import authenticate, login, logout, get_user_model
+from django.contrib.auth.models import Group
+from django.contrib.auth.views import LoginView, LoginView as DjangoLoginView, PasswordResetView
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.mail import EmailMultiAlternatives, send_mail
+from django.db import transaction
+from django.db.utils import IntegrityError
+from django.http import HttpResponse, HttpResponseRedirect, response as HttpResponseRedirect
+from django.shortcuts import redirect, render
+from django.urls import reverse, reverse_lazy
+from django.utils.decorators import method_decorator
+from django.utils.translation import gettext as _
+from django.views.decorators.cache import never_cache
+from django.views.decorators.csrf import csrf_protect
+from django.views.decorators.debug import sensitive_post_parameters
+from msal import ConfidentialClientApplication
+from social_django.models import UserSocialAuth
 
-
+from . import constants
+from .auth_helper import (extract_user_details, get_sign_in_flow,
+                          get_token, get_token_from_code, remove_user_and_token,
+                          store_user)
+from .backends import GoogleSignInBackend
 from .forms import LoginForm, LearnerSignupForm
-from .utils import redirect_based_on_group, get_msal_app
-from .auth_helper import get_sign_in_flow, get_token_from_code, store_user, get_token, remove_user_and_token, extract_user_details
 from .graph_helper import *
 from .models import Learner
+from .utils import get_msal_app, redirect_based_on_group
 
 logger = logging.getLogger(__name__)
 
@@ -104,7 +97,7 @@ class LoginView(DjangoLoginView):
     def redirect_authenticated_user(self, user):
         """Redirect users based on their group."""
         if user.groups.filter(name='administrator').exists():
-            return redirect('administrator_leaderboard')
+            return redirect('administrator_dashboard')
         elif user.groups.filter(name='instructor').exists():
             return redirect('instructor_dashboard')
         else:
