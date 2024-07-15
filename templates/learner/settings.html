@@ -587,10 +587,24 @@
                                 <td class="px-6 py-4">
                                     Name
                                 <td class="px-6 py-4">
-                                    {{ request.user.first_name }} {{ request.user.last_name }}
+                                    <form method="post">
+                                        {% csrf_token %}
+                                        <div class="grid gap-6 mb-6 md:grid-cols-2 mt-5">
+                                            <div>
+                                                <label for="{{ forms.learner_name_form.prefix }}-first_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"></label>
+                                                <input type="text" name="{{ forms.learner_name_form.prefix }}-first_name" id="{{ forms.learner_name_form.prefix }}-first_name" value="{{ forms.learner_name_form.instance.first_name }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-green-500 dark:focus:border-green-500"/>
+                                            </div>
+                                            <div>
+                                                <label for="{{ forms.learner_name_form.prefix }}-last_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"></label>
+                                                <input type="text" name="{{ forms.learner_name_form.prefix }}-last_name" id="{{ forms.learner_name_form.prefix }}-last_name" value="{{ forms.learner_name_form.instance.last_name }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-green-500 dark:focus:border-green-500"/>
+                                            </div>
+                                        </div>
                                 </td>
                                 <td class="px-6 py-4">
-                                    Edit
+                                        <button type="submit" name="learner_name_form" value="Submit" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                                            Save Changes
+                                        </button>
+                                    </form>
                                 </td>
                             </tr>
                             <tr class="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600">
@@ -601,10 +615,17 @@
                                     Email
                                 </td>
                                 <td class="px-6 py-4">
-                                    {{ request.user.email }}
+                                    <form method="post">
+                                        {% csrf_token %}
+                                        <div class="mb-6">
+                                            <label for="{{ forms.learner_email_form.prefix }}-email" class="block mb-2 mt-5 text-sm font-medium text-gray-900 dark:text-white"></label>
+                                            <input type="email" name="{{ forms.learner_email_form.prefix }}-email" id="{{ forms.learner_email_form.prefix }}-email" value="{{ forms.learner_email_form.instance.email }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-green-500 dark:focus:border-green-500"/>
+                                        </div> 
+                                    
                                 </td>
-                                <td class="px-6 py-4">
-                                    Edit, Verify
+                                <td class="px-6 py-4">                   
+                                        <button type="submit" name="learner_email_form" value="Submit" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Update</button>
+                                    </form>
                                 </td>
                             </tr>
                             <tr class="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600">
@@ -615,10 +636,22 @@
                                     Profile Picture
                                 </td>
                                 <td class="px-6 py-4">
-                                    Image displayed on the profile.
+                                    {% if request.user.picture %}
+                                        <img id="profileImage" class="w-20 h-20 rounded-full" src="{{ request.user.picture.url }}" alt="{{ request.user.first_name }}">
+                                    {% else %}
+                                        <img id="profileImage" class="w-20 h-20 rounded-full" src="https://flowbite.com/docs/images/people/profile-picture-5.jpg" alt="{{ request.user.first_name }}">
+                                    {% endif %}
                                 </td>
                                 <td class="px-6 py-4">
-                                    Upload, Delete
+                                    <form method="post" enctype="multipart/form-data" id="profilePictureForm">
+                                        {% csrf_token %}
+                                        <div style="display: none;">
+                                            {{ forms.profile_picture_form.picture }}
+                                        </div>
+                                        <button type="submit" name="profile_picture_form" id="updatePictureBtn"  value="Submit" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                                            Update Picture
+                                        </button>
+                                    </form>
                                 </td>
                             </tr>
 
@@ -633,22 +666,20 @@
                                     <form method="post">
                                         {% csrf_token %}
                                         <div class="mb-4">
-                                            <label for="id_timezone" class="block text-gray-700 text-sm font-bold mb-1 mt-5"></label>
-                                            <select name="timezone" id="id_timezone" class="form-select appearance-none block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding bg-no-repeat border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none">
-                                                {% for value, display in form.fields.timezone.choices %}
-                                                    <option value="{{ value }}" {% if form.instance.timezone == value %}selected{% endif %}>{{ display }}</option>
+                                            <label for="{{ forms.timezone_form.prefix }}-timezone" class="block text-gray-700 text-sm font-bold mb-1 mt-5"></label>
+                                            <select name="{{ forms.timezone_form.prefix }}-timezone" id="{{ forms.timezone_form.prefix }}-timezone" class="form-select appearance-none block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding bg-no-repeat border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-green-600 focus:outline-none">
+                                                {% for value, display in forms.timezone_form.fields.timezone.choices %}
+                                                    <option value="{{ value }}" {% if forms.timezone_form.instance.timezone == value %}selected{% endif %}>{{ display }}</option>
                                                 {% endfor %}
                                             </select>
                                         </div>
                                 </td>
                                 <td class="px-6 py-4">
-                                    <button type="submit" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                                    <button type="submit" name="timezone_form" value="Submit" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
                                         Save Timezone
                                     </button>
                                     </form>
-                                </td>
-                                
-                                   
+                                </td> 
                             </tr>
                             <tr class="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600">
                                 <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
@@ -661,7 +692,11 @@
                                     Toggles email notifications for various events (e.g., new course announcements, assignment deadlines, forum posts).
                                 </td>
                                 <td class="px-6 py-4">
-                                    Enable/Disable checkboxes
+                                    <label class="inline-flex items-center me-5 cursor-pointer">
+                                        <input type="checkbox" value="" class="sr-only peer" checked>
+                                        <div class="relative w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-green-300 dark:peer-focus:ring-green-800 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-green-600"></div>
+                                        <span class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300"></span>
+                                      </label>
                                 </td>
                             </tr>
 
@@ -707,7 +742,11 @@
                                     Determines if completed courses are visible on the profile.
                                 </td>
                                 <td class="px-6 py-4">
-                                    Enable/Disable checkbox             
+                                    <label class="inline-flex items-center me-5 cursor-pointer">
+                                        <input type="checkbox" value="" class="sr-only peer" checked>
+                                        <div class="relative w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-green-300 dark:peer-focus:ring-green-800 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-green-600"></div>
+                                        <span class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300"></span>
+                                      </label>            
                                 </td>
                             </tr>
                             <tr class="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600">
@@ -751,7 +790,11 @@
                                     Enables/disables closed captions for video content.
                                 </td>
                                 <td class="px-6 py-4">
-                                    Enable/Disable checkbox
+                                    <label class="inline-flex items-center me-5 cursor-pointer">
+                                        <input type="checkbox" value="" class="sr-only peer" checked>
+                                        <div class="relative w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-green-300 dark:peer-focus:ring-green-800 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-green-600"></div>
+                                        <span class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300"></span>
+                                      </label>
                                 </td>
                             </tr>
                             <tr class="bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600">
@@ -834,7 +877,7 @@
         <p>Your profile showcases your personal information, course progress, and achievements on the learning platform. Keeping your profile up-to-date helps personalize your learning experience and connect with other learners.</p>
         <h3 class="font-semibold text-gray-900 dark:text-white">Key Sections</h3>
         <p>The profile includes Basic Info, About Me, Courses, Progress, and Settings. Each section allows you to view and manage different aspects of your learning journey.</p>
-        <a href="#" class="flex items-center font-medium text-blue-600 dark:text-blue-500 dark:hover:text-blue-600 hover:text-blue-700 hover:underline">Profile guide <svg class="w-2 h-2 ms-1.5 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+        <a href="#" class="flex items-center font-medium text-green-600 dark:text-green-500 dark:hover:text-green-600 hover:text-green-700 hover:underline">Profile guide <svg class="w-2 h-2 ms-1.5 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
   </svg></a>
     </div>
@@ -847,7 +890,7 @@
         <p>This page outlines the various security measures implemented to protect your account and data within the learning management system (LMS).</p>
         <h3 class="font-semibold text-gray-900 dark:text-white">Key Categories</h3>
         <p>Security features are grouped into Password Management, Account Security, Data Privacy, System Security, and User Education. Some features require user action, while others are system-managed.</p>
-        <a href="#" class="flex items-center font-medium text-blue-600 dark:text-blue-500 dark:hover:text-blue-600 hover:text-blue-700 hover:underline">Learn more about security <svg class="w-2 h-2 ms-1.5 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+        <a href="#" class="flex items-center font-medium text-green-600 dark:text-green-500 dark:hover:text-green-600 hover:text-green-700 hover:underline">Learn more about security <svg class="w-2 h-2 ms-1.5 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
   </svg></a>
     </div>
@@ -861,10 +904,36 @@
         <p>This page allows you to customize various aspects of your learning management system (LMS) experience, from personal information to interface preferences.</p>
         <h3 class="font-semibold text-gray-900 dark:text-white">Key Categories</h3>
         <p>Settings are grouped into Profile, Notifications, Privacy, Accessibility, Language, and Other options. Each setting can be adjusted to suit your needs and preferences.</p>
-        <a href="#" class="flex items-center font-medium text-blue-600 dark:text-blue-500 dark:hover:text-blue-600 hover:text-blue-700 hover:underline">Settings guide <svg class="w-2 h-2 ms-1.5 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+        <a href="#" class="flex items-center font-medium text-green-600 dark:text-green-500 dark:hover:text-green-600 hover:text-green-700 hover:underline">Settings guide <svg class="w-2 h-2 ms-1.5 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
   </svg></a>
     </div>
     <div data-popper-arrow></div>
 </div>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const profileImage = document.getElementById('profileImage');
+        const fileInput = document.getElementById('{{ forms.profile_picture_form.picture.auto_id }}');
+        const updateButton = document.getElementById('updatePictureBtn');
+        
+        profileImage.addEventListener('click', function() {
+            fileInput.click();
+        });
+    
+        fileInput.addEventListener('change', function() {
+            if (this.files && this.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    profileImage.src = e.target.result;
+                };
+                reader.readAsDataURL(this.files[0]);
+                
+                // Enable the update button
+                updateButton.disabled = false;
+            }
+        });
+    });
+    </script>
 {% endblock %}

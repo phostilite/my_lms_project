@@ -14,6 +14,7 @@ import requests
 # Local application/library specific imports
 from accounts.forms import UserTimeZoneForm
 from accounts.models import Learner
+from learner.forms import LearnerForm, LearnerNameForm, LearnerEmailForm, LearnerProfilePictureForm
 from courses.models import CourseDelivery, ScormCloudCourse, ScormCloudRegistration
 
 # Configure the logger
@@ -87,16 +88,33 @@ def leaderboard(request):
         return HttpResponseServerError("An error occurred")
     
 @login_required
-def settings(request):
+def learner_settings(request):
+    forms = {
+        'timezone_form': UserTimeZoneForm(prefix='timezone_form', instance=request.user),
+        'learner_name_form': LearnerNameForm(prefix='learner_name_form', instance=request.user),
+        'learner_email_form': LearnerEmailForm(prefix='learner_email_form', instance=request.user),
+        'profile_picture_form': LearnerProfilePictureForm(prefix='profile_picture_form', instance=request.user),
+    }
+
     try:
         if request.method == 'POST':
-            form = UserTimeZoneForm(request.POST, instance=request.user)
-            if form.is_valid():
-                form.save()
-                return redirect('learner_settings')
-        else:
-            form = UserTimeZoneForm(instance=request.user)
-        return render(request, 'learner/settings.html', {'form': form})
+            # Identify which form is being submitted
+            for form_name, form in forms.items():
+                if form_name in request.POST:
+                    if form_name == 'profile_picture_form':
+                        form = form.__class__(request.POST, request.FILES, instance=request.user, prefix=form_name)
+                    else:
+                        form = form.__class__(request.POST, instance=request.user, prefix=form_name)
+                    if form.is_valid():
+                        form.save()
+                        return redirect('learner_settings')
+                    else:
+                        logger.error(f"Form errors in {form_name}: {form.errors.as_json()}")
+                        forms[form_name] = form
+                        break  
+
+        return render(request, 'learner/settings.html', {'forms': forms})
+
     except Exception as e:
         logger.error(f"Error loading profile: {e}")
         return HttpResponseServerError("An error occurred")
