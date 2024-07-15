@@ -12,7 +12,7 @@ urlpatterns = [
 
     path('upload_course/', views.upload_course, name='upload_course'),
     path('leaderboard/', views.leaderboard, name='administrator_leaderboard'),
-    path('settings/', views.settings,   name='administrator_settings'),
+    path('settings/', views.administrator_settings,   name='administrator_settings'),
 
     path('supervisor_list/', views.supervisor_list, name='administrator_supervisor_list'),
     path('register_supervisor/', views.register_supervisor, name='administrator_register_supervisor'),

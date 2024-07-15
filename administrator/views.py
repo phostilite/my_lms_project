@@ -1,7 +1,13 @@
+# Standard library imports
 import logging
 from decimal import Decimal
 
+# Third-party imports
 import requests
+from openpyxl import Workbook
+from openpyxl.styles import Alignment, Font
+
+# Django imports
 from django.conf import settings as django_settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
@@ -11,11 +17,11 @@ from django.forms import ValidationError
 from django.http import HttpResponse, HttpResponseServerError
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
-from openpyxl import Workbook
-from openpyxl.styles import Alignment, Font
 
+# Local application/library specific imports
 from accounts.forms import UserTimeZoneForm
 from accounts.models import Learner, Supervisor
+from administrator.forms import AdminNameForm, AdminEmailForm, AdminProfilePictureForm
 from courses.forms import CourseDeliveryForm, ScormCloudCourseForm
 from courses.models import Attendance, CourseDelivery, Enrollment, Feedback, ScormCloudCourse, ScormCloudRegistration
 from learner.forms import LearnerForm
@@ -127,16 +133,29 @@ def upload_course(request):
 
 
 @login_required
-def settings(request):
+def administrator_settings(request):
+    forms = {
+        'timezone_form': UserTimeZoneForm(prefix='timezone_form', instance=request.user),
+        'admin_name_form': AdminNameForm(prefix='admin_name_form', instance=request.user),
+        'admin_email_form': AdminEmailForm(prefix='admin_email_form', instance=request.user),
+        'profile_picture_form': AdminProfilePictureForm(prefix='profile_picture_form', instance=request.user),
+    }
     try:
         if request.method == 'POST':
-            form = UserTimeZoneForm(request.POST, instance=request.user)
-            if form.is_valid():
-                form.save()
-                return redirect('administrator_settings')
-        else:
-            form = UserTimeZoneForm(instance=request.user)
-        return render(request, 'administrator/settings.html', {'form': form})
+            for form_name, form in forms.items():
+                if form_name in request.POST:
+                    if form_name == 'profile_picture_form':
+                        form = form.__class__(request.POST, request.FILES, instance=request.user, prefix=form_name)
+                    else:
+                        form = form.__class__(request.POST, instance=request.user, prefix=form_name)
+                    if form.is_valid():
+                        form.save()
+                        return redirect('administrator_settings')
+                    else:
+                        logger.error(f"Form errors in {form_name}: {form.errors.as_json()}")
+                        forms[form_name] = form
+                        break  
+        return render(request, 'administrator/settings.html', {'forms': forms})
     except Exception as e:
         logger.error(f"Error loading profile: {e}")
         return HttpResponseServerError("An error occurred")
