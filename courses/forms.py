@@ -3,20 +3,39 @@ from .models import ScormCloudCourse
 from accounts.models import Facilitator, Learner
 from .models import CourseDelivery, ScormCloudCourse
 from datetime import datetime
+from django.db.models import Max
+import re
 
 class ScormCloudCourseForm(forms.ModelForm):
     file = forms.FileField()
+
     class Meta:
         model = ScormCloudCourse
         fields = [
             'title',
             'course_id',
-            'long_description', 
-            'short_description', 
-            'category', 
-            'duration', 
+            'long_description',
+            'short_description',
+            'category',
+            'duration',
             'cover_image',
-            ]
+        ]
+
+    def __init__(self, *args, **kwargs):
+        super(ScormCloudCourseForm, self).__init__(*args, **kwargs)
+        # Fetch the highest course_id from the database
+        max_course_id = ScormCloudCourse.objects.aggregate(Max('course_id'))['course_id__max']
+        if max_course_id:
+            # Extract the numeric part of the course_id
+            max_id_num = int(re.search(r'\d+', max_course_id).group())
+        else:
+            max_id_num = 0
+        # Increment the numeric part to generate the new course_id
+        new_course_id = f"COURSE-{max_id_num + 1:06d}"
+        # Set the initial value for the course_id field
+        self.fields['course_id'].initial = new_course_id
+        # Make the course_id field read-only if you don't want it to be editable
+        self.fields['course_id'].disabled = True
 
 
 class CourseDeliveryForm(forms.ModelForm):

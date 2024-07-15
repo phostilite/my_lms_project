@@ -146,7 +146,10 @@ def upload_course(request):
                 form.add_error(None, "Course not found in database after creation.")
     else:
         form = ScormCloudCourseForm()
-    return render(request, 'administrator/upload_course.html', {'form': form})
+    return render(request, 'administrator/upload_course.html', {
+        'form': form, 
+        'generated_course_id': form.fields['course_id'].initial
+        })
 
 
 @login_required
