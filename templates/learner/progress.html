@@ -4,237 +4,224 @@
 {% include './sidebar.html' %}
 
 <div class="p-8 sm:ml-64 mt-14">
-        <div class="container mx-auto p-4">
-            <div class="container mx-auto p-4">
-                <header class="flex justify-between items-center mb-8">
-                    <h1 class="text-2xl font-bold">Language Progress</h1>
-                    <nav>
-                        <a href="#" class="mx-2">Progress</a>
-                        <a href="#" class="mx-2">Decks</a>
-                        <a href="#" class="mx-2">Wordlist</a>
-                        <select class="bg-white-800 rounded">
-                            <option>German</option>
-                            <option>French</option>
-                            <option>Spanish</option>
-                        </select>
-                    </nav>
-                </header>
+    <h1 class="text-3xl font-bold mb-8">My Progress</h1>
         
-                <main class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <section class="p-4 rounded border border-green-700">
-                        <h2 class="text-xl mb-4">Today</h2>
-                        <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <h3>Accuracy</h3>
-                                <p class="text-3xl font-bold">79%</p>
-                                <p class="text-sm text-green-400">Average: 79% ↑</p>
-                            </div>
-                            <div>
-                                <h3>New words learned</h3>
-                                <p class="text-3xl font-bold">15</p>
-                                <p class="text-sm text-yellow-400">Your average: 22 ↓</p>
-                            </div>
-                            <div>
-                                <h3>Consistency</h3>
-                                <p class="text-3xl font-bold">27/30</p>
-                                <p class="text-sm text-yellow-400">Average: 26 days ↓</p>
-                            </div>
-                            <div>
-                                <h3>Answered cards</h3>
-                                <p class="text-3xl font-bold">212</p>
-                                <p class="text-sm text-green-400">Average: 200 cards ↑</p>
-                            </div>
-                        </div>
-                    </section>
+        <!-- Progress Overview -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+            <div class="bg-white p-6 rounded-lg shadow">
+                <h2 class="text-xl font-semibold mb-4">Courses Completed</h2>
+                <p class="text-4xl font-bold text-blue-600">12 <span class="text-lg text-gray-500">/ 20</span></p>
+                <div class="mt-4 bg-gray-200 h-2 rounded-full">
+                    <div class="bg-blue-600 h-2 rounded-full" style="width: 60%"></div>
+                </div>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow">
+                <h2 class="text-xl font-semibold mb-4">Total Study Time</h2>
+                <p class="text-4xl font-bold text-green-600">87 <span class="text-lg text-gray-500">hours</span></p>
+                <p class="mt-2 text-gray-600"><i class="fas fa-arrow-up text-green-500"></i> 12% increase from last month</p>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow">
+                <h2 class="text-xl font-semibold mb-4">Achievements</h2>
+                <p class="text-4xl font-bold text-yellow-600">8 <span class="text-lg text-gray-500">badges</span></p>
+                <div class="mt-4 flex space-x-2">
+                    <i class="fas fa-medal text-yellow-500 text-2xl"></i>
+                    <i class="fas fa-trophy text-yellow-500 text-2xl"></i>
+                    <i class="fas fa-award text-yellow-500 text-2xl"></i>
+                </div>
+            </div>
+        </div>
         
-                    <section class=" p-4 rounded border border-green-700">
-                        <h2 class="text-xl mb-4">All time</h2>
+        <!-- Weekly Study Time Chart -->
+        <div class="bg-white p-6 rounded-lg shadow mb-8">
+            <h2 class="text-xl font-semibold mb-4">Weekly Study Time</h2>
+            <canvas id="weeklyStudyChart"></canvas>
+        </div>
+
+        <!-- New: Subject Distribution Pie Chart -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+            <div class="bg-white p-6 rounded-lg shadow">
+                <h2 class="text-xl font-semibold mb-4">Subject Distribution</h2>
+                <canvas id="subjectDistributionChart"></canvas>
+            </div>
+            
+            <!-- New: Skill Radar Chart -->
+            <div class="bg-white p-6 rounded-lg shadow">
+                <h2 class="text-xl font-semibold mb-4">Skill Assessment</h2>
+                <canvas id="skillRadarChart"></canvas>
+            </div>
+        </div>
+        
+        <!-- Course Progress -->
+        <div class="bg-white p-6 rounded-lg shadow mb-8">
+            <h2 class="text-xl font-semibold mb-4">Course Progress</h2>
+            <div class="space-y-4">
+                <div>
+                    <div class="flex justify-between mb-1">
+                        <span class="text-base font-medium text-blue-700 dark:text-white">Python Basics</span>
+                        <span class="text-sm font-medium text-blue-700 dark:text-white">80%</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+                        <div class="bg-blue-600 h-2.5 rounded-full" style="width: 80%"></div>
+                    </div>
+                </div>
+                <div>
+                    <div class="flex justify-between mb-1">
+                        <span class="text-base font-medium text-blue-700 dark:text-white">Web Development</span>
+                        <span class="text-sm font-medium text-blue-700 dark:text-white">45%</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+                        <div class="bg-blue-600 h-2.5 rounded-full" style="width: 45%"></div>
+                    </div>
+                </div>
+                <div>
+                    <div class="flex justify-between mb-1">
+                        <span class="text-base font-medium text-blue-700 dark:text-white">Data Science</span>
+                        <span class="text-sm font-medium text-blue-700 dark:text-white">60%</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+                        <div class="bg-blue-600 h-2.5 rounded-full" style="width: 60%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- New: Learning Streak -->
+        <div class="bg-white p-6 rounded-lg shadow mb-8">
+            <h2 class="text-xl font-semibold mb-4">Learning Streak</h2>
+            <div class="flex items-center">
+                <i class="fas fa-fire text-4xl text-orange-500 mr-4"></i>
+                <div>
+                    <p class="text-2xl font-bold">14 Days</p>
+                    <p class="text-gray-600">Keep it up! You're on a roll!</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Recent Activity -->
+        <div class="bg-white p-6 rounded-lg shadow">
+            <h2 class="text-xl font-semibold mb-4">Recent Activity</h2>
+            <ul class="divide-y divide-gray-200">
+                <li class="py-4">
+                    <div class="flex space-x-3">
+                        <i class="fas fa-book-open text-blue-500 mt-1"></i>
                         <div>
-                            <h3>Words learned</h3>
-                            <p class="text-3xl font-bold">2455</p>
-                        </div>
-                    </section>
-        
-                    <section class=" p-4 rounded border border-green-700">
-                        <h2 class="text-xl mb-4">Leaderboard</h2>
-                        <ul>
-                            <li class="flex justify-between items-center mb-2">
-                                <span>🥇 Alex</span>
-                                <span>282 words</span>
-                            </li>
-                            <li class="flex justify-between items-center mb-2">
-                                <span>🥈 Riley</span>
-                                <span>250 words</span>
-                            </li>
-                            <li class="flex justify-between items-center mb-2">
-                                <span>🥉 Lindie</span>
-                                <span>88 words</span>
-                            </li>
-                        </ul>
-                    </section>
-                </main>
-    
-        
-        
-                <main class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <!-- Main content sections remain unchanged -->
-                </main>
-    
-                <section class="mt-8">
-                    <h2 class="text-xl mb-4">Active days</h2>
-                    <div class="relative">
-                        <div id="monthLabels" class="absolute top-0 left-0 w-full flex justify-between text-xs text-black mb-1">
-                            <!-- Month labels will be inserted here by JavaScript -->
-                        </div>
-                        <div class="flex">
-                            <div id="dayLabels" class="flex flex-col mr-4 pt-6  text-black">
-                                <!-- Day labels will be inserted here by JavaScript -->
-                            </div>
-                            <div class="flex-grow">
-                                <div id="calendar" class="grid gap-[3px] mt-6 text-black">
-                                    <!-- Calendar cells will be inserted here by JavaScript -->
-                                </div>
-                            </div>
+                            <p class="text-sm font-medium text-gray-900">Completed "Introduction to Python" course</p>
+                            <p class="text-sm text-gray-500">2 days ago</p>
                         </div>
                     </div>
-                    <div class="flex justify-between items-center mt-4">
-                        <p><span id="activeDaysCount">0</span> active days in <span id="currentYear">2022</span></p>
-                        <div class="flex items-center">
-                            <button id="prevYear" class="bg-green-900 text-white px-3 py-1 rounded mr-2">&lt;</button>
-                            <span id="yearDisplay" class="bg-green-900 text-white px-3 py-1 rounded">2022</span>
-                            <button id="nextYear" class="bg-green-900 text-white px-3 py-1 rounded ml-2">&gt;</button>
-                        </div>
-                        <div class="flex items-center">
-                            <span class="mr-2">Less</span>
-                            <div class="flex">
-                                <div class="w-4 h-4 bg-green-900 rounded-sm ml-2"></div>
-                                <div class="w-4 h-4 bg-green-700 rounded-sm ml-2"></div>
-                                <div class="w-4 h-4 bg-green-500 rounded-sm ml-2"></div>
-                                <div class="w-4 h-4 bg-green-300 rounded-sm ml-2"></div>
-                            </div>
-                            <span class="ml-2">More</span>
+                </li>
+                <li class="py-4">
+                    <div class="flex space-x-3">
+                        <i class="fas fa-quiz text-green-500 mt-1"></i>
+                        <div>
+                            <p class="text-sm font-medium text-gray-900">Passed "JavaScript Fundamentals" quiz</p>
+                            <p class="text-sm text-gray-500">4 days ago</p>
                         </div>
                     </div>
-                </section>
-          
-    </div>
+                </li>
+                <li class="py-4">
+                    <div class="flex space-x-3">
+                        <i class="fas fa-certificate text-yellow-500 mt-1"></i>
+                        <div>
+                            <p class="text-sm font-medium text-gray-900">Earned "Web Development Master" badge</p>
+                            <p class="text-sm text-gray-500">1 week ago</p>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
 </div>
 
-<style>
-    #calendar {
-        grid-template-columns: repeat(53, minmax(0, 1fr));
-        padding: 3px;
-        border-radius: 4px;
-        width: 1125px;
-        height: 145px;
-    }
-    .calendar-cell {
-        width: 14px;
-        height: 14px;
-        border-radius: 2px;
-    }
-    #dayLabels div {
-        height: 20px;
-        line-height: 50px;
-        font-size: 10px;
-        margin-right: 2px;
-    }
-</style>
-
-<script>
-    const calendar = document.getElementById('calendar');
-    const monthLabels = document.getElementById('monthLabels');
-    const dayLabels = document.getElementById('dayLabels');
-    const activeDaysCount = document.getElementById('activeDaysCount');
-    const currentYearSpan = document.getElementById('currentYear');
-    const yearDisplay = document.getElementById('yearDisplay');
-    const prevYearBtn = document.getElementById('prevYear');
-    const nextYearBtn = document.getElementById('nextYear');
-
-    const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', "Sun"];
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-
-    let currentYear = 2022;
-
-    function createCalendar(year) {
-        calendar.innerHTML = '';
-        monthLabels.innerHTML = '';
-        dayLabels.innerHTML = '';
-
-        // Add month labels
-        months.forEach(month => {
-            const monthSpan = document.createElement('span');
-            monthSpan.textContent = month;
-            monthSpan.className = 'inline-block text-center text-sm text-black w-[calc(100%/12)]';
-            monthLabels.appendChild(monthSpan);
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.5/flowbite.min.js"></script>
+    <script>
+        // Weekly Study Time Chart
+        const ctx = document.getElementById('weeklyStudyChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+                datasets: [{
+                    label: 'Study Hours',
+                    data: [12, 19, 15, 22],
+                    backgroundColor: 'rgba(59, 130, 246, 0.5)',
+                    borderColor: 'rgb(59, 130, 246)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Hours'
+                        }
+                    }
+                }
+            }
         });
 
-        // Add day labels
-        days.forEach(day => {
-            const dayLabel = document.createElement('div');
-            dayLabel.className = 'text-xl text-black h-3 flex items-center justify-end pr-2';
-            dayLabel.textContent = day;
-            dayLabels.appendChild(dayLabel);
-        });
-
-        // Add cells for each day of the year
-        const date = new Date(year, 0, 1);
-        const endDate = new Date(year + 1, 0, 1);
-
-        // Fill in the days before the first day of the year
-        const firstDayOfWeek = date.getDay();
-        for (let i = 0; i < (firstDayOfWeek + 6) % 7; i++) {
-            const cell = document.createElement('div');
-            cell.className = 'calendar-cell';
-            setRandomColor(cell);
-            calendar.appendChild(cell);
+        // New: Subject Distribution Pie Chart
+    const subjectCtx = document.getElementById('subjectDistributionChart').getContext('2d');
+    new Chart(subjectCtx, {
+        type: 'pie',
+        data: {
+            labels: ['Programming', 'Data Science', 'Web Development', 'Machine Learning', 'Databases'],
+            datasets: [{
+                data: [30, 20, 25, 15, 10],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.8)',
+                    'rgba(54, 162, 235, 0.8)',
+                    'rgba(255, 206, 86, 0.8)',
+                    'rgba(75, 192, 192, 0.8)',
+                    'rgba(153, 102, 255, 0.8)',
+                ],
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'right',
+                }
+            }
         }
-
-        let activeDays = 0;
-        while (date < endDate) {
-            const cell = document.createElement('div');
-            cell.className = 'calendar-cell';
-            setRandomColor(cell);
-            calendar.appendChild(cell);
-            date.setDate(date.getDate() + 1);
-            activeDays++;
-        }
-
-        // Fill in the days after the last day of the year
-        const lastDayOfWeek = (endDate.getDay() + 6) % 7;
-        for (let i = 0; i < (7 - lastDayOfWeek) % 7; i++) {
-            const cell = document.createElement('div');
-            cell.className = 'calendar-cell';
-            setRandomColor(cell);
-            calendar.appendChild(cell);
-        }
-
-        activeDaysCount.textContent = activeDays;
-        updateYearDisplay();
-    }
-
-    function setRandomColor(cell) {
-        const colors = ['bg-green-300', 'bg-green-500', 'bg-green-700', 'bg-green-900'];
-        const randomColor = colors[Math.floor(Math.random() * colors.length)];
-        cell.classList.add(randomColor);
-    }
-
-    function updateYearDisplay() {
-        yearDisplay.textContent = currentYear;
-        currentYearSpan.textContent = currentYear;
-    }
-
-    prevYearBtn.addEventListener('click', () => {
-        currentYear--;
-        createCalendar(currentYear);
     });
 
-    nextYearBtn.addEventListener('click', () => {
-        currentYear++;
-        createCalendar(currentYear);
+    // New: Skill Radar Chart
+    const skillCtx = document.getElementById('skillRadarChart').getContext('2d');
+    new Chart(skillCtx, {
+        type: 'radar',
+        data: {
+            labels: ['Python', 'JavaScript', 'SQL', 'Data Analysis', 'Problem Solving'],
+            datasets: [{
+                label: 'Your Skills',
+                data: [80, 65, 70, 85, 75],
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgb(54, 162, 235)',
+                pointBackgroundColor: 'rgb(54, 162, 235)',
+                pointBorderColor: '#fff',
+                pointHoverBackgroundColor: '#fff',
+                pointHoverBorderColor: 'rgb(54, 162, 235)'
+            }]
+        },
+        options: {
+            elements: {
+                line: {
+                    borderWidth: 3
+                }
+            },
+            scales: {
+                r: {
+                    angleLines: {
+                        display: false
+                    },
+                    suggestedMin: 0,
+                    suggestedMax: 100
+                }
+            }
+        }
     });
-
-    createCalendar(currentYear);
-</script>
+    </script>
 
 {% endblock %}
