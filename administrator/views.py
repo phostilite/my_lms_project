@@ -33,6 +33,8 @@ User = get_user_model()
 
 @login_required
 def dashboard(request):
+    print(django_settings)
+    print(django_settings.DOMAIN_NAME)
     try:
         return render(request, 'administrator/dashboard.html')
     except Exception as e:
@@ -87,11 +89,10 @@ def upload_course(request):
                     timeout=300,
                 )
 
-                response.raise_for_status()  # Raise exception for bad responses (4xx and 5xx)
+                response.raise_for_status()
                 api_response_data = response.json()
 
                 if api_response_data.get('message') == 'Course created successfully':
-                    # Fetch or create the ScormCloudCourse object
                     course, created = ScormCloudCourse.objects.get_or_create(
                         course_id=course_id, 
                         defaults={
@@ -100,7 +101,6 @@ def upload_course(request):
                             'web_path': api_response_data.get('web_path_to_course', '')  
                         }
                     )
-                    # Update only if already exists or new
                     if not created:
                         course.category = category
                         course.duration = duration
@@ -109,24 +109,41 @@ def upload_course(request):
                         course.cover_image = cover_image
                         course.save()
 
-                    # Log Success (with more details)
                     logger.info(f"Course created/updated successfully: {course_id}, Response: {api_response_data}")
 
-                    return redirect('course_list')  # Redirect to your course list view
+                    # Register the administrator as a learner for this course
+                    try:
+                        admin_user = request.user
+                        learner = Learner.objects.get(user=admin_user)
+                        
+                        register_url = f'{domain}/api/register/'
+                        register_data = {
+                            'course_id': course_id,
+                            'learner_id': learner.id
+                        }
+                        
+                        register_response = requests.post(register_url, data=register_data)
+                        register_response.raise_for_status()
+                        
+                        logger.info(f"Administrator registered for course: {course_id}, Learner ID: {learner.id}")
+                    except Learner.DoesNotExist:
+                        logger.error(f"Learner object not found for administrator: {admin_user.username}")
+                    except requests.RequestException as e:
+                        logger.error(f"Error registering administrator for course: {e}")
+
+                    return redirect('course_list')
 
                 else:
-                    # Handle API errors with more detailed logging
                     error_msg = api_response_data.get('error', 'Unknown error')
                     logger.error(f"Course creation API failed: {error_msg}")
-                    form.add_error(None, error_msg)  # Add the error to the form
+                    form.add_error(None, error_msg)
 
             except requests.RequestException as e:
-                logger.exception("Error calling create_course API:")  # Log full exception traceback
+                logger.exception("Error calling create_course API:")
                 form.add_error(None, f"Error creating course: {e}")
             except ScormCloudCourse.DoesNotExist:
                 logger.error(f"Course with ID {course_id} not found after API call.")
                 form.add_error(None, "Course not found in database after creation.")
-    
     else:
         form = ScormCloudCourseForm()
     return render(request, 'administrator/upload_course.html', {'form': form})
