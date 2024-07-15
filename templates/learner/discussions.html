@@ -2,150 +2,269 @@
 {% block content %}
 {% include './navbar.html' %}
 {% include './sidebar.html' %}
-  
-<div class="p-4 sm:ml-64">
-    <div class="p-4 mt-14">
-        <div class="p-5 mb-4 border border-gray-100 rounded-lg bg-gray-50 dark:bg-gray-800 dark:border-gray-700">
-            <time class="text-lg font-semibold text-gray-900 dark:text-white">January 13th, 2022</time>
-            <ol class="mt-3 divide-y divider-gray-200 dark:divide-gray-700">
-                <li>
-                    <a href="#" class="items-center block p-3 sm:flex hover:bg-gray-100 dark:hover:bg-gray-700">
-                        <img class="w-12 h-12 mb-3 me-3 rounded-full sm:mb-0" src="https://flowbite.com/docs/images/people/profile-picture-5.jpg" alt="Jese Leos image"/>
-                        <div class="text-gray-600 dark:text-gray-400">
-                            <div class="text-base font-normal"><span class="font-medium text-gray-900 dark:text-white">Jese Leos</span> likes <span class="font-medium text-gray-900 dark:text-white">Bonnie Green's</span> post in <span class="font-medium text-gray-900 dark:text-white"> How to start with Flowbite library</span></div>
-                            <div class="text-sm font-normal">"I wanted to share a webinar zeroheight."</div>
-                            <span class="inline-flex items-center text-xs font-normal text-gray-500 dark:text-gray-400">
-                                <svg class="w-2.5 h-2.5 me-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                                    <path d="M10 .5a9.5 9.5 0 1 0 0 19 9.5 9.5 0 0 0 0-19ZM8.374 17.4a7.6 7.6 0 0 1-5.9-7.4c0-.83.137-1.655.406-2.441l.239.019a3.887 3.887 0 0 1 2.082 2.5 4.1 4.1 0 0 0 2.441 2.8c1.148.522 1.389 2.007.732 4.522Zm3.6-8.829a.997.997 0 0 0-.027-.225 5.456 5.456 0 0 0-2.811-3.662c-.832-.527-1.347-.854-1.486-1.89a7.584 7.584 0 0 1 8.364 2.47c-1.387.208-2.14 2.237-2.14 3.307a1.187 1.187 0 0 1-1.9 0Zm1.626 8.053-.671-2.013a1.9 1.9 0 0 1 1.771-1.757l2.032.619a7.553 7.553 0 0 1-3.132 3.151Z"/>
-                                </svg>
-                                Public
-                            </span> 
-                        </div>
-                    </a>
-                </li>
-                <li>
-                    <a href="#" class="items-center block p-3 sm:flex hover:bg-gray-100 dark:hover:bg-gray-700">
-                        <img class="w-12 h-12 mb-3 me-3 rounded-full sm:mb-0" src="https://flowbite.com/docs/images/people/profile-picture-4.jpg" alt="Bonnie Green image"/>
-                        <div>
-                            <div class="text-base font-normal text-gray-600 dark:text-gray-400"><span class="font-medium text-gray-900 dark:text-white">Bonnie Green</span> react to <span class="font-medium text-gray-900 dark:text-white">Thomas Lean's</span> comment</div>
-                            <span class="inline-flex items-center text-xs font-normal text-gray-500 dark:text-gray-400">
-                                <svg class="w-2.5 h-2.5 me-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                                    <path d="m2 13.587 3.055-3.055A4.913 4.913 0 0 1 5 10a5.006 5.006 0 0 1 5-5c.178.008.356.026.532.054l1.744-1.744A8.973 8.973 0 0 0 10 3C4.612 3 0 8.336 0 10a6.49 6.49 0 0 0 2 3.587Z"/>
-                                    <path d="m12.7 8.714 6.007-6.007a1 1 0 1 0-1.414-1.414L11.286 7.3a2.98 2.98 0 0 0-.588-.21l-.035-.01a2.981 2.981 0 0 0-3.584 3.583c0 .012.008.022.01.033.05.204.12.401.211.59l-6.007 6.007a1 1 0 1 0 1.414 1.414L8.714 12.7c.189.091.386.162.59.211.011 0 .021.007.033.01a2.981 2.981 0 0 0 3.584-3.584c0-.012-.008-.023-.011-.035a3.05 3.05 0 0 0-.21-.588Z"/>
-                                    <path d="M17.821 6.593 14.964 9.45a4.952 4.952 0 0 1-5.514 5.514L7.665 16.75c.767.165 1.55.25 2.335.251 6.453 0 10-5.258 10-7 0-1.166-1.637-2.874-2.179-3.407Z"/>
-                                </svg>
-                                Private
-                            </span> 
-                        </div>
-                    </a>
-                </li>
-            </ol>
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+<div class="p-8 sm:ml-64 mt-14">
+    <div x-data="communityDiscussion()" class="container mx-auto">
+        <h1 class="text-3xl font-bold mb-6">Community Discussion</h1>
+
+        <!-- Search and Filters -->
+        <div class="mb-6 flex flex-col md:flex-row gap-4">
+            <input 
+                x-model="searchTerm" 
+                type="text" 
+                placeholder="Search discussions..." 
+                class="flex-grow p-2 border rounded-lg"
+            >
+            <select 
+                x-model="selectedCategory" 
+                class="p-2 border rounded-lg"
+            >
+                <option value="all">All Categories</option>
+                <option value="general">General</option>
+                <option value="support">Support</option>
+                <option value="offtopic">Off-Topic</option>
+            </select>
+            <select 
+                x-model="sortOrder" 
+                class="p-2 border rounded-lg"
+            >
+                <option value="latest">Latest</option>
+                <option value="oldest">Oldest</option>
+                <option value="mostReplies">Most Replies</option>
+            </select>
         </div>
-        <div class="p-5 border border-gray-100 rounded-lg bg-gray-50 dark:bg-gray-800 dark:border-gray-700">
-            <time class="text-lg font-semibold text-gray-900 dark:text-white">January 12th, 2022</time>
-            <ol class="mt-3 divide-y divider-gray-200 dark:divide-gray-700">
-                <li>
-                    <a href="#" class="items-center block p-3 sm:flex hover:bg-gray-100 dark:hover:bg-gray-700">
-                        <img class="w-12 h-12 mb-3 me-3 rounded-full sm:mb-0" src="https://flowbite.com/docs/images/people/profile-picture-3.jpg" alt="Laura Romeros image"/>
-                        <div class="text-gray-600 dark:text-gray-400">
-                            <div class="text-base font-normal"><span class="font-medium text-gray-900 dark:text-white">Laura Romeros</span> likes <span class="font-medium text-gray-900 dark:text-white">Bonnie Green's</span> post in <span class="font-medium text-gray-900 dark:text-white"> How to start with Flowbite library</span></div>
-                            <div class="text-sm font-normal">"I wanted to share a webinar zeroheight."</div>
-                            <span class="inline-flex items-center text-xs font-normal text-gray-500 dark:text-gray-400">
-                                <svg class="w-2.5 h-2.5 me-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                                    <path d="m2 13.587 3.055-3.055A4.913 4.913 0 0 1 5 10a5.006 5.006 0 0 1 5-5c.178.008.356.026.532.054l1.744-1.744A8.973 8.973 0 0 0 10 3C4.612 3 0 8.336 0 10a6.49 6.49 0 0 0 2 3.587Z"/>
-                                    <path d="m12.7 8.714 6.007-6.007a1 1 0 1 0-1.414-1.414L11.286 7.3a2.98 2.98 0 0 0-.588-.21l-.035-.01a2.981 2.981 0 0 0-3.584 3.583c0 .012.008.022.01.033.05.204.12.401.211.59l-6.007 6.007a1 1 0 1 0 1.414 1.414L8.714 12.7c.189.091.386.162.59.211.011 0 .021.007.033.01a2.981 2.981 0 0 0 3.584-3.584c0-.012-.008-.023-.011-.035a3.05 3.05 0 0 0-.21-.588Z"/>
-                                    <path d="M17.821 6.593 14.964 9.45a4.952 4.952 0 0 1-5.514 5.514L7.665 16.75c.767.165 1.55.25 2.335.251 6.453 0 10-5.258 10-7 0-1.166-1.637-2.874-2.179-3.407Z"/>
-                                </svg>
-                                Private
-                            </span> 
-                        </div>
-                    </a>
-                </li>
-                <li>
-                    <a href="#" class="items-center block p-3 sm:flex hover:bg-gray-100 dark:hover:bg-gray-700">
-                        <img class="w-12 h-12 mb-3 me-3 rounded-full sm:mb-0" src="https://flowbite.com/docs/images/people/profile-picture-2.jpg" alt="Mike Willi image"/>
-                        <div>
-                            <div class="text-base font-normal text-gray-600 dark:text-gray-400"><span class="font-medium text-gray-900 dark:text-white">Mike Willi</span> react to <span class="font-medium text-gray-900 dark:text-white">Thomas Lean's</span> comment</div>
-                            <span class="inline-flex items-center text-xs font-normal text-gray-500 dark:text-gray-400">
-                                <svg class="w-2.5 h-2.5 me-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                                    <path d="M10 .5a9.5 9.5 0 1 0 0 19 9.5 9.5 0 0 0 0-19ZM8.374 17.4a7.6 7.6 0 0 1-5.9-7.4c0-.83.137-1.655.406-2.441l.239.019a3.887 3.887 0 0 1 2.082 2.5 4.1 4.1 0 0 0 2.441 2.8c1.148.522 1.389 2.007.732 4.522Zm3.6-8.829a.997.997 0 0 0-.027-.225 5.456 5.456 0 0 0-2.811-3.662c-.832-.527-1.347-.854-1.486-1.89a7.584 7.584 0 0 1 8.364 2.47c-1.387.208-2.14 2.237-2.14 3.307a1.187 1.187 0 0 1-1.9 0Zm1.626 8.053-.671-2.013a1.9 1.9 0 0 1 1.771-1.757l2.032.619a7.553 7.553 0 0 1-3.132 3.151Z"/>
-                                </svg>
-                                Public
-                            </span> 
-                        </div>
-                    </a>
-                </li>
-                <li>
-                    <a href="#" class="items-center block p-3 sm:flex hover:bg-gray-100 dark:hover:bg-gray-700">
-                        <img class="w-12 h-12 mb-3 me-3 rounded-full sm:mb-0" src="https://flowbite.com/docs/images/people/profile-picture-1.jpg" alt="Jese Leos image"/>
-                        <div class="text-gray-600 dark:text-gray-400">
-                            <div class="text-base font-normal"><span class="font-medium text-gray-900 dark:text-white">Jese Leos</span> likes <span class="font-medium text-gray-900 dark:text-white">Bonnie Green's</span> post in <span class="font-medium text-gray-900 dark:text-white"> How to start with Flowbite library</span></div>
-                            <div class="text-sm font-normal">"I wanted to share a webinar zeroheight."</div>
-                            <span class="inline-flex items-center text-xs font-normal text-gray-500 dark:text-gray-400">
-                                <svg class="w-2.5 h-2.5 me-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                                    <path d="M10 .5a9.5 9.5 0 1 0 0 19 9.5 9.5 0 0 0 0-19ZM8.374 17.4a7.6 7.6 0 0 1-5.9-7.4c0-.83.137-1.655.406-2.441l.239.019a3.887 3.887 0 0 1 2.082 2.5 4.1 4.1 0 0 0 2.441 2.8c1.148.522 1.389 2.007.732 4.522Zm3.6-8.829a.997.997 0 0 0-.027-.225 5.456 5.456 0 0 0-2.811-3.662c-.832-.527-1.347-.854-1.486-1.89a7.584 7.584 0 0 1 8.364 2.47c-1.387.208-2.14 2.237-2.14 3.307a1.187 1.187 0 0 1-1.9 0Zm1.626 8.053-.671-2.013a1.9 1.9 0 0 1 1.771-1.757l2.032.619a7.553 7.553 0 0 1-3.132 3.151Z"/>
-                                </svg>
-                                Public
-                            </span> 
-                        </div>
-                    </a>
-                </li>
-                <li>
-                    <a href="#" class="items-center block p-3 sm:flex hover:bg-gray-100 dark:hover:bg-gray-700">
-                        <img class="w-12 h-12 mb-3 me-3 rounded-full sm:mb-0" src="https://flowbite.com/docs/images/people/profile-picture-5.jpg" alt="Bonnie Green image"/>
-                        <div class="text-gray-600 dark:text-gray-400">
-                            <div class="text-base font-normal"><span class="font-medium text-gray-900 dark:text-white">Bonnie Green</span> likes <span class="font-medium text-gray-900 dark:text-white">Bonnie Green's</span> post in <span class="font-medium text-gray-900 dark:text-white"> Top figma designs</span></div>
-                            <div class="text-sm font-normal">"I wanted to share a webinar zeroheight."</div>
-                            <span class="inline-flex items-center text-xs font-normal text-gray-500 dark:text-gray-400">
-                                <svg class="w-2.5 h-2.5 me-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                                    <path d="m2 13.587 3.055-3.055A4.913 4.913 0 0 1 5 10a5.006 5.006 0 0 1 5-5c.178.008.356.026.532.054l1.744-1.744A8.973 8.973 0 0 0 10 3C4.612 3 0 8.336 0 10a6.49 6.49 0 0 0 2 3.587Z"/>
-                                    <path d="m12.7 8.714 6.007-6.007a1 1 0 1 0-1.414-1.414L11.286 7.3a2.98 2.98 0 0 0-.588-.21l-.035-.01a2.981 2.981 0 0 0-3.584 3.583c0 .012.008.022.01.033.05.204.12.401.211.59l-6.007 6.007a1 1 0 1 0 1.414 1.414L8.714 12.7c.189.091.386.162.59.211.011 0 .021.007.033.01a2.981 2.981 0 0 0 3.584-3.584c0-.012-.008-.023-.011-.035a3.05 3.05 0 0 0-.21-.588Z"/>
-                                    <path d="M17.821 6.593 14.964 9.45a4.952 4.952 0 0 1-5.514 5.514L7.665 16.75c.767.165 1.55.25 2.335.251 6.453 0 10-5.258 10-7 0-1.166-1.637-2.874-2.179-3.407Z"/>
-                                </svg>
-                                Private
-                            </span> 
-                        </div>
-                    </a>
-                </li>
-            </ol>
+
+        <!-- Discussion Threads -->
+        <div class="space-y-6">
+            <template x-for="thread in filteredThreads" :key="thread.id">
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <div class="flex justify-between items-start mb-4">
+                        <h2 class="text-xl font-semibold" x-text="thread.title"></h2>
+                        <span 
+                            class="px-2 py-1 text-sm rounded-full" 
+                            :class="{
+                                'bg-blue-100 text-blue-800': thread.category === 'general',
+                                'bg-green-100 text-green-800': thread.category === 'support',
+                                'bg-purple-100 text-purple-800': thread.category === 'offtopic'
+                            }"
+                            x-text="thread.category"
+                        ></span>
+                    </div>
+                    <p class="text-gray-600 mb-4" x-text="thread.content"></p>
+                    <div class="flex justify-between items-center text-sm text-gray-500">
+                        <span x-text="`Posted by ${thread.author} on ${formatDate(thread.date)}`"></span>
+                        <span x-text="`${thread.replies.length} replies`"></span>
+                    </div>
+
+                    <!-- Replies -->
+                    <div class="mt-6 space-y-4">
+                        <template x-for="reply in thread.replies.slice(0, thread.showAllReplies ? undefined : 2)" :key="reply.id">
+                            <div class="bg-gray-50 rounded p-4">
+                                <p class="mb-2" x-text="reply.content"></p>
+                                <div class="text-sm text-gray-500">
+                                    <span x-text="`Reply by ${reply.author} on ${formatDate(reply.date)}`"></span>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+
+                    <!-- Show More Replies -->
+                    <template x-if="thread.replies.length > 2 && !thread.showAllReplies">
+                        <button 
+                            @click="thread.showAllReplies = true"
+                            class="mt-4 text-green-600 hover:underline"
+                        >
+                            Show all replies
+                        </button>
+                    </template>
+
+                    <!-- Add Reply -->
+                    <div class="mt-6">
+                        <textarea 
+                            x-model="thread.newReply" 
+                            placeholder="Write a reply..." 
+                            class="w-full p-2 border rounded-lg"
+                        ></textarea>
+                        <button 
+                            @click="addReply(thread)"
+                            class="mt-2 bg-green-500 text-white rounded-lg py-2 px-4 hover:bg-green-600"
+                        >
+                            Post Reply
+                        </button>
+                    </div>
+                </div>
+            </template>
         </div>
-        <div class="sticky bottom-0 bg-white dark:bg-gray-800 shadow-lg z-50 mt-4">
-            <form class="container mx-auto px-4 py-4">
-              <div class="w-full mb-4 border border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
-                <div class="px-4 py-2 bg-white rounded-t-lg dark:bg-gray-800">
-                  <label for="comment" class="sr-only">Your comment</label>
-                  <textarea id="comment" rows="2" class="w-full px-0 text-sm text-gray-900 bg-white border-0 dark:bg-gray-800 focus:ring-0 dark:text-white dark:placeholder-gray-400" placeholder="Write a comment..." required></textarea>
+
+        <!-- New Thread Button -->
+        <button 
+            @click="showNewThreadModal = true"
+            class="fixed bottom-6 right-6 bg-green-500 text-white rounded-full p-4 shadow-lg hover:bg-green-600"
+        >
+            <i class="fas fa-plus"></i>
+        </button>
+
+        <!-- New Thread Modal -->
+        <div x-show="showNewThreadModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+            <div class="bg-white rounded-lg p-6 w-full max-w-md">
+                <h2 class="text-2xl font-bold mb-4">Create New Thread</h2>
+                <input 
+                    x-model="newThread.title" 
+                    type="text" 
+                    placeholder="Thread Title" 
+                    class="w-full p-2 border rounded-lg mb-4"
+                >
+                <textarea 
+                    x-model="newThread.content" 
+                    placeholder="Thread Content" 
+                    class="w-full p-2 border rounded-lg mb-4"
+                    rows="4"
+                ></textarea>
+                <select 
+                    x-model="newThread.category" 
+                    class="w-full p-2 border rounded-lg mb-4"
+                >
+                    <option value="general">General</option>
+                    <option value="support">Support</option>
+                    <option value="offtopic">Off-Topic</option>
+                </select>
+                <div class="flex justify-end">
+                    <button 
+                        @click="showNewThreadModal = false"
+                        class="bg-gray-300 text-black rounded-lg py-2 px-4 mr-2 hover:bg-gray-400"
+                    >
+                        Cancel
+                    </button>
+                    <button 
+                        @click="createNewThread"
+                        class="bg-green-500 text-white rounded-lg py-2 px-4 hover:bg-green-600"
+                    >
+                        Create Thread
+                    </button>
                 </div>
-                <div class="flex items-center justify-between px-3 py-2 border-t dark:border-gray-600">
-                  <button type="submit" class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-green-700 rounded-lg focus:ring-4 focus:ring-green-200 dark:focus:ring-green-900 hover:bg-green-800">
-                    Post comment
-                  </button>
-                  <div class="flex ps-0 space-x-1 rtl:space-x-reverse sm:ps-2">
-                    <button type="button" class="inline-flex justify-center items-center p-2 text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600">
-                      <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 12 20">
-                        <path stroke="currentColor" stroke-linejoin="round" stroke-width="2" d="M1 6v8a5 5 0 1 0 10 0V4.5a3.5 3.5 0 1 0-7 0V13a2 2 0 0 0 4 0V6"/>
-                      </svg>
-                      <span class="sr-only">Attach file</span>
-                    </button>
-                    <button type="button" class="inline-flex justify-center items-center p-2 text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600">
-                      <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
-                        <path d="M8 0a7.992 7.992 0 0 0-6.583 12.535 1 1 0 0 0 .12.183l.12.146c.112.145.227.285.326.4l5.245 6.374a1 1 0 0 0 1.545-.003l5.092-6.205c.206-.222.4-.455.578-.7l.127-.155a.934.934 0 0 0 .122-.192A8.001 8.001 0 0 0 8 0Zm0 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6Z"/>
-                      </svg>
-                      <span class="sr-only">Set location</span>
-                    </button>
-                    <button type="button" class="inline-flex justify-center items-center p-2 text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600">
-                      <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 18">
-                        <path d="M18 0H2a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2Zm-5.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm4.376 10.481A1 1 0 0 1 16 15H4a1 1 0 0 1-.895-1.447l3.5-7A1 1 0 0 1 7.468 6a.965.965 0 0 1 .9.5l2.775 4.757 1.546-1.887a1 1 0 0 1 1.618.1l2.541 4a1 1 0 0 1 .028 1.011Z"/>
-                      </svg>
-                      <span class="sr-only">Upload image</span>
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </form>
-            <p class="container mx-auto px-4 pb-4 text-xs text-gray-500 dark:text-gray-400">Remember, contributions to this topic should follow our <a href="#" class="text-green-600 dark:text-green-500 hover:underline">Community Guidelines</a>.</p>
-          </div>
+            </div>
+        </div>
     </div>
-</div>
+
+    <script>
+        function communityDiscussion() {
+            return {
+                threads: [
+                    {
+                        id: 1,
+                        title: "Welcome to our community!",
+                        content: "Hello everyone! This is a place for us to discuss various topics and help each other out.",
+                        author: "Admin",
+                        date: new Date(2024, 6, 1),
+                        category: "general",
+                        replies: [
+                            { id: 1, content: "Glad to be here!", author: "User1", date: new Date(2024, 6, 1, 12, 30) },
+                            { id: 2, content: "Looking forward to great discussions!", author: "User2", date: new Date(2024, 6, 1, 13, 45) },
+                        ],
+                        showAllReplies: false,
+                        newReply: ""
+                    },
+                    {
+                        id: 2,
+                        title: "Need help with my homework",
+                        content: "I'm struggling with calculus. Can anyone recommend good resources?",
+                        author: "Student123",
+                        date: new Date(2024, 6, 5),
+                        category: "support",
+                        replies: [
+                            { id: 3, content: "Khan Academy has great calculus tutorials!", author: "MathWhiz", date: new Date(2024, 6, 5, 16, 20) },
+                        ],
+                        showAllReplies: false,
+                        newReply: ""
+                    },
+                    {
+                        id: 3,
+                        title: "Movie recommendations?",
+                        content: "What's everyone's favorite sci-fi movie? I need something to watch this weekend!",
+                        author: "FilmBuff",
+                        date: new Date(2024, 6, 10),
+                        category: "offtopic",
+                        replies: [
+                            { id: 4, content: "Inception is a must-watch!", author: "DreamExplorer", date: new Date(2024, 6, 10, 20, 15) },
+                            { id: 5, content: "I'd recommend The Matrix trilogy.", author: "RedPill", date: new Date(2024, 6, 11, 9, 30) },
+                            { id: 6, content: "Interstellar blew my mind!", author: "SpaceNerd", date: new Date(2024, 6, 11, 14, 45) },
+                        ],
+                        showAllReplies: false,
+                        newReply: ""
+                    }
+                ],
+                searchTerm: '',
+                selectedCategory: 'all',
+                sortOrder: 'latest',
+                showNewThreadModal: false,
+                newThread: {
+                    title: '',
+                    content: '',
+                    category: 'general'
+                },
+                get filteredThreads() {
+                    let filtered = this.threads;
+                    
+                    if (this.searchTerm) {
+                        const lowercaseSearch = this.searchTerm.toLowerCase();
+                        filtered = filtered.filter(thread => 
+                            thread.title.toLowerCase().includes(lowercaseSearch) || 
+                            thread.content.toLowerCase().includes(lowercaseSearch)
+                        );
+                    }
+                    
+                    if (this.selectedCategory !== 'all') {
+                        filtered = filtered.filter(thread => thread.category === this.selectedCategory);
+                    }
+                    
+                    switch (this.sortOrder) {
+                        case 'oldest':
+                            filtered.sort((a, b) => a.date - b.date);
+                            break;
+                        case 'mostReplies':
+                            filtered.sort((a, b) => b.replies.length - a.replies.length);
+                            break;
+                        default: // 'latest'
+                            filtered.sort((a, b) => b.date - a.date);
+                    }
+                    
+                    return filtered;
+                },
+                formatDate(date) {
+                    return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+                },
+                addReply(thread) {
+                    if (thread.newReply.trim()) {
+                        thread.replies.push({
+                            id: Date.now(),
+                            content: thread.newReply,
+                            author: "CurrentUser", // In a real app, this would be the logged-in user
+                            date: new Date()
+                        });
+                        thread.newReply = "";
+                    }
+                },
+                createNewThread() {
+                    if (this.newThread.title.trim() && this.newThread.content.trim()) {
+                        this.threads.unshift({
+                            id: Date.now(),
+                            title: this.newThread.title,
+                            content: this.newThread.content,
+                            author: "CurrentUser", // In a real app, this would be the logged-in user
+                            date: new Date(),
+                            category: this.newThread.category,
+                            replies: [],
+                            showAllReplies: false,
+                            newReply: ""
+                        });
+                        this.showNewThreadModal = false;
+                        this.newThread = { title: '', content: '', category: 'general' };
+                    }
+                }
+            }
+        }
+    </script>
+</div>    
 
 {% endblock %}

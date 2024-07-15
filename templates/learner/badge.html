@@ -2,84 +2,150 @@
 {% block content %}
 {% include './navbar.html' %}
 {% include './sidebar.html' %}
-  
-<div class="p-4 sm:ml-64">
-    <div class="p-4 mt-14">
-        <div class="container mx-auto px-4 py-8">
-            <header class="mb-8 text-center">
-                <h1 class="text-4xl font-bold text-gray-800">My Achievement Badges</h1>
-                <p class="text-gray-600 mt-2">Showcase your learning milestones and accomplishments</p>
-            </header>
-    
-            <div class="mb-6 flex flex-col sm:flex-row justify-between items-center gap-4">
-                <input type="text" placeholder="Search badges" class="border rounded-full px-4 py-2 w-full sm:w-64 focus:outline-none focus:ring-2 focus:ring-blue-400">
-                <div class="flex gap-2">
-                    <select class="border rounded-full px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400">
-                        <option>All Levels</option>
-                        <option>Gold</option>
-                        <option>Silver</option>
-                        <option>Bronze</option>
-                    </select>
-                    <select class="border rounded-full px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400">
-                        <option>All Categories</option>
-                        <option>Programming</option>
-                        <option>Design</option>
-                        <option>Data Science</option>
-                    </select>
+
+<div class="p-8 sm:ml-64 mt-14">
+    <h1 class="text-3xl font-bold mb-8">My Badges</h1>
+
+    <!-- Search and Filters -->
+    <div class="bg-white p-6 rounded-lg shadow mb-8">
+        <div class="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0 md:space-x-4">
+            <div class="w-full md:w-1/3">
+                <label for="search" class="sr-only">Search badges</label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i class="fas fa-search text-gray-400"></i>
+                    </div>
+                    <input type="text" id="search" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5" placeholder="Search badges">
                 </div>
             </div>
-    
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 place-items-center min-h-screen">
-                <!-- Gold Badge -->
-                <div class="bg-white rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition duration-300 w-72 h-96 animate-fade-in-up">
-                    <div class="bg-gradient-to-r from-yellow-300 to-yellow-500 p-8 flex justify-center items-center h-1/2">
-                        <i class="fas fa-award text-8xl text-white"></i>
-                    </div>
-                    <div class="p-6 text-center h-1/2 flex flex-col justify-between">
-                        <div>
-                            <h3 class="font-bold text-2xl mb-3">Code Master</h3>
-                            <p class="text-base text-gray-600 mb-4">Completed Advanced Programming</p>
-                        </div>
-                        <span class="inline-block bg-yellow-200 text-yellow-800 text-sm px-4 py-2 rounded-full">Gold</span>
-                    </div>
-                </div>
-
-                <!-- Silver Badge -->
-                <div class="bg-white rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition duration-300 w-72 h-96 animate-fade-in-up animation-delay-200">
-                    <div class="bg-gradient-to-r from-gray-300 to-gray-400 p-8 flex justify-center items-center h-1/2">
-                        <i class="fas fa-medal text-8xl text-white"></i>
-                    </div>
-                    <div class="p-6 text-center h-1/2 flex flex-col justify-between">
-                        <div>
-                            <h3 class="font-bold text-2xl mb-3">Design Pro</h3>
-                            <p class="text-base text-gray-600 mb-4">Mastered UI/UX Principles</p>
-                        </div>
-                        <span class="inline-block bg-gray-200 text-gray-800 text-sm px-4 py-2 rounded-full">Silver</span>
-                    </div>
-                </div>
-
-                <!-- Bronze Badge -->
-                <div class="bg-white rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition duration-300 w-72 h-96 animate-fade-in-up animation-delay-400">
-                    <div class="bg-gradient-to-r from-orange-300 to-orange-400 p-8 flex justify-center items-center h-1/2">
-                        <i class="fas fa-certificate text-8xl text-white"></i>
-                    </div>
-                    <div class="p-6 text-center h-1/2 flex flex-col justify-between">
-                        <div>
-                            <h3 class="font-bold text-2xl mb-3">Data Explorer</h3>
-                            <p class="text-base text-gray-600 mb-4">Completed Intro to Data Science</p>
-                        </div>
-                        <span class="inline-block bg-orange-200 text-orange-800 text-sm px-4 py-2 rounded-full">Bronze</span>
-                    </div>
-                </div>
+            <div class="flex space-x-4">
+                <select id="category-filter" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5">
+                    <option selected>All Categories</option>
+                    <option>Course Completion</option>
+                    <option>Skill Mastery</option>
+                    <option>Achievements</option>
+                </select>
+                <select id="status-filter" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5">
+                    <option selected>All Statuses</option>
+                    <option>Unlocked</option>
+                    <option>Locked</option>
+                </select>
             </div>
-    
-            <div class="mt-8 text-center">
-                <button class="bg-blue-500 text-white px-6 py-2 rounded-full hover:bg-blue-600 transition focus:outline-none focus:ring-2 focus:ring-blue-400">
-                    Load More Badges
-                </button>
+        </div>
+    </div>
+
+    <!-- Badges Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <!-- Unlocked Badges -->
+        <div class="bg-white rounded-lg shadow p-6 flex flex-col items-center">
+            <img src="https://via.placeholder.com/100" alt="Python Master" class="w-24 h-24 mb-4">
+            <h3 class="text-lg font-semibold mb-2">Python Master</h3>
+            <p class="text-sm text-gray-600 mb-4 text-center">Completed all Python courses</p>
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
+                <i class="fas fa-check-circle mr-2"></i>Unlocked
+            </span>
+        </div>
+
+        <div class="bg-white rounded-lg shadow p-6 flex flex-col items-center">
+            <img src="https://via.placeholder.com/100" alt="Web Wizard" class="w-24 h-24 mb-4">
+            <h3 class="text-lg font-semibold mb-2">Web Wizard</h3>
+            <p class="text-sm text-gray-600 mb-4 text-center">Created 5 web projects</p>
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
+                <i class="fas fa-check-circle mr-2"></i>Unlocked
+            </span>
+        </div>
+
+        <!-- Locked Badges -->
+        <div class="bg-white rounded-lg shadow p-6 flex flex-col items-center opacity-50">
+            <img src="https://via.placeholder.com/100" alt="Data Science Guru" class="w-24 h-24 mb-4 filter grayscale">
+            <h3 class="text-lg font-semibold mb-2">Data Science Guru</h3>
+            <p class="text-sm text-gray-600 mb-4 text-center">Complete all Data Science courses</p>
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-800">
+                <i class="fas fa-lock mr-2"></i>Locked
+            </span>
+        </div>
+
+        <div class="bg-white rounded-lg shadow p-6 flex flex-col items-center opacity-50">
+            <img src="https://via.placeholder.com/100" alt="AI Pioneer" class="w-24 h-24 mb-4 filter grayscale">
+            <h3 class="text-lg font-semibold mb-2">AI Pioneer</h3>
+            <p class="text-sm text-gray-600 mb-4 text-center">Build an AI project</p>
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-800">
+                <i class="fas fa-lock mr-2"></i>Locked
+            </span>
+        </div>
+
+        <!-- Add more badge items here -->
+    </div>
+
+    <!-- Pagination -->
+    <div class="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6 mt-8 rounded-lg shadow">
+        <div class="flex flex-1 justify-between sm:hidden">
+            <a href="#" class="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">Previous</a>
+            <a href="#" class="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">Next</a>
+        </div>
+        <div class="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
+            <div>
+                <p class="text-sm text-gray-700">
+                    Showing <span class="font-medium">1</span> to <span class="font-medium">10</span> of <span class="font-medium">97</span> results
+                </p>
+            </div>
+            <div>
+                <nav class="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
+                    <a href="#" class="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">
+                        <span class="sr-only">Previous</span>
+                        <i class="fas fa-chevron-left h-5 w-5"></i>
+                    </a>
+                    <a href="#" aria-current="page" class="relative z-10 inline-flex items-center bg-indigo-600 px-4 py-2 text-sm font-semibold text-white focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">1</a>
+                    <a href="#" class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">2</a>
+                    <a href="#" class="relative hidden items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 md:inline-flex">3</a>
+                    <span class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-300 focus:outline-offset-0">...</span>
+                    <a href="#" class="relative hidden items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 md:inline-flex">8</a>
+                    <a href="#" class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">9</a>
+                    <a href="#" class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">10</a>
+                    <a href="#" class="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">
+                        <span class="sr-only">Next</span>
+                        <i class="fas fa-chevron-right h-5 w-5"></i>
+                    </a>
+                </nav>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    // Add JavaScript for search and filter functionality
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.getElementById('search');
+        const categoryFilter = document.getElementById('category-filter');
+        const statusFilter = document.getElementById('status-filter');
+        const badges = document.querySelectorAll('.grid > div');
+
+        function filterBadges() {
+            const searchTerm = searchInput.value.toLowerCase();
+            const category = categoryFilter.value;
+            const status = statusFilter.value;
+
+            badges.forEach(badge => {
+                const title = badge.querySelector('h3').textContent.toLowerCase();
+                const badgeCategory = badge.dataset.category; // You'll need to add this data attribute to your badge elements
+                const badgeStatus = badge.querySelector('span').textContent.includes('Unlocked') ? 'Unlocked' : 'Locked';
+
+                const matchesSearch = title.includes(searchTerm);
+                const matchesCategory = category === 'All Categories' || badgeCategory === category;
+                const matchesStatus = status === 'All Statuses' || badgeStatus === status;
+
+                if (matchesSearch && matchesCategory && matchesStatus) {
+                    badge.style.display = 'flex';
+                } else {
+                    badge.style.display = 'none';
+                }
+            });
+        }
+
+        searchInput.addEventListener('input', filterBadges);
+        categoryFilter.addEventListener('change', filterBadges);
+        statusFilter.addEventListener('change', filterBadges);
+    });
+</script>
 
 {% endblock %}

@@ -2,135 +2,194 @@
 {% block content %}
 {% include './navbar.html' %}
 {% include './sidebar.html' %}
+<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
-<div class="p-4 sm:ml-64">
-    <div class="p-4 mt-14">
-        <div class="container mx-auto p-4">
-            <div class="flex justify-between items-center mb-4">
-                <button id="prevMonth" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg shadow transition duration-300 ease-in-out transform hover:scale-105">&lt; Prev</button>
-                <h1 id="monthYear" class="text-2xl font-bold"></h1>
-                <button id="nextMonth" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg shadow transition duration-300 ease-in-out transform hover:scale-105">Next &gt;</button>
-            </div>
-            <div id="calendar" class="grid grid-cols-7 gap-2"></div>
-        </div>
-    </div>
-</div>
-
-<!-- Modal for adding tasks -->
-<div id="taskModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center">
-    <div class="bg-white p-8 rounded-lg shadow-xl">
-        <h2 class="text-xl font-bold mb-4">Add Task for <span id="selectedDate"></span></h2>
-        <input type="text" id="taskInput" class="border p-2 w-full mb-4" placeholder="Enter task">
-        <div class="flex justify-end">
-            <button id="cancelTask" class="bg-gray-300 text-black px-4 py-2 rounded mr-2">Cancel</button>
-            <button id="addTask" class="bg-green-500 text-white px-4 py-2 rounded">Add Task</button>
-        </div>
-    </div>
-</div>
-
-<script>
-const calendar = document.getElementById('calendar');
-const prevBtn = document.getElementById('prevMonth');
-const nextBtn = document.getElementById('nextMonth');
-const monthYearElement = document.getElementById('monthYear');
-const taskModal = document.getElementById('taskModal');
-const taskInput = document.getElementById('taskInput');
-const addTaskBtn = document.getElementById('addTask');
-const cancelTaskBtn = document.getElementById('cancelTask');
-const selectedDateElement = document.getElementById('selectedDate');
-
-let currentDate = new Date();
-let tasks = {};
-let selectedDate = null;
-
-function renderCalendar() {
-    calendar.innerHTML = '';
-    const year = currentDate.getFullYear();
-    const month = currentDate.getMonth();
-
-    monthYearElement.textContent = new Date(year, month).toLocaleString('default', { month: 'long', year: 'numeric' });
-
-    const firstDay = new Date(year, month, 1);
-    const lastDay = new Date(year, month + 1, 0);
-
-    const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-    daysOfWeek.forEach(day => {
-        const dayCell = document.createElement('div');
-        dayCell.className = 'text-center font-bold';
-        dayCell.textContent = day;
-        calendar.appendChild(dayCell);
-    });
-
-    for (let i = 0; i < firstDay.getDay(); i++) {
-        calendar.appendChild(createDateCell(''));
-    }
-
-    for (let day = 1; day <= lastDay.getDate(); day++) {
-        const dateCell = createDateCell(day);
-        const dateString = `${year}-${(month + 1).toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
+<div class="p-8 sm:ml-64 mt-14">
+    <div x-data="calendar()" class="container mx-auto">
+        <h1 class="text-3xl font-bold mb-6">My Calendar</h1>
         
-        dateCell.addEventListener('click', () => openTaskModal(dateString));
+        <div class="flex flex-col md:flex-row gap-6">
+            <!-- Main Calendar -->
+            <div class="w-full md:w-3/4 bg-white rounded-lg shadow-md p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-semibold" x-text="currentMonthYear"></h2>
+                    <div>
+                        <button @click="previousMonth" class="text-gray-600 hover:text-gray-800 mr-2">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <button @click="nextMonth" class="text-gray-600 hover:text-gray-800">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-7 gap-2">
+                    <template x-for="day in ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']">
+                        <div class="text-center font-semibold" x-text="day"></div>
+                    </template>
+                    
+                    <template x-for="day in calendarDays">
+                        <div 
+                            @click="selectDate(day)"
+                            :class="{
+                                'text-center p-2 hover:bg-gray-100 cursor-pointer': true,
+                                'text-gray-400': !day.isCurrentMonth,
+                                'bg-green-100': day.date.toDateString() === selectedDate.toDateString(),
+                                'font-bold': day.date.toDateString() === new Date().toDateString()
+                            }"
+                        >
+                            <span x-text="day.date.getDate()"></span>
+                            <template x-if="day.events.length > 0">
+                                <div class="text-xs text-green-600" x-text="`${day.events.length} event${day.events.length > 1 ? 's' : ''}`"></div>
+                            </template>
+                        </div>
+                    </template>
+                </div>
+            </div>
+            
+            <!-- Sidebar -->
+            <div class="w-full md:w-1/4">
+                <button @click="showAddEventModal = true" class="w-full bg-green-500 text-white rounded-lg py-2 px-4 mb-4 hover:bg-green-600">
+                    <i class="fas fa-plus mr-2"></i> Add Event
+                </button>
+                
+                <div class="mb-4">
+                    <input x-model="searchTerm" type="text" placeholder="Search events..." class="w-full p-2 border rounded-lg mb-2">
+                    <select x-model="filterType" class="w-full p-2 border rounded-lg">
+                        <option value="all">All Events</option>
+                        <option value="meeting">Meetings</option>
+                        <option value="class">Classes</option>
+                        <option value="assignment">Assignments</option>
+                    </select>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow-md p-4">
+                    <h3 class="text-lg font-semibold mb-3">Upcoming Events</h3>
+                    <template x-for="event in filteredEvents" :key="event.id">
+                        <div class="mb-3 p-2 bg-gray-50 rounded">
+                            <div class="flex justify-between items-center">
+                                <span class="font-medium" x-text="event.title"></span>
+                                <span class="text-sm text-gray-600" x-text="formatTime(event.time)"></span>
+                            </div>
+                            <p class="text-sm text-gray-600" x-text="event.description"></p>
+                        </div>
+                    </template>
+                </div>
+                
+                <div class="mt-4 bg-white rounded-lg shadow-md p-4">
+                    <h3 class="text-lg font-semibold mb-3">Notifications</h3>
+                    <div class="text-sm text-gray-600">
+                        <template x-for="notification in notifications" :key="notification.id">
+                            <p class="mb-2">
+                                <i class="fas fa-bell mr-2 text-yellow-500"></i>
+                                <span x-text="notification.message"></span>
+                            </p>
+                        </template>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Add Event Modal -->
+        
+    </div>
+    
+    <script>
+        function calendar() {
+            return {
+                currentDate: new Date(),
+                selectedDate: new Date(),
+                showAddEventModal: false,
+                events: [
+                    { id: 1, title: 'Team Meeting', description: 'Discuss project progress', date: new Date(2024, 6, 15), time: '09:00', type: 'meeting' },
+                    { id: 2, title: 'Math Assignment Due', description: 'Submit homework', date: new Date(2024, 6, 15), time: '23:59', type: 'assignment' },
+                    { id: 3, title: 'History Class', description: 'Chapter 5 discussion', date: new Date(2024, 6, 16), time: '14:00', type: 'class' }
+                ],
+                notifications: [
+                    { id: 1, message: 'New event added: "Final Exam"' },
+                    { id: 2, message: 'Reminder: Team meeting in 1 hour' }
+                ],
+                searchTerm: '',
+                filterType: 'all',
+                newEvent: {
+                    title: '',
+                    date: '',
+                    time: '',
+                    description: '',
+                    type: 'meeting'
+                },
+                get currentMonthYear() {
+                    return this.currentDate.toLocaleString('default', { month: 'long', year: 'numeric' });
+                },
+                get calendarDays() {
+                    const year = this.currentDate.getFullYear();
+                    const month = this.currentDate.getMonth();
+                    const firstDay = new Date(year, month, 1);
+                    const lastDay = new Date(year, month + 1, 0);
+                    const daysInMonth = lastDay.getDate();
+                    const startingDayOfWeek = firstDay.getDay();
 
-        if (tasks[dateString]) {
-            const taskList = document.createElement('ul');
-            tasks[dateString].forEach(task => {
-                const li = document.createElement('li');
-                li.textContent = task;
-                li.className = 'text-sm';
-                taskList.appendChild(li);
-            });
-            dateCell.appendChild(taskList);
+                    const calendarDays = [];
+
+                    for (let i = 0; i < startingDayOfWeek; i++) {
+                        const date = new Date(year, month, -startingDayOfWeek + i + 1);
+                        calendarDays.push({ date, isCurrentMonth: false, events: this.getEventsForDate(date) });
+                    }
+
+                    for (let i = 1; i <= daysInMonth; i++) {
+                        const date = new Date(year, month, i);
+                        calendarDays.push({ date, isCurrentMonth: true, events: this.getEventsForDate(date) });
+                    }
+
+                    const remainingDays = 42 - calendarDays.length;
+                    for (let i = 1; i <= remainingDays; i++) {
+                        const date = new Date(year, month + 1, i);
+                        calendarDays.push({ date, isCurrentMonth: false, events: this.getEventsForDate(date) });
+                    }
+
+                    return calendarDays;
+                },
+                get filteredEvents() {
+                    return this.events.filter(event => {
+                        const matchesSearch = event.title.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+                                              event.description.toLowerCase().includes(this.searchTerm.toLowerCase());
+                        const matchesFilter = this.filterType === 'all' || event.type === this.filterType;
+                        return matchesSearch && matchesFilter;
+                    });
+                },
+                previousMonth() {
+                    this.currentDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth() - 1, 1);
+                },
+                nextMonth() {
+                    this.currentDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth() + 1, 1);
+                },
+                selectDate(day) {
+                    this.selectedDate = day.date;
+                },
+                getEventsForDate(date) {
+                    return this.events.filter(event => event.date.toDateString() === date.toDateString());
+                },
+                formatTime(time) {
+                    return new Date(`2000-01-01T${time}`).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                },
+                addEvent() {
+                    const newEventDate = new Date(this.newEvent.date);
+                    this.events.push({
+                        id: this.events.length + 1,
+                        title: this.newEvent.title,
+                        description: this.newEvent.description,
+                        date: newEventDate,
+                        time: this.newEvent.time,
+                        type: this.newEvent.type
+                    });
+                    this.showAddEventModal = false;
+                    this.newEvent = { title: '', date: '', time: '', description: '', type: 'meeting' };
+                    this.notifications.push({ id: this.notifications.length + 1, message: `New event added: "${this.newEvent.title}"` });
+                }
+            }
         }
-
-        calendar.appendChild(dateCell);
-    }
-}
-
-function createDateCell(content) {
-    const cell = document.createElement('div');
-    cell.className = 'border p-2 h-24 overflow-y-auto cursor-pointer hover:bg-gray-100';
-    cell.textContent = content;
-    return cell;
-}
-
-function openTaskModal(date) {
-    selectedDate = date;
-    selectedDateElement.textContent = new Date(date).toLocaleDateString();
-    taskModal.classList.remove('hidden');
-    taskModal.classList.add('flex');
-}
-
-function closeTaskModal() {
-    taskModal.classList.add('hidden');
-    taskModal.classList.remove('flex');
-    taskInput.value = '';
-}
-
-prevBtn.addEventListener('click', () => {
-    currentDate.setMonth(currentDate.getMonth() - 1);
-    renderCalendar();
-});
-
-nextBtn.addEventListener('click', () => {
-    currentDate.setMonth(currentDate.getMonth() + 1);
-    renderCalendar();
-});
-
-addTaskBtn.addEventListener('click', () => {
-    const task = taskInput.value.trim();
-    if (task && selectedDate) {
-        if (!tasks[selectedDate]) {
-            tasks[selectedDate] = [];
-        }
-        tasks[selectedDate].push(task);
-        closeTaskModal();
-        renderCalendar();
-    }
-});
-
-cancelTaskBtn.addEventListener('click', closeTaskModal);
-
-renderCalendar();
-</script>
-
+    </script>
+</div>
+        
 {% endblock %}
