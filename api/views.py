@@ -16,6 +16,10 @@ from django.http import JsonResponse, HttpResponseRedirect
 from django.contrib.auth import get_user_model
 from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
+from rustici_software_cloud_v2.rest import ApiException
+from django.views import View
+from django.core.exceptions import ObjectDoesNotExist
 
 from courses.models import ScormCloudCourse
 from .utils import course_id_is_valid
@@ -300,3 +304,42 @@ def set_application_configuration(request):
     except scorm_cloud.rest.ApiException as api_e:
         logger.error(f"ScormCloud API Error: {api_e}")
         return JsonResponse({'error': f'Failed to update application configuration: {api_e.reason}'}, status=500)
+    
+
+@method_decorator(csrf_exempt, name='dispatch')
+class DeleteCourseView(View):
+    def delete(self, request, course_id):
+        try:
+            # Configure SCORM Cloud client
+            config = scorm_cloud.Configuration()
+            config.username = settings.CLOUDSCORM_APP_ID
+            config.password = settings.CLOUDSCORM_SECRET_KEY
+            scorm_cloud.Configuration().set_default(config)
+            
+            # Initialize CourseApi
+            course_api = scorm_cloud.CourseApi()
+            
+            # Delete the course
+            course_api.delete_course(course_id)
+            
+            # Delete the course from local database
+            try:
+                scorm_course = ScormCloudCourse.objects.get(course_id=course_id)
+                scorm_course.delete()
+                logger.info(f"Course with ID {course_id} has been successfully deleted from SCORM Cloud and local database.")
+            except ObjectDoesNotExist:
+                logger.warning(f"Course with ID {course_id} was deleted from SCORM Cloud but not found in local database.")
+            
+            return JsonResponse({"message": "Course deleted successfully from SCORM Cloud and local database"}, status=200)
+        
+        except ApiException as e:
+            logger.error(f"API error occurred while deleting course {course_id} from SCORM Cloud: {str(e)}")
+            return JsonResponse({"error": "API error occurred", "details": str(e)}, status=500)
+        
+        except ValueError as e:
+            logger.error(f"Value error occurred while deleting course {course_id}: {str(e)}")
+            return JsonResponse({"error": "Invalid course ID", "details": str(e)}, status=400)
+        
+        except Exception as e:
+            logger.error(f"Unexpected error occurred while deleting course {course_id}: {str(e)}")
+            return JsonResponse({"error": "An unexpected error occurred", "details": str(e)}, status=500)

@@ -90,7 +90,7 @@
                                                 <a href="#" class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Edit</a>
                                             </li>
                                             <li>
-                                                <a href="#" class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Delete</a>
+                                                <a href="#" class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white delete-course" data-course-id="{{ course.course_id }}">Delete</a>
                                             </li>
                                             <li>
                                                 <a href="{% url 'course_delivery_list' course.id %}" class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Manage Deliveries</a>
@@ -181,4 +181,53 @@
         });
     });
 </script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const deleteLinks = document.querySelectorAll('.delete-course');
+        
+        deleteLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const courseId = this.getAttribute('data-course-id');
+
+                const warningMessage = 
+                "WARNING: Deleting this course will also delete everything connected to it, including:\n\n" +
+                "- Registrations\n" +
+                "- Invitations\n" +
+                "- Dispatches\n" +
+                "- Debug Logs\n\n" +
+                "Are you sure you want to proceed with deletion?";
+                
+                if (confirm(warningMessage)) {
+                    deleteCourse(courseId);
+                }
+            });
+        });
+    
+        function deleteCourse(courseId) {
+            fetch(`/api/delete_course/${courseId}/`, {
+                method: 'DELETE'
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(err => {
+                        throw new Error(err.error || 'Failed to delete the course');
+                    });
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Success:', data);
+                alert('Course deleted successfully');
+                // Reload the page or update the UI
+                location.reload();
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                alert(error.message || 'An unexpected error occurred while deleting the course');
+            });
+        }
+    });
+    </script>
 {% endblock %}
