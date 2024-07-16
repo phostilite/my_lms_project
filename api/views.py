@@ -372,11 +372,18 @@ class LoginView(APIView):
 
             groups = list(user.groups.values_list('name', flat=True)) 
 
+            try:
+                learner = Learner.objects.get(user=user)
+                learner_id = learner.id
+            except Learner.DoesNotExist:
+                learner_id = None  
+
             response_data = {
                 'message': 'Login successful',
                 'access': access_token,
                 'refresh': refresh_token,
                 'groups': groups,
+                'learner_id': learner_id,
             }
             return Response(response_data, status=status.HTTP_200_OK)
         else:
