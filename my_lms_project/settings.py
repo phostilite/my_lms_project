@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'social_django',
     'django.contrib.sites',
     'rest_framework',
+    'rest_framework_simplejwt',
     'anymail',
 ]
 

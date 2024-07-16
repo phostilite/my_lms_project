@@ -21,6 +21,13 @@ from rustici_software_cloud_v2.rest import ApiException
 from django.views import View
 from django.core.exceptions import ObjectDoesNotExist
 
+
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from django.contrib.auth import authenticate
+from rest_framework_simplejwt.tokens import RefreshToken # Import the TokenObtainPairView class
+
 from courses.models import ScormCloudCourse
 from .utils import course_id_is_valid
 from accounts.models import Learner
@@ -343,3 +350,34 @@ class DeleteCourseView(View):
         except Exception as e:
             logger.error(f"Unexpected error occurred while deleting course {course_id}: {str(e)}")
             return JsonResponse({"error": "An unexpected error occurred", "details": str(e)}, status=500)
+
+
+
+class LoginView(APIView):
+    def post(self, request):
+        email = request.data.get('email')
+        password = request.data.get('password')
+        
+        # Input validation
+        if not email or not password:
+            return Response({'error': 'Please provide both email and password.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        # User authentication
+        user = authenticate(request, username=email, password=password)
+
+        if user is not None:
+            refresh = RefreshToken.for_user(user)  # Generate tokens using SimpleJWT
+            access_token = str(refresh.access_token)
+            refresh_token = str(refresh)
+
+            groups = list(user.groups.values_list('name', flat=True)) 
+
+            response_data = {
+                'message': 'Login successful',
+                'access': access_token,
+                'refresh': refresh_token,
+                'groups': groups,
+            }
+            return Response(response_data, status=status.HTTP_200_OK)
+        else:
+            return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
