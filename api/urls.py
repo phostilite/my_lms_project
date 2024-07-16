@@ -11,4 +11,5 @@ urlpatterns = [
 
     path('login/', views.LoginView.as_view(), name='api_login'),
     path('enrolled_courses/', views.EnrolledCoursesView.as_view(), name='enrolled_courses'),
+    path('registration_id/', views.GetRegistrationIDView.as_view(), name='get_registration_id'),
 ]

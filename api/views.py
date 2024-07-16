@@ -20,7 +20,7 @@ from django.utils.decorators import method_decorator
 from rustici_software_cloud_v2.rest import ApiException
 from django.views import View
 from django.core.exceptions import ObjectDoesNotExist
-
+from django.shortcuts import get_object_or_404
 
 
 from rest_framework import status
@@ -40,7 +40,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
-from .serializers import CourseDeliverySerializer  
+from .serializers import CourseDeliverySerializer, ScormCloudRegistrationSerializer  
 
 User = get_user_model()
 
@@ -408,4 +408,20 @@ class EnrolledCoursesView(APIView):
         learner = request.user.learner
         enrolled_deliveries = CourseDelivery.objects.filter(participants=learner)
         serializer = CourseDeliverySerializer(enrolled_deliveries, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+class GetRegistrationIDView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        learner_id = request.query_params.get('learner_id')
+        course_id = request.query_params.get('course_id')
+
+        if not learner_id or not course_id:
+            return Response({"error": "learner_id and course_id must be provided."}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Assuming 'Learner' model has an 'id' field that matches 'learner_id'
+        registration = get_object_or_404(ScormCloudRegistration, learner__id=learner_id, course_id=course_id)
+        serializer = ScormCloudRegistrationSerializer(registration)
         return Response(serializer.data, status=status.HTTP_200_OK)
