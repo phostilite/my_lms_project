@@ -22,16 +22,25 @@ from django.views import View
 from django.core.exceptions import ObjectDoesNotExist
 
 
+
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.contrib.auth import authenticate
-from rest_framework_simplejwt.tokens import RefreshToken # Import the TokenObtainPairView class
+from rest_framework_simplejwt.tokens import RefreshToken 
 
 from courses.models import ScormCloudCourse
 from .utils import course_id_is_valid
 from accounts.models import Learner
-from courses.models import ScormCloudCourse, ScormCloudRegistration
+from courses.models import ScormCloudCourse, ScormCloudRegistration, CourseDelivery
+
+
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from .serializers import CourseDeliverySerializer  
 
 User = get_user_model()
 
@@ -388,3 +397,15 @@ class LoginView(APIView):
             return Response(response_data, status=status.HTTP_200_OK)
         else:
             return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+
+
+
+class EnrolledCoursesView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        learner = request.user.learner
+        enrolled_deliveries = CourseDelivery.objects.filter(participants=learner)
+        serializer = CourseDeliverySerializer(enrolled_deliveries, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
