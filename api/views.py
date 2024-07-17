@@ -375,7 +375,7 @@ class LoginView(APIView):
         user = authenticate(request, username=email, password=password)
 
         if user is not None:
-            refresh = RefreshToken.for_user(user)  # Generate tokens using SimpleJWT
+            refresh = RefreshToken.for_user(user)  
             access_token = str(refresh.access_token)
             refresh_token = str(refresh)
 
@@ -393,6 +393,13 @@ class LoginView(APIView):
                 'refresh': refresh_token,
                 'groups': groups,
                 'learner_id': learner_id,
+                'learner_name': user.get_full_name() if user.get_full_name() else None,
+                'learner_email': user.email if user.email else None,
+                'learner_phone': user.phone_number if user.phone_number else None,
+                'learner_picture': request.build_absolute_uri(user.picture.url) if user.picture else None,
+                'learner_date_joined': user.date_joined,
+                'learner_gender': user.gender,
+                'learner_timezone': user.timezone,
             }
             return Response(response_data, status=status.HTTP_200_OK)
         else:
@@ -409,6 +416,7 @@ class EnrolledCoursesView(APIView):
         enrolled_deliveries = CourseDelivery.objects.filter(participants=learner)
         serializer = CourseDeliverySerializer(enrolled_deliveries, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+    
     
 class GetRegistrationIDView(APIView):
     authentication_classes = [JWTAuthentication]
