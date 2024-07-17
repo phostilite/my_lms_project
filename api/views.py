@@ -433,3 +433,17 @@ class GetRegistrationIDView(APIView):
         registration = get_object_or_404(ScormCloudRegistration, learner__id=learner_id, course_id=course_id)
         serializer = ScormCloudRegistrationSerializer(registration)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class RefreshTokenView(APIView):
+    def post(self, request):
+        refresh_token = request.data.get('refresh_token')
+        if not refresh_token:
+            return Response({"error": "Refresh token is required"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            refresh = RefreshToken(refresh_token)
+            access_token = str(refresh.access_token)
+            return Response({"access_token": access_token})
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
