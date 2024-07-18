@@ -19,4 +19,6 @@ urlpatterns = [
     path('enrolled_courses/', views.enrolled_courses, name='learner_enrolled_courses'),
     path('play_course/', views.play_course, name='learner_play_course'),
     path('launch_course/', views.launch_course, name='learner_launch_course'),
+
+    path('support/', views.support, name='learner_support'),
 ]

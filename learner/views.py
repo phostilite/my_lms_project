@@ -203,3 +203,10 @@ def play_course(request):
         return JsonResponse({'error': 'An unexpected error occurred'}, status=500)
 
 
+
+def support(request):
+    try:
+        return render(request, 'learner/support.html')
+    except Exception as e:
+        logger.error(f"Error loading support: {e}")
+        return HttpResponseServerError("An error occurred")

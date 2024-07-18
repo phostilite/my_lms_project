@@ -457,4 +457,9 @@ def preview_course(request, learner_id, course_id):
         return HttpResponseServerError("An error occurred")
 
 
-    
+def support(request):
+    try:
+        return render(request, 'administrator/support.html')
+    except Exception as e:
+        logger.error(f"Error loading support: {e}")
+        return HttpResponseServerError("An error occurred")
