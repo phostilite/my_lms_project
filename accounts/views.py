@@ -1,8 +1,14 @@
+# Standard library imports
 import logging
 import uuid
 from urllib.parse import urlencode
 
+# Third-party imports
 import requests
+from msal import ConfidentialClientApplication
+from social_django.models import UserSocialAuth
+
+# Django imports
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout, get_user_model
@@ -12,7 +18,7 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.core.mail import EmailMultiAlternatives, send_mail
 from django.db import transaction
 from django.db.utils import IntegrityError
-from django.http import HttpResponse, HttpResponseRedirect, response as HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.urls import reverse, reverse_lazy
 from django.utils.decorators import method_decorator
@@ -20,13 +26,10 @@ from django.utils.translation import gettext as _
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.debug import sensitive_post_parameters
-from msal import ConfidentialClientApplication
-from social_django.models import UserSocialAuth
 
+# Local application/library specific imports
 from . import constants
-from .auth_helper import (extract_user_details, get_sign_in_flow,
-                          get_token, get_token_from_code, remove_user_and_token,
-                          store_user)
+from .auth_helper import extract_user_details, get_sign_in_flow, get_token, get_token_from_code, remove_user_and_token, store_user
 from .backends import GoogleSignInBackend
 from .forms import LoginForm, LearnerSignupForm
 from .graph_helper import *
