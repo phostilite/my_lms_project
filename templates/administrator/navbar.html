@@ -25,6 +25,8 @@
                 </div>
                 <input type="search" id="default-search" class="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-green-500 dark:focus:border-green-500" placeholder="Search" required />
                 <button type="submit" class="text-white absolute end-2.5 bottom-2.5 bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">Search</button>
+
+                <div id="search-suggestions" class="absolute z-10 w-full bg-white border border-gray-300 rounded-lg mt-1 hidden"></div>
             </div>
         </form>
             <div class="flex items-center ms-3">
@@ -67,3 +69,65 @@
       </div>
     </div>
   </nav>
+
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.getElementById('default-search');
+        const suggestionsContainer = document.getElementById('search-suggestions');
+        
+        // Sample predefined suggestions for administrator
+        const sampleSuggestions = [
+            "User Management",
+            "Course Creation",
+            "Analytics Dashboard",
+            "System Settings",
+            "Instructor Applications",
+            "Content Moderation",
+            "Payment Processing",
+            "Student Enrollment",
+            "Certificate Management",
+            "Learning Paths"
+        ];
+    
+        searchInput.addEventListener('input', function() {
+            const inputValue = this.value.toLowerCase();
+            if (inputValue.length > 0) {
+                const filteredSuggestions = sampleSuggestions.filter(suggestion => 
+                    suggestion.toLowerCase().includes(inputValue)
+                );
+                
+                displaySuggestions(filteredSuggestions);
+            } else {
+                suggestionsContainer.innerHTML = '';
+                suggestionsContainer.classList.add('hidden');
+            }
+        });
+    
+        function displaySuggestions(suggestions) {
+            suggestionsContainer.innerHTML = '';
+            if (suggestions.length > 0) {
+                suggestions.forEach(suggestion => {
+                    const div = document.createElement('div');
+                    div.textContent = suggestion;
+                    div.className = 'p-2 hover:bg-gray-100 cursor-pointer';
+                    div.onclick = function() {
+                        searchInput.value = suggestion;
+                        suggestionsContainer.classList.add('hidden');
+                    };
+                    suggestionsContainer.appendChild(div);
+                });
+                suggestionsContainer.classList.remove('hidden');
+            } else {
+                suggestionsContainer.classList.add('hidden');
+            }
+        }
+    
+        // Hide suggestions when clicking outside
+        document.addEventListener('click', function(e) {
+            if (e.target !== searchInput && e.target !== suggestionsContainer) {
+                suggestionsContainer.classList.add('hidden');
+            }
+        });
+    });
+    </script>
