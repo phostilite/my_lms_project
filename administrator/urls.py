@@ -6,7 +6,6 @@ urlpatterns = [
     path('', views.dashboard, name='administrator_dashboard'),
     path('calendar/', views.calendar, name='administrator_calendar'),
 
-
     path('course_list/', views.course_list, name='course_list'),
     path('preview_course/<int:learner_id>/<int:course_id>/', views.preview_course, name='administrator_preview_course'),
 
@@ -30,7 +29,8 @@ urlpatterns = [
     path('course_delivery/<int:course_id>/<str:delivery_id>/', views.course_delivery_detail, name='course_delivery_detail'),
     path('export_attendance/<int:delivery_id>/', views.export_attendance, name='export_attendance'),
 
-
     path('support/', views.support, name='administrator_support'),
 
+    path('create-tenant-request/', views.TenantRequestView.as_view(), name='create_tenant_request'),
+    path('tenant-list/', views.TenantListView.as_view(), name='tenant_list'),
 ]

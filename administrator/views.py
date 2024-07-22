@@ -4,6 +4,7 @@ from decimal import Decimal
 
 # Third-party imports
 import requests
+from requests.exceptions import RequestException
 from openpyxl import Workbook
 from openpyxl.styles import Alignment, Font
 
@@ -14,9 +15,13 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError, transaction
 from django.forms import ValidationError
-from django.http import HttpResponse, HttpResponseServerError
+from django.http import HttpResponse, HttpResponseServerError, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
+from django.views.generic.edit import CreateView
+from django.views.generic import ListView
+from django.urls import reverse_lazy
+from django.db.models import Q
 
 # Local application/library specific imports
 from accounts.forms import UserTimeZoneForm
@@ -26,6 +31,10 @@ from courses.forms import CourseDeliveryForm, ScormCloudCourseForm
 from courses.models import Attendance, CourseDelivery, Enrollment, Feedback, ScormCloudCourse, ScormCloudRegistration
 from learner.forms import LearnerForm
 from supervisor.forms import SupervisorForm
+from multitenancy.models import TenantRequest
+from multitenancy.forms import TenantRequestForm
+
+import requests
 
 logger = logging.getLogger(__name__)
 
@@ -463,3 +472,86 @@ def support(request):
     except Exception as e:
         logger.error(f"Error loading support: {e}")
         return HttpResponseServerError("An error occurred")
+    
+
+class TenantRequestView(CreateView):
+    model = TenantRequest
+    form_class = TenantRequestForm
+    template_name = 'administrator/multitenancy/create_tenant_request.html'
+    success_url = reverse_lazy('tenant_list')
+
+    def form_valid(self, form):
+        try:
+            response = super().form_valid(form)
+            # self.send_tenant_data_to_server(self.object)
+            logger.info(f'Tenant request created successfully: {form.cleaned_data}')
+        except Exception as e:
+            logger.error(f'Error creating tenant request: {e}')
+            form.add_error(None, 'An unexpected error occurred. Please try again.')
+        return super().form_invalid(form) if form.errors else response
+    
+    def form_invalid(self, form):
+        logger.error(f'Form validation failed: {form.errors}')
+        logger.debug(f'Form data: {form.cleaned_data}')
+        if self.request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            return JsonResponse({'errors': form.errors}, status=400)
+        return super().form_invalid(form)
+
+    def send_tenant_data_to_server(self, tenant_request):
+        url = 'https://multitenant-server.learnknowdigital.com/api/create_tenant/'
+        data = {
+            'company_name': tenant_request.company_name,
+            'subdomain': tenant_request.subdomain,
+            'primary_color': tenant_request.primary_color,
+            'secondary_color': tenant_request.secondary_color,
+            'db_type': tenant_request.db_type,
+            'db_name': tenant_request.db_name,
+            'db_user': tenant_request.db_user,
+            'db_password': tenant_request.db_password,
+            'db_host': tenant_request.db_host,
+            'db_port': tenant_request.db_port,
+        }
+        files = {'logo': tenant_request.logo.file}
+        try:
+            response = requests.post(url, data=data, files=files)
+            if response.status_code == 200:
+                tenant_request.status = 'approved'
+                logger.info(f'Tenant request approved: {tenant_request}')
+            else:
+                tenant_request.status = 'rejected'
+                logger.warning(f'Tenant request rejected: {tenant_request}. Response: {response.status_code}')
+        except RequestException as e:
+            tenant_request.status = 'error'
+            logger.error(f'Error sending tenant request to server: {e}')
+        finally:
+            tenant_request.save()
+
+
+class TenantListView(ListView):
+    model = TenantRequest
+    template_name = 'administrator/multitenancy/tenant_list.html'
+    context_object_name = 'tenants'
+    paginate_by = 10  
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        search_query = self.request.GET.get('search', '')
+        status_filter = self.request.GET.get('status', '')
+
+        if search_query:
+            queryset = queryset.filter(
+                Q(company_name__icontains=search_query) |
+                Q(subdomain__icontains=search_query)
+            )
+
+        if status_filter:
+            queryset = queryset.filter(status=status_filter)
+
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['search_query'] = self.request.GET.get('search', '')
+        context['status_filter'] = self.request.GET.get('status', '')
+        context['create_tenant_url'] = reverse_lazy('create_tenant')
+        return context

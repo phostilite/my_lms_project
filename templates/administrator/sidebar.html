@@ -77,6 +77,25 @@
                   </li>
             </ul>
          </li>
+         <li>
+            <button type="button" class="flex items-center w-full p-2 text-base text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700" aria-controls="dropdown-tenants" data-collapse-toggle="dropdown-tenants">
+               <svg class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"  xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="50" height="50" viewBox="0 0 50 50">
+                  <path d="M6,2v46h38V2H6z M17,35h-4v-3h4V35z M17,30h-4v-4h4V30z M17,24h-4v-3h4V24z M30,26v4H19v-4H30z M19,24v-3h11v3H19z M30,32v3 H19v-3H30z M37,42H25v-2h12V42z M37,35h-5v-3h5V35z M37,30h-5v-4h5V30z M37,24h-5v-3h5V24z M37,13H13v-2h24V13z"></path>
+              </svg>
+                  <span class="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">Tenant Management</span>
+                  <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+                  </svg>
+            </button>
+            <ul id="dropdown-tenants" class="hidden py-2 space-y-2">
+                  <li>
+                     <a href="{% url 'tenant_list' %}" class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">View Tenants</a>
+                  </li>
+                  <li>
+                     <a href="{% url 'create_tenant_request' %}" class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Create Tenants</a>
+                  </li>
+            </ul>
+         </li>
           <li>
              <a href="{% url 'administrator_support' %}" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
                 <svg class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="50" height="50" viewBox="0 0 50 50">

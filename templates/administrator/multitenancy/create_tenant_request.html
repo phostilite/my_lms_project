@@ -1,0 +1,183 @@
+{% extends '../../base.html' %}
+{% block content %}
+{% load static %}
+{% include '../navbar.html' %}
+{% include '../sidebar.html' %}
+
+<div class="p-8 sm:ml-64 mt-14 bg-green-50">
+    <div class="container mx-auto">
+        <h1 class="text-4xl font-bold text-green-800 mb-4">Create New Tenant</h1>
+
+        <!-- Breadcrumbs -->
+        <nav class="bg-green-100 p-3" aria-label="Breadcrumb">
+            <ol class="list-none p-0 inline-flex">
+            <li class="flex items-center">
+                <a href="{% url 'administrator_dashboard' %}" class="text-green-500 hover:text-green-700">Dashboard</a>
+                <svg class="fill-current w-3 h-3 mx-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M285.476 272.971L91.132 467.314c-9.373 9.373-24.569 9.373-33.941 0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941 0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z"/></svg>
+            </li>
+            <li class="flex items-center">
+                <span class="text-gray-500">Create Tenant</span>
+            </li>
+            </ol>
+        </nav>
+        
+        <form id="tenantform" method="post" enctype="multipart/form-data" class="bg-white shadow-lg rounded-lg px-8 pt-6 pb-8 mb-4">
+            {% csrf_token %}
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="mb-4">
+                    <label class="block text-green-700 text-sm font-bold mb-2" for="company_name">
+                        Company Name
+                    </label>
+                    <input class="shadow-sm border-green-300 rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent" 
+                           id="company_name" type="text" name="company_name" required>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="block text-green-700 text-sm font-bold mb-2" for="subdomain">
+                        Subdomain
+                    </label>
+                    <div class="flex rounded-md shadow-sm">
+                        <input class="rounded-l-md border-green-300 w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent" 
+                               id="subdomain" type="text" name="subdomain" required>
+                        <span class="inline-flex items-center px-3 rounded-r-md border border-l-0 border-green-300 bg-gray-50 text-gray-500 text-sm">
+                            .learnknowdigital.com
+                        </span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mb-6">
+                <label class="block text-green-700 text-sm font-bold mb-2" for="logo">
+                    Logo
+                </label>
+                <input class="file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100" 
+                       id="logo" type="file" name="logo" accept="image/*" required>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div>
+                    <label class="block text-green-700 text-sm font-bold mb-2" for="primary_color">
+                        Primary Color
+                    </label>
+                    <input class="h-10 w-full rounded-md border-green-300 shadow-sm focus:border-green-500 focus:ring focus:ring-green-200 focus:ring-opacity-50" 
+                           id="primary_color" type="color" name="primary_color" required>
+                </div>
+                <div>
+                    <label class="block text-green-700 text-sm font-bold mb-2" for="secondary_color">
+                        Secondary Color
+                    </label>
+                    <input class="h-10 w-full rounded-md border-green-300 shadow-sm focus:border-green-500 focus:ring focus:ring-green-200 focus:ring-opacity-50" 
+                           id="secondary_color" type="color" name="secondary_color" required>
+                </div>
+            </div>
+            
+            <div class="mb-6">
+                <label class="block text-green-700 text-sm font-bold mb-2" for="db_type">
+                    Database Type
+                </label>
+                <select class="w-full rounded-md border-green-300 shadow-sm focus:border-green-500 focus:ring focus:ring-green-200 focus:ring-opacity-50" 
+                        id="db_type" name="db_type" required>
+                    <option value="postgresql">PostgreSQL</option>
+                    <option value="mysql">MySQL</option>
+                </select>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="mb-4">
+                    <label class="block text-green-700 text-sm font-bold mb-2" for="db_name">
+                        Database Name
+                    </label>
+                    <input class="shadow-sm border-green-300 rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent" 
+                           id="db_name" type="text" name="db_name" required>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="block text-green-700 text-sm font-bold mb-2" for="db_user">
+                        Database User
+                    </label>
+                    <input class="shadow-sm border-green-300 rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent" 
+                           id="db_user" type="text" name="db_user" required>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="mb-4">
+                    <label class="block text-green-700 text-sm font-bold mb-2" for="db_password">
+                        Database Password
+                    </label>
+                    <input class="shadow-sm border-green-300 rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent" 
+                           id="db_password" type="password" name="db_password" required>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="block text-green-700 text-sm font-bold mb-2" for="db_host">
+                        Database Host
+                    </label>
+                    <input class="shadow-sm border-green-300 rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent" 
+                           id="db_host" type="text" name="db_host" value="localhost" required>
+                </div>
+            </div>
+            
+            <div class="mb-6">
+                <label class="block text-green-700 text-sm font-bold mb-2" for="db_port">
+                    Database Port
+                </label>
+                <input class="shadow-sm border-green-300 rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent" 
+                       id="db_port" type="number" name="db_port" value="5432" required>
+            </div>
+            
+            <div class="flex items-center justify-end">
+                <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-6 rounded-full focus:outline-none focus:shadow-outline transition duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-110" 
+                        type="submit">
+                    Create Tenant
+                </button>
+            </div>
+        </form>
+    </div>
+    
+    <script>
+        // Dynamic port change based on database type
+        document.getElementById('db_type').addEventListener('change', function() {
+            var portInput = document.getElementById('db_port');
+            if (this.value === 'postgresql') {
+                portInput.value = '5432';
+            } else if (this.value === 'mysql') {
+                portInput.value = '3306';
+            }
+        });
+    </script>
+</div>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+$(document).ready(function() {
+    $('#tenantform').submit(function(e) {
+        e.preventDefault(); // Prevent the default form submission
+        $.ajax({
+            url: $(this).attr('action'), // or the URL you're submitting to
+            type: 'POST',
+            data: new FormData(this),
+            processData: false,
+            contentType: false,
+            success: function(data) {
+                // Handle success (e.g., redirecting to success_url or displaying a success message)
+                alert('Tenant request created successfully.');
+            },
+            error: function(xhr, errmsg, err) {
+                // Handle errors
+                if(xhr.status == 400) {
+                    const errors = xhr.responseJSON.errors;
+                    Object.keys(errors).forEach(function(key) {
+                        alert(errors[key]); // Display each error as an alert
+                    });
+                } else {
+                    alert('An unexpected error occurred. Please try again.');
+                }
+            }
+        });
+    });
+});
+</script>
+{% endblock %}
