@@ -1,0 +1,108 @@
+{% extends '../../base.html' %}
+{% block content %}
+{% load static %}
+{% include '../navbar.html' %}
+{% include '../sidebar.html' %}
+
+<div class="p-8 sm:ml-64 mt-14 bg-green-50">
+    <div class="container mx-auto">
+        <h1 class="text-4xl font-bold text-green-800 mb-4">Tenant Details</h1>
+
+        <!-- Breadcrumbs -->
+        <nav class="flex mb-5" aria-label="Breadcrumb">
+            <ol class="inline-flex items-center space-x-1 md:space-x-3">
+                <li class="inline-flex items-center">
+                    <a href="{% url 'administrator_dashboard' %}" class="inline-flex items-center text-sm font-medium text-green-700 hover:text-green-900">
+                        <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
+                        Dashboard
+                    </a>
+                </li>
+                <li>
+                    <div class="flex items-center">
+                        <svg class="w-6 h-6 text-green-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg>
+                        <a href="{% url 'tenant_list' %}" class="ml-1 text-sm font-medium text-green-700 hover:text-green-900 md:ml-2">Tenants</a>
+                    </div>
+                </li>
+                <li aria-current="page">
+                    <div class="flex items-center">
+                        <svg class="w-6 h-6 text-green-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg>
+                        <span class="ml-1 text-sm font-medium text-gray-500 md:ml-2">{{ tenant.company_name }}</span>
+                    </div>
+                </li>
+            </ol>
+        </nav>
+
+        <!-- Tenant Details Card -->
+        <div class="bg-white shadow-lg rounded-lg overflow-hidden">
+            <!-- Header with Logo and Colors -->
+            <div class="p-6 bg-green-600 text-white flex items-center justify-between">
+                <div class="flex items-center">
+                    {% if tenant.logo %}
+                        <img src="{{ tenant.logo.url }}" alt="{{ tenant.company_name }} Logo" class="w-16 h-16 rounded-full mr-4 bg-white p-1">
+                    {% else %}
+                        <div class="w-16 h-16 rounded-full mr-4 bg-white p-1"></div>
+                    {% endif %}
+                    <h2 class="text-2xl font-bold">{{ tenant.company_name }}</h2>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="flex items-center">
+                        <span class="w-6 h-6 rounded-full" style="background-color: {{ tenant.primary_color }}"></span>
+                        <span class="ml-2">Primary</span>
+                    </div>
+                    <div class="flex items-center">
+                        <span class="w-6 h-6 rounded-full" style="background-color: {{ tenant.secondary_color }}"></span>
+                        <span class="ml-2">Secondary</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tenant Information -->
+            <div class="p-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <h3 class="text-lg font-semibold text-green-800 mb-2">General Information</h3>
+                        <p><strong class="text-green-700">Subdomain:</strong> {{ tenant.subdomain }}.learnknowdigital.com</p>
+                        <p><strong class="text-green-700">Status:</strong> <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">{{ tenant.get_status_display }}</span></p>
+                        <p><strong class="text-green-700">Created At:</strong> {{ tenant.created_at|date:"F j, Y, g:i a" }}</p>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-semibold text-green-800 mb-2">Database Information</h3>
+                        <p><strong class="text-green-700">Database Type:</strong> {{ tenant.get_db_type_display }}</p>
+                        <p><strong class="text-green-700">Database Name:</strong> {{ tenant.db_name }}</p>
+                        <p><strong class="text-green-700">Database User:</strong> {{ tenant.db_user }}</p>
+                        <p><strong class="text-green-700">Database Host:</strong> {{ tenant.db_host }}</p>
+                        <p><strong class="text-green-700">Database Port:</strong> {{ tenant.db_port }}</p>
+                    </div>
+                </div>
+
+                <!-- CloudScorm Information -->
+                <div class="mt-6">
+                    <h3 class="text-lg font-semibold text-green-800 mb-2">CloudScorm Information</h3>
+                    <p><strong class="text-green-700">App ID:</strong> {% if tenant.cloudscorm_app_id %}{{ tenant.cloudscorm_app_id }}{% else %}Not set{% endif %}</p>
+                    <p><strong class="text-green-700">Secret Key:</strong> {% if tenant.cloudscorm_secret_key %}•••••••••• (hidden){% else %}Not set{% endif %}</p>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="px-6 py-4 bg-gray-50 border-t border-gray-200 text-right">
+                <a href="#" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full mr-2">
+                    Edit Tenant
+                </a>
+                <button onclick="confirmDelete()" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full">
+                    Delete Tenant
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function confirmDelete() {
+    if (confirm('Are you sure you want to delete this tenant? This action cannot be undone.')) {
+        // Perform delete action here
+        // You might want to use AJAX to send a DELETE request to your server
+    }
+}
+</script>
+
+{% endblock %}

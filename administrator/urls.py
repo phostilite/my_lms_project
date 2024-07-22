@@ -33,4 +33,5 @@ urlpatterns = [
 
     path('create-tenant-request/', views.TenantRequestView.as_view(), name='create_tenant_request'),
     path('tenant-list/', views.TenantListView.as_view(), name='tenant_list'),
+    path('tenant/<int:tenant_id>/', views.tenant_detail, name='tenant_detail'),
 ]

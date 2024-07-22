@@ -510,6 +510,8 @@ class TenantRequestView(CreateView):
             'db_password': tenant_request.db_password,
             'db_host': tenant_request.db_host,
             'db_port': tenant_request.db_port,
+            'cloudscorm_app_id': tenant_request.cloudscorm_app_id,
+            'cloudscorm_secret_key': tenant_request.cloudscorm_secret_key,
         }
         files = {'logo': tenant_request.logo.file}
         try:
@@ -555,3 +557,11 @@ class TenantListView(ListView):
         context['status_filter'] = self.request.GET.get('status', '')
         context['create_tenant_url'] = reverse_lazy('create_tenant')
         return context
+    
+@login_required
+def tenant_detail(request, tenant_id):
+    tenant = get_object_or_404(TenantRequest, id=tenant_id)
+    context = {
+        'tenant': tenant,
+    }
+    return render(request, 'administrator/multitenancy/tenant_detail.html', context)

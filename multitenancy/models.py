@@ -26,6 +26,9 @@ class TenantRequest(models.Model):
     db_password = models.CharField(max_length=128)  
     db_host = models.CharField(max_length=255, default='localhost')
     db_port = models.IntegerField(default=5432)  
+
+    cloudscorm_app_id = models.CharField(max_length=100, blank=True, null=True)
+    cloudscorm_secret_key = models.CharField(max_length=255, blank=True, null=True)
     
     created_at = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
